@@ -14,8 +14,11 @@ Constant::Constant(Vec2f p, Vec2f s)
     initInterface(s);
     
     startVal = 0;
+    nextVal = 0;
     updateVal(0);
     valInc = 1;
+    
+    immediateChange = false;
 }
 
 void Constant::initInterface(Vec2f size)
@@ -33,7 +36,12 @@ void Constant::initInterface(Vec2f size)
 
 void Constant::update()
 {
-    
+    if (!immediateChange)
+    {
+        if (nextVal != val) {
+            updateVal(nextVal);
+        }
+    }
 }
 
 void Constant::draw()
@@ -58,6 +66,23 @@ void Constant::draw()
     gl::popMatrices();
 }
 
+void Constant::drawOutline()
+{
+    gl::pushMatrices();
+    gl::translate(canvasRect.getUpperLeft() - Vec2f(4, 4));
+
+    glPushAttrib(GL_ENABLE_BIT);
+    glLineStipple(1, 0xff00);
+    gl::enable(GL_LINE_STIPPLE);
+    
+    gl::color(0, 0, 0);
+    gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
+    
+    glPopAttrib();
+    
+    gl::popMatrices();
+}
+
 void Constant::mouseDown(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
@@ -71,15 +96,6 @@ void Constant::mouseDown(cease::MouseEvent event)
         isCompDrag = true;
         compDragAnchor = event.getPos();
     }
-    
-    
-    
-//    if (progbarRect.contains(local))
-//    {
-        //        val = lmap(x, pos.x, pos.x+size.x, min, max);
-        //        graphicVal.x = x;
-//    }
-    
 }
 
 void Constant::mouseDrag(cease::MouseEvent event)
@@ -88,12 +104,16 @@ void Constant::mouseDrag(cease::MouseEvent event)
     
     if (isValDrag) {
         dragX = local.x;
-        updateVal(startVal + (dragX - dragStartX) * valInc);
+        if (immediateChange) {
+            updateVal(startVal + (dragX - dragStartX) * valInc);
+        }
+        else {
+            nextVal = startVal + (dragX - dragStartX) * valInc;
+        }
     }
 
     if (isCompDrag) {
         canvasRect += event.getPos() - compDragAnchor;
-//        pos += local - compDragAnchor;
         compDragAnchor = event.getPos();
     }
 }
@@ -114,16 +134,13 @@ void Constant::mouseUp( cease::MouseEvent event)
 void Constant::mouseWheel( cease::MouseEvent event ) {}
 void Constant::mouseMove( cease::MouseEvent event ) {}
 
-ConnectionResult* Constant::getConnection(cease::MouseEvent event)
+ConnectionResult* Constant::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
     if (inputNode->contains(local)) {
         if (inputNode->isConnected()) {
             return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNode);
-        }
-        else {
-            return new ConnectionResult(TYPE_INPUT, inputNode);
         }
     }
     else if (outputNode->contains(local)) {
@@ -137,6 +154,26 @@ ConnectionResult* Constant::getConnection(cease::MouseEvent event)
 
     return NULL;
 }
+
+ConnectionResult* Constant::getConnectionEnd(cease::MouseEvent event)
+{
+    Vec2f local = getLocalCoords(event.getPos());
+
+    if (inputNode->contains(local)) {
+        if (!inputNode->isConnected()) {
+            return new ConnectionResult(TYPE_INPUT, inputNode);
+        }
+    }
+    else if (outputNode->contains(local)) {
+        if (!outputNode->isConnected()) {
+            return new ConnectionResult(TYPE_OUTPUT, outputNode);
+        }
+    }
+    
+    return NULL;
+}
+
+
 
 Vec2f Constant::getCanvasPos()
 {
@@ -155,7 +192,12 @@ float Constant::getValue(int i)
 
 void Constant::setValue(int i, float v)
 {
-    updateVal(v);
+    if (immediateChange) {
+        updateVal(v);
+    }
+    else {
+        nextVal = v;
+    }
 }
 
 Vec2f Constant::getLocalCoords(Vec2f p)

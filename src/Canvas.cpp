@@ -26,15 +26,11 @@ void Canvas::setup(Vec2f _pos, Vec2f _size, Vec2f _vSize)
     isMouseDown = false;
     mouseHandler = this;
     currentWire = NULL;
+    focusComponent = NULL;
 }
 
 void Canvas::update()
 {
-    for (int i=0; i<programs.size(); i++)
-    {
-        programs[i]->update();
-    }
-    
     for (int i=0; i<components.size(); i++)
     {
         components[i]->update();
@@ -69,14 +65,18 @@ void Canvas::draw()
     
     // the components on the canvas
     gl::color(0, 0, 0);
-    for (int i=0; i<programs.size(); i++)
-    {
-        programs[i]->draw();
-    }
     for (int i=0; i<components.size(); i++)
     {
         components[i]->draw();
     }
+
+    // draw focused component
+    if (focusComponent != NULL) {
+        focusComponent->draw();
+        focusComponent->drawOutline();
+    }
+
+    // draw wires
     for (int i=0; i<wires.size(); i++)
     {
         wires[i]->draw();
@@ -84,7 +84,7 @@ void Canvas::draw()
     if (currentWire != NULL) {
         currentWire->draw();
     }
-    
+
     gl::popMatrices();
     gl::setViewport(prevViewport);
     fbo.unbindFramebuffer();
@@ -103,11 +103,6 @@ void Canvas::draw()
     gl::drawStrokedRect(Rectf(0, 0, size.x, size.y));
     
     gl::popMatrices();
-}
-
-void Canvas::addProgram(Program *prog)
-{
-    programs.push_back(prog);
 }
 
 void Canvas::addComponent(CanvasComponent *comp)
@@ -160,14 +155,6 @@ ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
 void Canvas::setMouseHandler(cease::MouseEvent event)
 {
     // find the component the mouse is above (programs, wires, tools)
-    for (int i=0; i<programs.size(); i++)
-    {
-        if (programs[i]->contains(event.getPos()))
-        {
-            mouseHandler = (MouseListener*)programs[i];
-            return;
-        }
-    }
     for (int i=0; i<components.size(); i++)
     {
         if (components[i]->contains(event.getPos()))
@@ -187,18 +174,19 @@ void Canvas::appMouseDown(MouseEvent event)
     setMouseHandler(cevent);
     
     if (mouseHandler == this) {
+        focusComponent = NULL;
         mouseHandler->mouseDown(cease::MouseEvent(event.getPos() - pos, event.getWheelIncrement()));
     }
     else {
-        ConnectionResult* con = mouseHandler->getConnection(cevent);
+        ConnectionResult* con = ((CanvasComponent*)mouseHandler)->getConnectionStart(cevent);
         if (con != NULL && con->type != TYPE_INPUT) {
             // node was clicked handle it
             handleConnectionStart(con);
         }
         else {
-
-        // no node was clicked, do the normal gui stuff
-        mouseHandler->mouseDown(cevent);
+            // no node was clicked, do the normal gui stuff
+            focusComponent = (CanvasComponent*)mouseHandler;
+            mouseHandler->mouseDown(cevent);
         }
     }
 }
@@ -210,7 +198,7 @@ void Canvas::appMouseUp(MouseEvent event)
     
     if (currentWire != NULL)
     {
-        handleConnectionEnd(mouseHandler->getConnection(cevent));
+        handleConnectionEnd(((CanvasComponent*)mouseHandler)->getConnectionEnd(cevent));
     }
     else {
         mouseHandler->mouseUp(cevent);
@@ -315,8 +303,12 @@ void Canvas::handleConnectionEnd(ConnectionResult *con)
         return;
     }
 
-    currentWire->addConnectable(con);
-    wires.push_back(currentWire);
+    if (currentWire->addConnectable(con)) {
+        wires.push_back(currentWire);
+    }
+    else {
+        delete currentWire;
+    }
     currentWire = NULL;
     
     // delete the connection result

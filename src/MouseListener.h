@@ -40,7 +40,6 @@ public:
 	virtual void mouseWheel( cease::MouseEvent event ) = 0;
 	virtual void mouseMove( cease::MouseEvent event ) = 0;
 	virtual void mouseDrag( cease::MouseEvent event ) = 0;
-    virtual ConnectionResult* getConnection( cease::MouseEvent event) = 0;
     virtual bool contains(Vec2f p) = 0;
 };
 

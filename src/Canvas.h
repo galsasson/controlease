@@ -36,7 +36,6 @@ public:
     void setup(Vec2f _pos, Vec2f _size, Vec2f _vSize);
     void update();
     void draw();
-    void addProgram(Program *program);
     void addComponent(CanvasComponent *comp);
 
 	void mouseDown( cease::MouseEvent event );
@@ -69,7 +68,6 @@ private:
     void handleConnectionEnd(ConnectionResult *con);
     Wire* popWireWithNode(Node *node);
     
-    boost::container::vector<Program*> programs;
     boost::container::vector<CanvasComponent*> components;
     
     
@@ -77,6 +75,7 @@ private:
     gl::Fbo fbo;
     
     // interaction
+    CanvasComponent *focusComponent;
     MouseListener *mouseHandler;
     Vec2f prevMouse;
     bool isMouseDown;

@@ -85,6 +85,22 @@ void Program::draw()
     gl::popMatrices();
 }
 
+void Program::drawOutline()
+{
+    gl::pushMatrices();
+    gl::translate(pos-Vec2f(4, 4));
+    
+    glPushAttrib(GL_ENABLE_BIT);
+    glLineStipple(1, 0xff00);
+    gl::enable(GL_LINE_STIPPLE);
+
+    gl::color(0, 0, 0);
+    gl::drawStrokedRect(Rectf(Vec2f(0, 0), Vec2f(size.x+8, size.y+8)));
+    
+    glPopAttrib();
+    gl::popMatrices();
+}
+
 void Program::mouseDown(cease::MouseEvent event)
 {
     isMouseDown = true;
@@ -113,17 +129,32 @@ void Program::mouseDrag(cease::MouseEvent event)
 //    checkBounds();
 }
 
-ConnectionResult* Program::getConnection(cease::MouseEvent event)
+ConnectionResult* Program::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
-    
+
     for (int i=0; i<inputNodes.size(); i++)
     {
         if (inputNodes[i]->contains(local)) {
             if (inputNodes[i]->isConnected()) {
                 return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
             }
-            return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
+        }
+    }
+    
+    return NULL;
+}
+
+ConnectionResult* Program::getConnectionEnd(cease::MouseEvent event)
+{
+    Vec2f local = getLocalCoords(event.getPos());
+    
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        if (inputNodes[i]->contains(local)) {
+            if (!inputNodes[i]->isConnected()) {
+                return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
+            }
         }
     }
     

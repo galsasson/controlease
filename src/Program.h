@@ -36,13 +36,15 @@ public:
     
     void update();
     void draw();
+    void drawOutline();
     
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
-    ConnectionResult* getConnection(cease::MouseEvent event);
+    ConnectionResult* getConnectionStart(cease::MouseEvent event);
+    ConnectionResult* getConnectionEnd(cease::MouseEvent event);
     bool contains(Vec2f p);
     
     Vec2f getCanvasPos();

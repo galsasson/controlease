@@ -36,13 +36,16 @@ public:
     void initInterface(Vec2f size);
     void update();
     void draw();
+    void drawOutline();
 
     void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
-    ConnectionResult* getConnection( cease::MouseEvent event);
+    ConnectionResult* getConnectionStart( cease::MouseEvent event);
+    ConnectionResult* getConnectionEnd( cease::MouseEvent event);
+    
     bool contains(Vec2f p);
     Vec2f getCanvasPos();
     
@@ -52,6 +55,8 @@ public:
 private:
     void updateVal(float newVal);
     std::string getValueString();
+    
+    bool immediateChange;
     
     Vec2f getLocalCoords(Vec2f p);
     Vec2f getCanvasCoords(Vec2f p);
@@ -75,6 +80,7 @@ private:
     OutputNode *outputNode;
     InputNode *inputNode;
     
+    float nextVal;
     float val;
     std::string valStr;
     float valInc;
