@@ -25,6 +25,7 @@ void Canvas::setup(Vec2f _pos, Vec2f _size, Vec2f _vSize)
     
     isMouseDown = false;
     mouseHandler = this;
+    currentWire = NULL;
 }
 
 void Canvas::update()
@@ -37,6 +38,10 @@ void Canvas::update()
     for (int i=0; i<components.size(); i++)
     {
         components[i]->update();
+    }
+    for (int i=0; i<wires.size(); i++)
+    {
+        wires[i]->update();
     }
 }
 
@@ -71,6 +76,13 @@ void Canvas::draw()
     for (int i=0; i<components.size(); i++)
     {
         components[i]->draw();
+    }
+    for (int i=0; i<wires.size(); i++)
+    {
+        wires[i]->draw();
+    }
+    if (currentWire != NULL) {
+        currentWire->draw();
     }
     
     gl::popMatrices();
@@ -139,6 +151,12 @@ void Canvas::mouseDrag(cease::MouseEvent event)
     checkBounds();
 }
 
+ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
+{
+    return NULL;
+}
+
+
 void Canvas::setMouseHandler(cease::MouseEvent event)
 {
     // find the component the mouse is above (programs, wires, tools)
@@ -146,7 +164,7 @@ void Canvas::setMouseHandler(cease::MouseEvent event)
     {
         if (programs[i]->contains(event.getPos()))
         {
-            mouseHandler = programs[i];
+            mouseHandler = (MouseListener*)programs[i];
             return;
         }
     }
@@ -154,7 +172,7 @@ void Canvas::setMouseHandler(cease::MouseEvent event)
     {
         if (components[i]->contains(event.getPos()))
         {
-            mouseHandler = components[i];
+            mouseHandler = (MouseListener*)components[i];
             return;
         }
     }
@@ -172,14 +190,31 @@ void Canvas::appMouseDown(MouseEvent event)
         mouseHandler->mouseDown(cease::MouseEvent(event.getPos() - pos, event.getWheelIncrement()));
     }
     else {
+        ConnectionResult* con = mouseHandler->getConnection(cevent);
+        if (con != NULL && con->type != TYPE_INPUT) {
+            // node was clicked handle it
+            handleConnectionStart(con);
+        }
+        else {
+
+        // no node was clicked, do the normal gui stuff
         mouseHandler->mouseDown(cevent);
+        }
     }
 }
 
 void Canvas::appMouseUp(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
-    mouseHandler->mouseUp(cevent);
+    setMouseHandler(cevent);
+    
+    if (currentWire != NULL)
+    {
+        handleConnectionEnd(mouseHandler->getConnection(cevent));
+    }
+    else {
+        mouseHandler->mouseUp(cevent);
+    }
 }
 
 void Canvas::appMouseWheel(MouseEvent event)
@@ -205,7 +240,13 @@ void Canvas::appMouseDrag(MouseEvent event)
         cevent = cease::MouseEvent(getLocalCoords(event.getPos()), event.getWheelIncrement());
     }
     
-    mouseHandler->mouseDrag(cevent);
+    
+    if (currentWire != NULL) {
+        currentWire->setEnd(cevent.getPos());
+    }
+    else {
+        mouseHandler->mouseDrag(cevent);
+    }
 }
 
 bool Canvas::contains(Vec2f p)
@@ -232,4 +273,66 @@ void Canvas::checkBounds()
 Vec2f Canvas::getLocalCoords(Vec2f worldCoords)
 {
     return (worldCoords - pos + topLeft) / scale;
+}
+
+void Canvas::handleConnectionStart(ConnectionResult *con)
+{
+    // currentWire will always be NULL is we got here
+    
+    // check if we grabbed an already connected wire
+    if (con->type == TYPE_DISCONNECT_INPUT) {
+        // find the wire that was clicked
+        currentWire = popWireWithNode(con->node);
+        if (currentWire != NULL) {
+            currentWire->disconnectInput();
+        }
+        return;
+    }
+    
+    if (con->type == TYPE_DISCONNECT_OUTPUT) {
+        currentWire = popWireWithNode(con->node);
+        if (currentWire != NULL) {
+            currentWire->disconnectOutput();
+        }
+        return;
+    }
+    
+    if (con->type == TYPE_OUTPUT) {
+        currentWire = new Wire();
+        currentWire->addConnectable(con);
+    }
+    
+    // delete the connection result
+    delete con;
+}
+
+void Canvas::handleConnectionEnd(ConnectionResult *con)
+{
+    if (con == NULL) {
+        // no connection
+        delete currentWire;
+        currentWire = NULL;
+        return;
+    }
+
+    currentWire->addConnectable(con);
+    wires.push_back(currentWire);
+    currentWire = NULL;
+    
+    // delete the connection result
+    delete con;
+}
+
+Wire* Canvas::popWireWithNode(Node *node)
+{
+    for (int i=0; i<wires.size(); i++)
+    {
+        if (wires[i]->haveNode(node)) {
+            Wire* wire = wires[i];
+            wires.erase(wires.begin() + i);
+            return wire;
+        }
+    }
+    
+    return NULL;
 }

@@ -18,6 +18,9 @@
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
 		2A798DBF18B84FC000421573 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DBD18B84FC000421573 /* Slider.cpp */; };
 		2A798DC218B859AE00421573 /* Constant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Constant.cpp */; };
+		2A798DC918B97C8600421573 /* Wire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC718B97C8600421573 /* Wire.cpp */; };
+		2A798DD318B997DF00421573 /* InputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD118B997DF00421573 /* InputNode.cpp */; };
+		2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD418B998DC00421573 /* OutputNode.cpp */; };
 		2A7F105118B52C84006CA100 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F104F18B52C84006CA100 /* Program.cpp */; };
 		2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F105218B562EA006CA100 /* ProgramInput.cpp */; };
 		2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AD2E23918B849400084A524 /* ToolBox.cpp */; };
@@ -61,6 +64,13 @@
 		2A798DC118B859AE00421573 /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constant.h; path = ../src/Constant.h; sourceTree = "<group>"; };
 		2A798DC318B85D6100421573 /* Controlease.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Controlease.h; path = ../src/Controlease.h; sourceTree = "<group>"; };
 		2A798DC518B86ACA00421573 /* CanvasComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasComponent.h; path = ../src/CanvasComponent.h; sourceTree = "<group>"; };
+		2A798DC718B97C8600421573 /* Wire.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Wire.cpp; path = ../src/Wire.cpp; sourceTree = "<group>"; };
+		2A798DC818B97C8600421573 /* Wire.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Wire.h; path = ../src/Wire.h; sourceTree = "<group>"; };
+		2A798DD118B997DF00421573 /* InputNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = InputNode.cpp; path = ../src/InputNode.cpp; sourceTree = "<group>"; };
+		2A798DD218B997DF00421573 /* InputNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = InputNode.h; path = ../src/InputNode.h; sourceTree = "<group>"; };
+		2A798DD418B998DC00421573 /* OutputNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutputNode.cpp; path = ../src/OutputNode.cpp; sourceTree = "<group>"; };
+		2A798DD518B998DC00421573 /* OutputNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputNode.h; path = ../src/OutputNode.h; sourceTree = "<group>"; };
+		2A798DD718B9A33B00421573 /* ConnectionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionResult.h; path = ../src/ConnectionResult.h; sourceTree = "<group>"; };
 		2A7F104F18B52C84006CA100 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Program.cpp; path = ../src/Program.cpp; sourceTree = "<group>"; };
 		2A7F105018B52C84006CA100 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Program.h; path = ../src/Program.h; sourceTree = "<group>"; };
 		2A7F105218B562EA006CA100 /* ProgramInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramInput.cpp; path = ../src/ProgramInput.cpp; sourceTree = "<group>"; };
@@ -133,6 +143,7 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2A798DC318B85D6100421573 /* Controlease.h */,
 				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
 				2A7F104F18B52C84006CA100 /* Program.cpp */,
 				2A7F105018B52C84006CA100 /* Program.h */,
@@ -145,13 +156,19 @@
 				2AD2E23518B7E4E20084A524 /* MouseListener.h */,
 				2AD2E23918B849400084A524 /* ToolBox.cpp */,
 				2AD2E23A18B849400084A524 /* ToolBox.h */,
-				2A798DBC18B84FC000421573 /* Node.h */,
 				2A798DBD18B84FC000421573 /* Slider.cpp */,
 				2A798DBE18B84FC000421573 /* Slider.h */,
 				2A798DC018B859AE00421573 /* Constant.cpp */,
 				2A798DC118B859AE00421573 /* Constant.h */,
-				2A798DC318B85D6100421573 /* Controlease.h */,
 				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
+				2A798DC718B97C8600421573 /* Wire.cpp */,
+				2A798DC818B97C8600421573 /* Wire.h */,
+				2A798DD118B997DF00421573 /* InputNode.cpp */,
+				2A798DD218B997DF00421573 /* InputNode.h */,
+				2A798DD418B998DC00421573 /* OutputNode.cpp */,
+				2A798DD518B998DC00421573 /* OutputNode.h */,
+				2A798DBC18B84FC000421573 /* Node.h */,
+				2A798DD718B9A33B00421573 /* ConnectionResult.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -363,12 +380,15 @@
 				2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */,
 				69535C0D44F7467BBD2DE711 /* OscBundle.cpp in Sources */,
 				FE1FFDB9EDE54692A9CAF6E3 /* OscListener.cpp in Sources */,
+				2A798DC918B97C8600421573 /* Wire.cpp in Sources */,
+				2A798DD318B997DF00421573 /* InputNode.cpp in Sources */,
 				33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */,
 				C0E223501FF742C793325391 /* OscSender.cpp in Sources */,
 				2A798DC218B859AE00421573 /* Constant.cpp in Sources */,
 				2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */,
 				53B663210C164E40B7B58C20 /* IpEndpointName.cpp in Sources */,
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
+				2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */,
 				11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */,
 				2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */,
 				69D60E2FAA7C495FA7312ACE /* OscPrintReceivedElements.cpp in Sources */,

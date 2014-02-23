@@ -9,25 +9,22 @@
 #ifndef Controlease_Node_h
 #define Controlease_Node_h
 
-class InputNode
-{
-public:
-    ~InputNode() {};
-    virtual void updateVal(float val) = 0;
-};
+#include "cinder/app/App.h"
+#include "Controlease.h"
 
-class OutputNode
+class Node
 {
 public:
-    ~OutputNode() {};
-    virtual void connect(InputNode *node) = 0;
-};
-
-class Connectable
-{
-public:
+    ~Node() {};
     
-    Connectable(int t);
+    Node *prev;
+    Node *next;
+    
+    virtual void updateVal(float val) = 0;
+    virtual void connect(Node *node) = 0;
+    virtual void disconnect(Node *node) = 0;
+    virtual bool isConnected() = 0;
+
 };
 
 #endif

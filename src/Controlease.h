@@ -22,7 +22,9 @@ typedef enum _ConnectionType
 {
     TYPE_NONE = 0,
     TYPE_INPUT = 1,
-    TYPE_OUTPUT = 2
+    TYPE_OUTPUT = 2,
+    TYPE_DISCONNECT_INPUT = 3,
+    TYPE_DISCONNECT_OUTPUT = 4,
 } ConnectionType;
 
 #endif

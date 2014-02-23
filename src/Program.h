@@ -17,14 +17,18 @@
 #include "OscSender.h"
 #include "OscListener.h"
 
-#include "MouseListener.h"
+#include "Controlease.h"
+#include "ConnectionResult.h"
+#include "ResourceManager.h"
+#include "CanvasComponent.h"
 #include "ProgramInput.h"
+#include "InputNode.h"
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Program : public MouseListener
+class Program : public CanvasComponent
 {
 public:
     Program(int oport, int iport, Vec2f _pos);
@@ -33,19 +37,26 @@ public:
     void update();
     void draw();
     
-    bool contains(Vec2f p);
-    
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
+    ConnectionResult* getConnection(cease::MouseEvent event);
+    bool contains(Vec2f p);
+    
+    Vec2f getCanvasPos();
+    float getValue(int i);
+    void setValue(int i, float v);
+    
 
 private:
     void connect();
     void handleMessages();
     void handleAlive(osc::Message msg);
     void addInput(osc::Message msg);
+    Vec2f getLocalCoords(Vec2f p);
+    Vec2f getCanvasCoords(Vec2f p);
     
     int programPort;
     int listenPort;
@@ -54,7 +65,8 @@ private:
     osc::Listener oscListener;
 
     bool connected;
-    boost::container::vector<ProgramInput*> inputs;
+    vector<ProgramInput*> inputs;
+    vector<InputNode*> inputNodes;
 //    boost::container::vector<ProgramOutput> outputs;
     
     // graphical representation

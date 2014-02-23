@@ -15,17 +15,27 @@
 #include "OscSender.h"
 
 #include "Controlease.h"
-#include "ResourceManager.h"
-#include "Node.h"
 
 using namespace std;
 using namespace ci;
-using namespace ci::app;
 
-
-class ProgramInput : public InputNode
+class ProgramInput
 {
 public:
+    ProgramInput();
+    bool setup(osc::Sender *sender, osc::Message msg);
+
+    string getName();
+    float getValue();
+    
+    void sendVal(float val);
+
+private:
+    string getValueString();
+    
+    osc::Sender *oscSender;
+    bool initialized;
+
     string name;
     string address;
     int index;
@@ -35,19 +45,6 @@ public:
     bool boolVal;
     float minVal;
     float maxVal;
-    
-    ProgramInput();
-    bool setup(osc::Sender *sender, osc::Message msg, Vec2f p);
-    void update();
-    void draw();
-    
-    void updateVal(float val);
-    
-private:
-    osc::Sender *oscSender;
-    string getValueString();
-    bool initialized;
-    Vec2f pos;
 };
 
 

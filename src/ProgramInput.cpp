@@ -13,10 +13,9 @@ ProgramInput::ProgramInput()
     initialized = false;
 }
 
-bool ProgramInput::setup(osc::Sender *sender, osc::Message msg, Vec2f p)
+bool ProgramInput::setup(osc::Sender *sender, osc::Message msg)
 {
     oscSender = sender;
-    pos = p;
     try {
         if (msg.getNumArgs() < 5) {
             return false;
@@ -48,31 +47,32 @@ bool ProgramInput::setup(osc::Sender *sender, osc::Message msg, Vec2f p)
     return true;
 }
 
-void ProgramInput::update()
+string ProgramInput::getName()
 {
-    if (!initialized) {
-        return;
-    }
+    return name;
 }
 
-void ProgramInput::draw()
+float ProgramInput::getValue()
 {
-    if (!initialized) {
-        return;
+    if (type == TYPE_INT32) {
+        return (float)intVal;
+    }
+    else if (type == TYPE_FLOAT) {
+        return floatVal;
+    }
+    else if (type == TYPE_BOOLEAN) {
+        if (boolVal) {
+            return 1;
+        }
+        else {
+            return 0;
+        }
     }
     
-    gl::pushMatrices();
-    gl::translate(pos);
-    gl::color(1, 1, 1);
-    gl::drawSolidCircle(Vec2f(0, 0), 3);
-    gl::color(0, 0, 0);
-    gl::drawStrokedCircle(Vec2f(0, 0), 3);
-    ResourceManager::getInstance().getTextureFont()->drawString(name, Vec2f(8, 2));
-    
-    gl::popMatrices();
+    return 0;
 }
 
-void ProgramInput::updateVal(float val)
+void ProgramInput::sendVal(float val)
 {
     if (type == TYPE_INT32) {
         intVal = (int)val;

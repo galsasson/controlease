@@ -19,14 +19,17 @@
 #include "Controlease.h"
 #include "ResourceManager.h"
 #include "MouseListener.h"
-#include "Node.h"
+#include "InputNode.h"
+#include "OutputNode.h"
+#include "ConnectionResult.h"
 #include "CanvasComponent.h"
+
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Constant : public CanvasComponent, public InputNode, public OutputNode
+class Constant : public CanvasComponent
 {
 public:
     Constant(Vec2f p, Vec2f s);
@@ -34,29 +37,30 @@ public:
     void update();
     void draw();
 
-    void connect(InputNode *node);
-
     void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
-    
+    ConnectionResult* getConnection( cease::MouseEvent event);
     bool contains(Vec2f p);
+    Vec2f getCanvasPos();
+    
+    float getValue(int i);
+    void setValue(int i, float v);
     
 private:
     void updateVal(float newVal);
     std::string getValueString();
     
     Vec2f getLocalCoords(Vec2f p);
+    Vec2f getCanvasCoords(Vec2f p);
     
     Rectf canvasRect;
     Rectf rect;
     Rectf titleRect;
     Rectf dragRect;
     Rectf valRect;
-    Vec2f inputNodePos;
-    Vec2f outputNodePos;
     
     // component dragging
     bool isCompDrag;
@@ -67,10 +71,9 @@ private:
     float dragX;
     bool isValDrag;
     float startVal;
-    
-    
-    
-    InputNode *next;
+
+    OutputNode *outputNode;
+    InputNode *inputNode;
     
     float val;
     std::string valStr;

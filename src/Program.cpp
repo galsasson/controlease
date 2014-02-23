@@ -39,13 +39,7 @@ void Program::update()
     
     if (!connected) {
         return;
-    }
-    
-    
-    for (int i=0; i<inputs.size(); i++)
-    {
-        inputs[i]->update();
-    }
+    }    
 }
 
 void Program::draw()
@@ -74,22 +68,22 @@ void Program::draw()
     ResourceManager::getInstance().getTextureFont()->drawString(name, Vec2f(size.x/2 - halfNameSize.x, 15));
     gl::drawLine(Vec2f(0, 20), Vec2f(size.x, 20));
 
-    // draw all the inputs
+    // draw all the input names
     for (int i=0; i<inputs.size(); i++)
     {
-        inputs[i]->draw();
+        ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 30+i*15));
     }
+    
+    // draw all input nodes
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        inputNodes[i]->draw();
+    }
+    
     
     
     gl::popMatrices();
 }
-
-bool Program::contains(Vec2f p)
-{
-    Area a = Area(pos, pos+size);
-    return a.contains(p);
-}
-
 
 void Program::mouseDown(cease::MouseEvent event)
 {
@@ -119,6 +113,53 @@ void Program::mouseDrag(cease::MouseEvent event)
 //    checkBounds();
 }
 
+ConnectionResult* Program::getConnection(cease::MouseEvent event)
+{
+    Vec2f local = getLocalCoords(event.getPos());
+    
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        if (inputNodes[i]->contains(local)) {
+            if (inputNodes[i]->isConnected()) {
+                return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
+            }
+            return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
+        }
+    }
+    
+    return NULL;
+}
+
+bool Program::contains(Vec2f p)
+{
+    Area a = Area(pos, pos+size);
+    return a.contains(p);
+}
+
+Vec2f Program::getCanvasPos()
+{
+    return pos;
+}
+
+float Program::getValue(int i)
+{
+    return inputs[i]->getValue();
+}
+
+void Program::setValue(int i, float v)
+{
+    inputs[i]->sendVal(v);
+}
+
+Vec2f Program::getLocalCoords(Vec2f p)
+{
+    return p-pos;
+}
+
+Vec2f Program::getCanvasCoords(Vec2f p)
+{
+    return pos+p;
+}
 
 
 void Program::connect()
@@ -211,7 +252,8 @@ void Program::handleAlive(osc::Message msg)
 void Program::addInput(osc::Message msg)
 {
     ProgramInput *input = new ProgramInput();
-    if (input->setup(oscSender, msg, nextInputPos)) {
+    if (input->setup(oscSender, msg)) {
+        inputNodes.push_back(new InputNode(inputNodes.size(), this, nextInputPos));
         setSize(size+Vec2f(0, 15));
         nextInputPos.y += 15;
         inputs.push_back(input);

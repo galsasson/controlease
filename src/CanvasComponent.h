@@ -17,6 +17,9 @@ public:
     virtual ~CanvasComponent() {};
     virtual void update() = 0;
     virtual void draw() = 0;
+    virtual Vec2f getCanvasPos() = 0;
+    virtual float getValue(int i) = 0;
+    virtual void setValue(int i, float v) = 0;
 };
 
 

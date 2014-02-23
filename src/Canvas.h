@@ -17,11 +17,14 @@
 #include "cinder/TriMesh.h"
 #include "cinder/gl/Vbo.h"
 
+#include "Controlease.h"
 #include "MouseListener.h"
 #include "ResourceManager.h"
 #include "Program.h"
+#include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"
+#include "Wire.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -41,6 +44,8 @@ public:
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
+    ConnectionResult* getConnection(cease::MouseEvent event);
+    bool contains(Vec2f p);
     
     void appMouseDown( MouseEvent event );
 	void appMouseUp( MouseEvent event);
@@ -48,7 +53,7 @@ public:
 	void appMouseMove( MouseEvent event );
 	void appMouseDrag( MouseEvent event );
     
-    bool contains(Vec2f p);
+    
 
     Vec2f pos;
     Vec2f size;
@@ -60,6 +65,9 @@ private:
     void setMouseHandler(cease::MouseEvent event);
     void checkBounds();
     Vec2f getLocalCoords(Vec2f worldCoords);
+    void handleConnectionStart(ConnectionResult *con);
+    void handleConnectionEnd(ConnectionResult *con);
+    Wire* popWireWithNode(Node *node);
     
     boost::container::vector<Program*> programs;
     boost::container::vector<CanvasComponent*> components;
@@ -68,13 +76,14 @@ private:
     // hold the canvas
     gl::Fbo fbo;
     
-    // used to draw on screen
-    TriMesh triMesh;
-    
     // interaction
     MouseListener *mouseHandler;
     Vec2f prevMouse;
     bool isMouseDown;
+    
+    // connecting graph
+    boost::container::vector<Wire*> wires;
+    Wire* currentWire;
 };
 
 
