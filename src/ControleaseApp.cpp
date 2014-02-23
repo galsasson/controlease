@@ -48,7 +48,11 @@ void ControleaseApp::setup()
     
     canvas->addComponent(new Program(8617, 9876, Vec2f(450, 250)));
     canvas->addComponent(new Constant(Vec2f(200, 250), Vec2f(130, 40)));
+    canvas->addComponent(new Constant(Vec2f(200, 300), Vec2f(130, 40)));
+    canvas->addComponent(new Constant(Vec2f(200, 350), Vec2f(130, 40)));
+    canvas->addComponent(new Constant(Vec2f(200, 400), Vec2f(130, 40)));
     canvas->addComponent(new Constant(Vec2f(200, 450), Vec2f(130, 40)));
+    canvas->addComponent(new Constant(Vec2f(200, 500), Vec2f(130, 40)));
     
     // rendering settings
     glEnable(GL_LINE_SMOOTH);

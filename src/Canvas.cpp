@@ -198,7 +198,13 @@ void Canvas::appMouseUp(MouseEvent event)
     
     if (currentWire != NULL)
     {
-        handleConnectionEnd(((CanvasComponent*)mouseHandler)->getConnectionEnd(cevent));
+        // special case if user release on canvas
+        if (mouseHandler == this) {
+            handleConnectionEnd(NULL);
+        }
+        else {
+            handleConnectionEnd(((CanvasComponent*)mouseHandler)->getConnectionEnd(cevent));
+        }
     }
     else {
         mouseHandler->mouseUp(cevent);
