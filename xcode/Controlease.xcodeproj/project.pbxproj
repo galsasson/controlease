@@ -21,6 +21,7 @@
 		2A798DC918B97C8600421573 /* Wire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC718B97C8600421573 /* Wire.cpp */; };
 		2A798DD318B997DF00421573 /* InputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD118B997DF00421573 /* InputNode.cpp */; };
 		2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD418B998DC00421573 /* OutputNode.cpp */; };
+		2A798DDC18BA7CFE00421573 /* Tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DDA18BA7CFE00421573 /* Tool.cpp */; };
 		2A7F105118B52C84006CA100 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F104F18B52C84006CA100 /* Program.cpp */; };
 		2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F105218B562EA006CA100 /* ProgramInput.cpp */; };
 		2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AD2E23918B849400084A524 /* ToolBox.cpp */; };
@@ -71,6 +72,8 @@
 		2A798DD418B998DC00421573 /* OutputNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OutputNode.cpp; path = ../src/OutputNode.cpp; sourceTree = "<group>"; };
 		2A798DD518B998DC00421573 /* OutputNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OutputNode.h; path = ../src/OutputNode.h; sourceTree = "<group>"; };
 		2A798DD718B9A33B00421573 /* ConnectionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionResult.h; path = ../src/ConnectionResult.h; sourceTree = "<group>"; };
+		2A798DDA18BA7CFE00421573 /* Tool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tool.cpp; path = ../src/Tool.cpp; sourceTree = "<group>"; };
+		2A798DDB18BA7CFE00421573 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tool.h; path = ../src/Tool.h; sourceTree = "<group>"; };
 		2A7F104F18B52C84006CA100 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Program.cpp; path = ../src/Program.cpp; sourceTree = "<group>"; };
 		2A7F105018B52C84006CA100 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Program.h; path = ../src/Program.h; sourceTree = "<group>"; };
 		2A7F105218B562EA006CA100 /* ProgramInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramInput.cpp; path = ../src/ProgramInput.cpp; sourceTree = "<group>"; };
@@ -169,6 +172,8 @@
 				2A798DD518B998DC00421573 /* OutputNode.h */,
 				2A798DBC18B84FC000421573 /* Node.h */,
 				2A798DD718B9A33B00421573 /* ConnectionResult.h */,
+				2A798DDA18BA7CFE00421573 /* Tool.cpp */,
+				2A798DDB18BA7CFE00421573 /* Tool.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -396,6 +401,7 @@
 				2A7F105118B52C84006CA100 /* Program.cpp in Sources */,
 				49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */,
 				4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */,
+				2A798DDC18BA7CFE00421573 /* Tool.cpp in Sources */,
 				2A798DBF18B84FC000421573 /* Slider.cpp in Sources */,
 				DAE7E905601D4DB3A8525A1F /* UdpSocket.cpp in Sources */,
 			);

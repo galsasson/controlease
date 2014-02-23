@@ -10,8 +10,9 @@
 
 ToolBox::ToolBox(Vec2f p, Vec2f s)
 {
-    pos = p;
-    size = s;
+    rect = Rectf(p, p+s);
+    
+    createTools();
 }
 
 void ToolBox::update()
@@ -22,12 +23,46 @@ void ToolBox::update()
 void ToolBox::draw()
 {
     gl::pushMatrices();
-    gl::translate(pos);
+    gl::translate(rect.getUpperLeft());
     
     gl::color(1, 1, 1);
-    gl::drawSolidRect(Rectf(pos, pos+size));
+    gl::drawSolidRect(Rectf(Vec2f(0, 0), rect.getSize()));
     gl::color(0, 0, 0);
-    gl::drawStrokedRect(Rectf(pos, pos+size));
+    gl::drawStrokedRect(Rectf(Vec2f(0, 0), rect.getSize()));
+    
+    for (int i=0; i<tools.size(); i++)
+    {
+        tools[i]->draw();
+    }
     
     gl::popMatrices();
+}
+
+Tool* ToolBox::mouseDown( MouseEvent event )
+{
+    Vec2f local = getLocalCoords(event.getPos());
+    for (int i=0; i<tools.size(); i++)
+    {
+        if (tools[i]->contains(local)) {
+            return tools[i];
+        }
+    }
+    
+    return NULL;
+}
+
+bool ToolBox::contains(Vec2f p)
+{
+    return rect.contains(p);
+}
+
+void ToolBox::createTools()
+{
+    tools.push_back(new Tool(TOOL_TYPE_PROGRAM, Vec2f(10, 50), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_CONSTANT, Vec2f(10, 75), Vec2f(rect.getWidth()-20, 20)));
+}
+
+Vec2f ToolBox::getLocalCoords(Vec2f p)
+{
+    return p-rect.getUpperLeft();
 }

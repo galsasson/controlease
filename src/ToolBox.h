@@ -13,19 +13,32 @@
 #include "cinder/app/App.h"
 #include "cinder/gl/gl.h"
 
+#include <vector>
 #include "MouseListener.h"
+#include "Tool.h"
 
 using namespace ci;
 using namespace ci::gl;
+using namespace std;
 
-class ToolBox : public MouseListener
+class ToolBox
 {
 public:
     ToolBox(Vec2f p, Vec2f s);
     void update();
     void draw();
     
+    Tool* mouseDown( MouseEvent event );
+    bool contains(Vec2f p);
+
+    
 private:
+    void createTools();
+    Vec2f getLocalCoords(Vec2f p);
+    
+    vector<Tool*> tools;
+    
+    Rectf rect;
     Vec2f pos;
     Vec2f size;
 };

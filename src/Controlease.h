@@ -11,6 +11,9 @@
 
 #define FLOAT_PRECISION "2"
 
+#define CANVAS_WIDTH    2048
+#define CANVAS_HEIGHT   4096
+
 typedef enum _ValueType
 {
     TYPE_INT32 = 1,

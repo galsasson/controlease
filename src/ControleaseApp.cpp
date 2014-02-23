@@ -2,6 +2,7 @@
 #include "cinder/gl/gl.h"
 
 #include "Canvas.h"
+#include "ToolBox.h"
 #include "Program.h"
 #include "Slider.h"
 #include "Constant.h"
@@ -30,6 +31,7 @@ class ControleaseApp : public AppNative {
     
 private:
     Canvas *canvas;
+    ToolBox *toolbox;
     
     MouseEvent bakeNewEvent(MouseEvent event, Vec2f origin);
     MouseEvent bakeCanvasMouseEvent(MouseEvent event);
@@ -47,9 +49,13 @@ void ControleaseApp::setup()
     ResourceManager::getInstance().initResources();
     
     canvas = new Canvas();
-    canvas->setup(Vec2f(150, 50), Vec2f(650, 550), Vec2f(750*4, 550*4));
+    canvas->setup(Vec2f(150, 50), Vec2f(650, 550));
     
-    canvas->addComponent(new Program(8617, 9876, Vec2f(450, 250)));
+    toolbox = new ToolBox(Vec2f(0, 50), Vec2f(150, getWindowHeight()-50));
+    
+    Program *p = new Program(Vec2f(400, 250));
+    p->setupConnection(8617, 9876);
+    canvas->addComponent(p);
     canvas->addComponent(new Constant(Vec2f(200, 250), Vec2f(130, 40)));
     canvas->addComponent(new Constant(Vec2f(200, 300), Vec2f(130, 40)));
     canvas->addComponent(new Constant(Vec2f(200, 350), Vec2f(130, 40)));
@@ -64,6 +70,7 @@ void ControleaseApp::setup()
 
 void ControleaseApp::update()
 {
+    toolbox->update();
     canvas->update();
 }
 
@@ -72,6 +79,7 @@ void ControleaseApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 0.7, 0.7, 0.7 ) );
     
+    toolbox->draw();
     canvas->draw();
     
 }
@@ -79,7 +87,15 @@ void ControleaseApp::draw()
 
 void ControleaseApp::mouseDown( MouseEvent event )
 {
-    canvas->appMouseDown(event);
+    if (canvas->contains(event.getPos())) {
+        canvas->appMouseDown(event);
+    }
+    else if (toolbox->contains(event.getPos())) {
+        Tool *tool = toolbox->mouseDown(event);
+        if (tool != NULL) {
+            canvas->addComponent(tool);
+        }
+    }
 }
 
 void ControleaseApp::mouseUp(MouseEvent event)

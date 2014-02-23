@@ -21,10 +21,12 @@
 #include "MouseListener.h"
 #include "ResourceManager.h"
 #include "Program.h"
+#include "Constant.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"
 #include "Wire.h"
+#include "Tool.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -33,10 +35,11 @@ class Canvas : public MouseListener
 {
 public:
     Canvas();
-    void setup(Vec2f _pos, Vec2f _size, Vec2f _vSize);
+    void setup(Vec2f _pos, Vec2f _size);
     void update();
     void draw();
     void addComponent(CanvasComponent *comp);
+    void addComponent(Tool *tool);
 
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);

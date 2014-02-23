@@ -31,9 +31,10 @@ using namespace std;
 class Program : public CanvasComponent
 {
 public:
-    Program(int oport, int iport, Vec2f _pos);
+    Program(Vec2f _pos);
     ~Program();
     
+    void setupConnection(int oport, int iport);
     void update();
     void draw();
     void drawOutline();
@@ -61,6 +62,7 @@ private:
     void addInput(osc::Message msg);
     Vec2f getLocalCoords(Vec2f p);
     Vec2f getCanvasCoords(Vec2f p);
+    void applyBorders();
     
     int programPort;
     int listenPort;
@@ -71,7 +73,6 @@ private:
     bool connected;
     vector<ProgramInput*> inputs;
     vector<InputNode*> inputNodes;
-//    boost::container::vector<ProgramOutput> outputs;
     
     // graphical representation
     void setSize(Vec2f s);

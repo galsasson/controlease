@@ -8,18 +8,14 @@
 
 #include "Program.h"
 
-Program::Program(int oport, int iport, Vec2f _pos)
+Program::Program(Vec2f _pos)
 {
-    programPort = oport;
-    listenPort = iport;
-    
     pos = _pos;
     setSize(Vec2f(200, 20));
     nextInputPos = Vec2f(6, 28);
     
     isMouseDown = false;
-    
-    connect();
+    connected = false;
 }
 
 Program::~Program()
@@ -34,6 +30,14 @@ Program::~Program()
     {
         delete inputNodes[i];
     }
+}
+
+void Program::setupConnection(int oport, int iport)
+{
+    programPort = oport;
+    listenPort = iport;
+    
+    connect();
 }
 
 void Program::update()
@@ -130,7 +134,7 @@ void Program::mouseDrag(cease::MouseEvent event)
     pos += event.getPos() - prevMouse;
     prevMouse = event.getPos();
     
-//    checkBounds();
+    applyBorders();
 }
 
 ConnectionResult* Program::getConnectionStart(cease::MouseEvent event)
@@ -322,3 +326,26 @@ void Program::setSize(Vec2f s)
     size = s;
     halfSize = s/2;
 }
+
+void Program::applyBorders()
+{
+    float x1 = pos.x;
+    float x2 = pos.x + size.x;
+    float y1 = pos.y;
+    float y2 = pos.y + size.y;
+    
+    if (x1 < 0) {
+        pos.x += -x1;
+    }
+    else if (x2 > CANVAS_WIDTH) {
+        pos.x -= x2-CANVAS_WIDTH;
+    }
+    
+    if (y1 < 0) {
+        pos.y += -y1;
+    }
+    else if (y2 > CANVAS_HEIGHT) {
+        pos.y -= y2-CANVAS_HEIGHT;
+    }
+}
+

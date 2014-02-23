@@ -13,11 +13,11 @@ Canvas::Canvas()
     
 }
 
-void Canvas::setup(Vec2f _pos, Vec2f _size, Vec2f _vSize)
+void Canvas::setup(Vec2f _pos, Vec2f _size)
 {
     pos = _pos;
     size = _size;
-    virtualSize = _vSize;
+    virtualSize = Vec2f(CANVAS_WIDTH, CANVAS_HEIGHT);
     topLeft = Vec2f(0, 0);
     scale = Vec2f(1, 1);
     
@@ -108,6 +108,25 @@ void Canvas::draw()
 void Canvas::addComponent(CanvasComponent *comp)
 {
     components.push_back(comp);
+}
+
+void Canvas::addComponent(Tool *tool)
+{
+    if (tool == NULL) {
+        return;
+    }
+    
+    switch (tool->type) {
+        case TOOL_TYPE_PROGRAM:
+            addComponent(new Program(topLeft + Vec2f(30, 30)));
+            break;
+        case TOOL_TYPE_CONSTANT:
+            addComponent(new Constant(topLeft + Vec2f(30, 30), Vec2f(130, 40)));
+            break;
+            
+        default:
+            break;
+    }
 }
 
 void Canvas::mouseDown(cease::MouseEvent event)
