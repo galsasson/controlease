@@ -1,13 +1,13 @@
 //
 //  ResourceManager.h
-//  tunnelvars
+//  Controlease
 //
 //  Created by Gal Sasson on 2/19/14.
 //
 //
 
-#ifndef __tunnelvars__ResourceManager__
-#define __tunnelvars__ResourceManager__
+#ifndef __Controlease__ResourceManager__
+#define __Controlease__ResourceManager__
 
 #include <iostream>
 #include "cinder/app/AppBasic.h"

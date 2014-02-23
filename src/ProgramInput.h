@@ -1,37 +1,35 @@
 //
 //  ProgramInput.h
-//  tunnelvars
+//  Controlease
 //
 //  Created by Gal Sasson on 2/19/14.
 //
 //
 
-#ifndef __tunnelvars__ProgramInput__
-#define __tunnelvars__ProgramInput__
+#ifndef __Controlease__ProgramInput__
+#define __Controlease__ProgramInput__
 
 #include <iostream>
+#include <sstream>
 #include "OscListener.h"
+#include "OscSender.h"
+
+#include "Controlease.h"
 #include "ResourceManager.h"
+#include "Node.h"
 
 using namespace std;
 using namespace ci;
 using namespace ci::app;
 
 
-class ProgramInput
+class ProgramInput : public InputNode
 {
 public:
-    typedef enum _InputType
-    {
-        TYPE_INT32 = 1,
-        TYPE_FLOAT = 2,
-        TYPE_BOOLEAN = 3
-    } InputType;
-
     string name;
     string address;
     int index;
-    int type;
+    ValueType type;
     int intVal;
     float floatVal;
     bool boolVal;
@@ -39,11 +37,15 @@ public:
     float maxVal;
     
     ProgramInput();
-    bool setup(osc::Message msg, Vec2f p);
+    bool setup(osc::Sender *sender, osc::Message msg, Vec2f p);
     void update();
     void draw();
     
+    void updateVal(float val);
+    
 private:
+    osc::Sender *oscSender;
+    string getValueString();
     bool initialized;
     Vec2f pos;
 };

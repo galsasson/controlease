@@ -1,6 +1,6 @@
 //
 //  Program.cpp
-//  tunnelvars
+//  Controlease
 //
 //  Created by Gal Sasson on 2/19/14.
 //
@@ -15,7 +15,9 @@ Program::Program(int oport, int iport, Vec2f _pos)
     
     pos = _pos;
     setSize(Vec2f(200, 20));
-    nextInputPos = Vec2f(-10, 30);
+    nextInputPos = Vec2f(6, 28);
+    
+    isMouseDown = false;
     
     connect();
 }
@@ -52,21 +54,24 @@ void Program::draw()
         // draw a non active program
         gl::pushMatrices();
         gl::translate(pos);
+        gl::color(1, 1, 1);
+        gl::drawSolidRoundedRect(Rectf(0, 0, size.x, size.y), 3);
         gl::color(0, 0, 0);
-        gl::drawStrokedCircle(Vec2f(0, 0), 10);
+        gl::drawStrokedRoundedRect(Rectf(0, 0, size.x, size.y), 3);
         gl::color(1, 0.1, 0.1);
-        gl::drawLine(Vec2f(-9, 0), Vec2f(9, 0));
+        gl::drawLine(Vec2f(0, size.y/2), Vec2f(size.x, size.y/2));
         gl::popMatrices();
         return;
     }
 
     gl::pushMatrices();
-    
     gl::translate(pos);
 
+    gl::color(1, 1, 1);
+    gl::drawSolidRoundedRect(Rectf(0, 0, size.x, size.y), 3);
     gl::color(0, 0, 0);
-    gl::drawStrokedRect(Rectf(0, 0, size.x, size.y));
-    ResourceManager::getInstance().getTextureFont()->drawString(name, Vec2f(5, 15));
+    gl::drawStrokedRoundedRect(Rectf(0, 0, size.x, size.y), 3);
+    ResourceManager::getInstance().getTextureFont()->drawString(name, Vec2f(size.x/2 - halfNameSize.x, 15));
     gl::drawLine(Vec2f(0, 20), Vec2f(size.x, 20));
 
     // draw all the inputs
@@ -79,19 +84,57 @@ void Program::draw()
     gl::popMatrices();
 }
 
+bool Program::contains(Vec2f p)
+{
+    Area a = Area(pos, pos+size);
+    return a.contains(p);
+}
+
+
+void Program::mouseDown(cease::MouseEvent event)
+{
+    isMouseDown = true;
+    prevMouse = event.getPos();
+}
+
+void Program::mouseUp(cease::MouseEvent event)
+{
+    isMouseDown = false;
+}
+
+void Program::mouseWheel(cease::MouseEvent event)
+{
+}
+
+void Program::mouseMove(cease::MouseEvent event)
+{
+    
+}
+
+void Program::mouseDrag(cease::MouseEvent event)
+{
+    pos += event.getPos() - prevMouse;
+    prevMouse = event.getPos();
+    
+//    checkBounds();
+}
+
+
+
 void Program::connect()
 {
     connected = false;
     boost::posix_time::ptime s = boost::posix_time::second_clock::local_time();
     
-    oscSender.setup("localhost", programPort);
+    oscSender = new osc::Sender();
+    oscSender->setup("localhost", programPort);
     oscListener.setup(listenPort);
     
     osc::Message helloMsg;
     helloMsg.setAddress("/alive?");
     helloMsg.addStringArg("127.0.0.1");
     helloMsg.addIntArg(listenPort);
-    oscSender.sendMessage(helloMsg);
+    oscSender->sendMessage(helloMsg);
     
     boost::posix_time::ptime e = boost::posix_time::second_clock::local_time();
     boost::posix_time::time_duration duration = e-s;
@@ -168,9 +211,9 @@ void Program::handleAlive(osc::Message msg)
 void Program::addInput(osc::Message msg)
 {
     ProgramInput *input = new ProgramInput();
-    if (input->setup(msg, nextInputPos)) {
-        setSize(size+Vec2f(0, 20));
-        nextInputPos.y += 20;
+    if (input->setup(oscSender, msg, nextInputPos)) {
+        setSize(size+Vec2f(0, 15));
+        nextInputPos.y += 15;
         inputs.push_back(input);
     }
     else {

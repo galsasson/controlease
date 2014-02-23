@@ -1,13 +1,13 @@
 //
 //  Program.h
-//  tunnelvars
+//  Controlease
 //
 //  Created by Gal Sasson on 2/19/14.
 //
 //
 
-#ifndef __tunnelvars__Program__
-#define __tunnelvars__Program__
+#ifndef __Controlease__Program__
+#define __Controlease__Program__
 
 #include <iostream>
 #include "cinder/app/AppNative.h"
@@ -17,13 +17,14 @@
 #include "OscSender.h"
 #include "OscListener.h"
 
+#include "MouseListener.h"
 #include "ProgramInput.h"
 
 using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Program
+class Program : public MouseListener
 {
 public:
     Program(int oport, int iport, Vec2f _pos);
@@ -32,6 +33,14 @@ public:
     void update();
     void draw();
     
+    bool contains(Vec2f p);
+    
+	void mouseDown( cease::MouseEvent event );
+	void mouseUp( cease::MouseEvent event);
+	void mouseWheel( cease::MouseEvent event );
+	void mouseMove( cease::MouseEvent event );
+	void mouseDrag( cease::MouseEvent event );
+
 private:
     void connect();
     void handleMessages();
@@ -41,7 +50,7 @@ private:
     int programPort;
     int listenPort;
     
-    osc::Sender oscSender;
+    osc::Sender *oscSender;
     osc::Listener oscListener;
 
     bool connected;
@@ -58,6 +67,10 @@ private:
     Vec2f size;
     Vec2f halfSize;
     Vec2f nextInputPos;
+    
+    // interaction
+    Vec2f prevMouse;
+    bool isMouseDown;
     
     
 };

@@ -16,8 +16,11 @@
 		14A0F1BC8626477E8429059F /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7088C28B5D094C8B88881F63 /* CinderApp.icns */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
+		2A798DBF18B84FC000421573 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DBD18B84FC000421573 /* Slider.cpp */; };
+		2A798DC218B859AE00421573 /* Constant.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Constant.cpp */; };
 		2A7F105118B52C84006CA100 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F104F18B52C84006CA100 /* Program.cpp */; };
 		2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F105218B562EA006CA100 /* ProgramInput.cpp */; };
+		2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AD2E23918B849400084A524 /* ToolBox.cpp */; };
 		33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7284549FB1D8423F9431F311 /* OscMessage.cpp */; };
 		49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB7CAEC47235404597E0C9AC /* OscTypes.cpp */; };
 		4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26DDD80C5F90432EBDEF38A8 /* NetworkingUtils.cpp */; };
@@ -51,10 +54,20 @@
 		2A2E083118B5714B0060A535 /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceManager.h; path = ../src/ResourceManager.h; sourceTree = "<group>"; };
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
 		2A2E083418B58E270060A535 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Canvas.h; path = ../src/Canvas.h; sourceTree = "<group>"; };
+		2A798DBC18B84FC000421573 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../src/Node.h; sourceTree = "<group>"; };
+		2A798DBD18B84FC000421573 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Slider.cpp; path = ../src/Slider.cpp; sourceTree = "<group>"; };
+		2A798DBE18B84FC000421573 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Slider.h; path = ../src/Slider.h; sourceTree = "<group>"; };
+		2A798DC018B859AE00421573 /* Constant.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Constant.cpp; path = ../src/Constant.cpp; sourceTree = "<group>"; };
+		2A798DC118B859AE00421573 /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Constant.h; path = ../src/Constant.h; sourceTree = "<group>"; };
+		2A798DC318B85D6100421573 /* Controlease.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Controlease.h; path = ../src/Controlease.h; sourceTree = "<group>"; };
+		2A798DC518B86ACA00421573 /* CanvasComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasComponent.h; path = ../src/CanvasComponent.h; sourceTree = "<group>"; };
 		2A7F104F18B52C84006CA100 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Program.cpp; path = ../src/Program.cpp; sourceTree = "<group>"; };
 		2A7F105018B52C84006CA100 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Program.h; path = ../src/Program.h; sourceTree = "<group>"; };
 		2A7F105218B562EA006CA100 /* ProgramInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramInput.cpp; path = ../src/ProgramInput.cpp; sourceTree = "<group>"; };
 		2A7F105318B562EA006CA100 /* ProgramInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgramInput.h; path = ../src/ProgramInput.h; sourceTree = "<group>"; };
+		2AD2E23518B7E4E20084A524 /* MouseListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseListener.h; path = ../src/MouseListener.h; sourceTree = "<group>"; };
+		2AD2E23918B849400084A524 /* ToolBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ToolBox.cpp; path = ../src/ToolBox.cpp; sourceTree = "<group>"; };
+		2AD2E23A18B849400084A524 /* ToolBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ToolBox.h; path = ../src/ToolBox.h; sourceTree = "<group>"; };
 		2B5BCFB7C1E749DD97E05BC3 /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = ../blocks/OSC/src/osc/MessageMappingOscPacketListener.h; sourceTree = "<group>"; };
 		2BA1B4C6349548E4A2664999 /* OscHostEndianness.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = OscHostEndianness.h; path = ../blocks/OSC/src/osc/OscHostEndianness.h; sourceTree = "<group>"; };
 		3E041154607B43BC9447EE87 /* OscReceivedElements.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = OscReceivedElements.cpp; path = ../blocks/OSC/src/osc/OscReceivedElements.cpp; sourceTree = "<group>"; };
@@ -129,6 +142,16 @@
 				2A2E083118B5714B0060A535 /* ResourceManager.h */,
 				2A2E083318B58E270060A535 /* Canvas.cpp */,
 				2A2E083418B58E270060A535 /* Canvas.h */,
+				2AD2E23518B7E4E20084A524 /* MouseListener.h */,
+				2AD2E23918B849400084A524 /* ToolBox.cpp */,
+				2AD2E23A18B849400084A524 /* ToolBox.h */,
+				2A798DBC18B84FC000421573 /* Node.h */,
+				2A798DBD18B84FC000421573 /* Slider.cpp */,
+				2A798DBE18B84FC000421573 /* Slider.h */,
+				2A798DC018B859AE00421573 /* Constant.cpp */,
+				2A798DC118B859AE00421573 /* Constant.h */,
+				2A798DC318B85D6100421573 /* Controlease.h */,
+				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -337,10 +360,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC092B884D0940DEACDA3C98 /* ControleaseApp.cpp in Sources */,
+				2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */,
 				69535C0D44F7467BBD2DE711 /* OscBundle.cpp in Sources */,
 				FE1FFDB9EDE54692A9CAF6E3 /* OscListener.cpp in Sources */,
 				33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */,
 				C0E223501FF742C793325391 /* OscSender.cpp in Sources */,
+				2A798DC218B859AE00421573 /* Constant.cpp in Sources */,
 				2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */,
 				53B663210C164E40B7B58C20 /* IpEndpointName.cpp in Sources */,
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
@@ -351,6 +376,7 @@
 				2A7F105118B52C84006CA100 /* Program.cpp in Sources */,
 				49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */,
 				4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */,
+				2A798DBF18B84FC000421573 /* Slider.cpp in Sources */,
 				DAE7E905601D4DB3A8525A1F /* UdpSocket.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
