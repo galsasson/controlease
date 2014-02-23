@@ -18,6 +18,11 @@ InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
     prev = NULL;
 }
 
+InputNode::~InputNode()
+{
+    
+}
+
 void InputNode::draw()
 {
     gl::color(1, 1, 1);

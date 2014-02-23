@@ -14,6 +14,17 @@ Wire::Wire()
     onode = NULL;
 }
 
+Wire::~Wire()
+{
+    if (inode) {
+        disconnectInput();
+    }
+    
+    if (onode) {
+        disconnectOutput();
+    }
+}
+
 void Wire::update()
 {
     
@@ -75,17 +86,25 @@ bool Wire::haveNode(Node *node)
 
 void Wire::disconnectInput()
 {
-    currentEnd = inode->getCanvasPos();
-    inode->disconnect(onode);
-    onode->disconnect(inode);
+    if (inode) {
+        currentEnd = inode->getCanvasPos();
+        inode->disconnect(onode);
+    }
+    if (onode) {
+        onode->disconnect(inode);
+    }
     inode = NULL;
 }
 
 void Wire::disconnectOutput()
 {
-    currentEnd = onode->getCanvasPos();
-    onode->disconnect(inode);
-    inode->disconnect(onode);
+    if (onode) {
+        currentEnd = onode->getCanvasPos();
+        onode->disconnect(inode);
+    }
+    if (inode) {
+        inode->disconnect(onode);
+    }
     onode = NULL;
 }
 

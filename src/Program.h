@@ -45,6 +45,8 @@ public:
 	void mouseDrag( cease::MouseEvent event );
     ConnectionResult* getConnectionStart(cease::MouseEvent event);
     ConnectionResult* getConnectionEnd(cease::MouseEvent event);
+    vector<Node*> getInputNodes();
+    vector<Node*> getOutputNodes();
     bool contains(Vec2f p);
     
     Vec2f getCanvasPos();

@@ -23,7 +23,10 @@ class ControleaseApp : public AppNative {
 	void mouseWheel( MouseEvent event );
 	void mouseMove( MouseEvent event );
 	void mouseDrag( MouseEvent event );
-    
+	void keyDown( KeyEvent event );
+	void keyUp( KeyEvent event );
+
+//	void resize();
     
 private:
     Canvas *canvas;
@@ -98,6 +101,17 @@ void ControleaseApp::mouseDrag( MouseEvent event )
 {
     canvas->appMouseDrag(event);
 }
+
+void ControleaseApp::keyDown( KeyEvent event )
+{
+    canvas->appKeyDown(event);
+}
+
+void ControleaseApp::keyUp( KeyEvent event )
+{
+    canvas->appKeyUp(event);
+}
+
 
 MouseEvent ControleaseApp::bakeNewEvent(MouseEvent event, Vec2f origin)
 {

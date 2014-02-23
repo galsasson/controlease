@@ -26,6 +26,8 @@ class Wire
 {
 public:
     Wire();
+    ~Wire();
+    
     void update();
     void draw();
     

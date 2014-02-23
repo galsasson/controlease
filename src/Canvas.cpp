@@ -146,6 +146,11 @@ void Canvas::mouseDrag(cease::MouseEvent event)
     checkBounds();
 }
 
+bool Canvas::contains(Vec2f p)
+{
+    return Area(pos, pos+size).contains(p);
+}
+
 ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
 {
     return NULL;
@@ -243,10 +248,21 @@ void Canvas::appMouseDrag(MouseEvent event)
     }
 }
 
-bool Canvas::contains(Vec2f p)
+
+void Canvas::appKeyDown(cinder::app::KeyEvent event)
 {
-    return Area(pos, pos+size).contains(p);
+    if (event.getCode() == 8)   // DEL
+    {
+        if (focusComponent) {
+            deleteFocusComponent();
+        }
+    }
 }
+
+void Canvas::appKeyUp(cinder::app::KeyEvent event)
+{
+}
+
 
 void Canvas::checkBounds()
 {
@@ -334,3 +350,46 @@ Wire* Canvas::popWireWithNode(Node *node)
     
     return NULL;
 }
+
+void Canvas::deleteFocusComponent()
+{
+    if (focusComponent == NULL) {
+        return;
+    }
+    
+    // first, delete all wires
+    vector<Node*> inodes = focusComponent->getInputNodes();
+    for (int i=0; i<inodes.size(); i++)
+    {
+        Wire *w = popWireWithNode(inodes[i]);
+        if (w) {
+            delete w;
+        }
+    }
+    vector<Node*> onodes = focusComponent->getOutputNodes();
+    for (int i=0; i<onodes.size(); i++)
+    {
+        Wire *w = popWireWithNode(onodes[i]);
+        if (w) {
+            delete w;
+        }
+    }
+
+    // if component is also the mouse handler, set it to this
+    if (focusComponent == mouseHandler) {
+        mouseHandler = this;
+    }
+
+    // now delete the component
+    for (int i=0; i<components.size(); i++)
+    {
+        if (components[i] == focusComponent)
+        {
+            components.erase(components.begin() + i);
+            delete focusComponent;
+            focusComponent = NULL;
+        }
+    }
+    
+}
+

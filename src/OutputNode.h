@@ -21,6 +21,7 @@ class OutputNode : public Node
 {
 public:
     OutputNode(int i, CanvasComponent *comp, Vec2f p);
+    ~OutputNode();
     
     void draw();
     bool contains(Vec2f p);

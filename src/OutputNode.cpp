@@ -18,6 +18,11 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     prev = NULL;
 }
 
+OutputNode::~OutputNode()
+{
+    
+}
+
 void OutputNode::draw()
 {
     gl::color(1, 1, 1);

@@ -21,6 +21,12 @@ Constant::Constant(Vec2f p, Vec2f s)
     immediateChange = false;
 }
 
+Constant::~Constant()
+{
+    delete inputNode;
+    delete outputNode;
+}
+
 void Constant::initInterface(Vec2f size)
 {
     rect = Rectf(Vec2f(0, 0), size);
@@ -173,6 +179,21 @@ ConnectionResult* Constant::getConnectionEnd(cease::MouseEvent event)
     return NULL;
 }
 
+vector<Node*> Constant::getInputNodes()
+{
+    vector<Node*> inputs;
+    inputs.push_back(inputNode);
+    
+    return inputs;
+}
+
+vector<Node*> Constant::getOutputNodes()
+{
+    vector<Node*> outputs;
+    outputs.push_back(outputNode);
+    
+    return outputs;
+}
 
 
 Vec2f Constant::getCanvasPos()

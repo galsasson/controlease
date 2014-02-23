@@ -11,6 +11,10 @@
 
 #include "MouseListener.h"
 #include "ConnectionResult.h"
+#include "Node.h"
+#include <vector>
+
+using namespace std;
 
 class CanvasComponent : public MouseListener
 {
@@ -24,6 +28,8 @@ public:
     virtual void setValue(int i, float v) = 0;
     virtual ConnectionResult* getConnectionStart( cease::MouseEvent event) = 0;
     virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event) = 0;
+    virtual vector<Node*> getInputNodes() = 0;
+    virtual vector<Node*> getOutputNodes() = 0;
 };
 
 

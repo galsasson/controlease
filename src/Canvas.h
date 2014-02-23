@@ -43,8 +43,9 @@ public:
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
-    ConnectionResult* getConnection(cease::MouseEvent event);
     bool contains(Vec2f p);
+    ConnectionResult* getConnection(cease::MouseEvent event);
+    
     
     void appMouseDown( MouseEvent event );
 	void appMouseUp( MouseEvent event);
@@ -52,7 +53,9 @@ public:
 	void appMouseMove( MouseEvent event );
 	void appMouseDrag( MouseEvent event );
     
-    
+    void appKeyDown( KeyEvent event );
+    void appKeyUp( KeyEvent event );
+
 
     Vec2f pos;
     Vec2f size;
@@ -67,6 +70,7 @@ private:
     void handleConnectionStart(ConnectionResult *con);
     void handleConnectionEnd(ConnectionResult *con);
     Wire* popWireWithNode(Node *node);
+    void deleteFocusComponent();
     
     boost::container::vector<CanvasComponent*> components;
     

@@ -29,7 +29,11 @@ Program::~Program()
     {
         delete inputs[i];
     }
-    inputs.clear();
+    
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        delete inputNodes[i];
+    }
 }
 
 void Program::update()
@@ -159,6 +163,25 @@ ConnectionResult* Program::getConnectionEnd(cease::MouseEvent event)
     }
     
     return NULL;
+}
+
+vector<Node*> Program::getInputNodes()
+{
+    vector<Node*> inodes;
+    
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        inodes.push_back((Node*)inputNodes[i]);
+        
+    }
+    return inodes;
+}
+
+vector<Node*> Program::getOutputNodes()
+{
+    vector<Node*> outputs;
+    
+    return outputs;
 }
 
 bool Program::contains(Vec2f p)

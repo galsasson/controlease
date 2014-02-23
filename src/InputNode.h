@@ -21,6 +21,7 @@ class InputNode : public Node
 {
 public:
     InputNode(int i, CanvasComponent *val, Vec2f p);
+    ~InputNode();
     
     void draw();
     bool contains(Vec2f p);
