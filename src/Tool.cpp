@@ -47,6 +47,20 @@ string Tool::getToolName(ToolType t)
             return "Program";
         case TOOL_TYPE_CONSTANT:
             return "Constant";
+        case TOOL_TYPE_SPLIT:
+            return "Split";
+        case TOOL_TYPE_ADD:
+            return "Add";
+        case TOOL_TYPE_SUB:
+            return "Substract";
+        case TOOL_TYPE_MUL:
+            return "Multiply";
+        case TOOL_TYPE_DIV:
+            return "Divide";
+        case TOOL_TYPE_NOISE:
+            return "Noise";
+        case TOOL_TYPE_RANDOM:
+            return "Random";
     }
     
     return "Unknown";

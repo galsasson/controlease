@@ -136,6 +136,11 @@ bool Program::isHotspot(cease::MouseEvent event)
     return titleRect.contains(getLocalCoords(event.getPos()));
 }
 
+bool Program::isDragPoint(cease::MouseEvent event)
+{
+    return titleRect.contains(getLocalCoords(event.getPos()));
+}
+
 ConnectionResult* Program::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());

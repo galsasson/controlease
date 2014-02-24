@@ -120,7 +120,10 @@ void Canvas::addComponent(Tool *tool)
             addComponent(new Program(topLeft + Vec2f(30, 30)));
             break;
         case TOOL_TYPE_CONSTANT:
-            addComponent(new Constant(topLeft + Vec2f(30, 30), Vec2f(80, 40)));
+            addComponent(new Constant(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            break;
+        case TOOL_TYPE_SPLIT:
+            addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
             
         default:
@@ -201,11 +204,14 @@ void Canvas::appMouseDown(MouseEvent event)
     if (focusComponent == NULL) {
         return;
     }
-    
+
+    if (focusComponent->isDragPoint(cevent)) {
+        dragComponent = focusComponent;
+    }
+
     // check for hot spot in component (draggable elements)
     if (focusComponent->isHotspot(cevent))
     {
-        dragComponent = focusComponent;
         return focusComponent->mouseDown(cevent);
     }
     

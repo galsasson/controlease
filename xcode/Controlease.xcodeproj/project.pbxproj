@@ -22,6 +22,7 @@
 		2A798DD318B997DF00421573 /* InputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD118B997DF00421573 /* InputNode.cpp */; };
 		2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD418B998DC00421573 /* OutputNode.cpp */; };
 		2A798DDC18BA7CFE00421573 /* Tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DDA18BA7CFE00421573 /* Tool.cpp */; };
+		2A798DDF18BAFAB000421573 /* Split.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DDD18BAFAB000421573 /* Split.cpp */; };
 		2A7F105118B52C84006CA100 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F104F18B52C84006CA100 /* Program.cpp */; };
 		2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F105218B562EA006CA100 /* ProgramInput.cpp */; };
 		2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AD2E23918B849400084A524 /* ToolBox.cpp */; };
@@ -74,6 +75,8 @@
 		2A798DD718B9A33B00421573 /* ConnectionResult.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ConnectionResult.h; path = ../src/ConnectionResult.h; sourceTree = "<group>"; };
 		2A798DDA18BA7CFE00421573 /* Tool.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Tool.cpp; path = ../src/Tool.cpp; sourceTree = "<group>"; };
 		2A798DDB18BA7CFE00421573 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tool.h; path = ../src/Tool.h; sourceTree = "<group>"; };
+		2A798DDD18BAFAB000421573 /* Split.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Split.cpp; path = ../src/Split.cpp; sourceTree = "<group>"; };
+		2A798DDE18BAFAB000421573 /* Split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Split.h; path = ../src/Split.h; sourceTree = "<group>"; };
 		2A7F104F18B52C84006CA100 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Program.cpp; path = ../src/Program.cpp; sourceTree = "<group>"; };
 		2A7F105018B52C84006CA100 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Program.h; path = ../src/Program.h; sourceTree = "<group>"; };
 		2A7F105218B562EA006CA100 /* ProgramInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramInput.cpp; path = ../src/ProgramInput.cpp; sourceTree = "<group>"; };
@@ -146,10 +149,9 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2A798DE018BAFAD200421573 /* Components */,
 				2A798DC318B85D6100421573 /* Controlease.h */,
 				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
-				2A7F104F18B52C84006CA100 /* Program.cpp */,
-				2A7F105018B52C84006CA100 /* Program.h */,
 				2A7F105218B562EA006CA100 /* ProgramInput.cpp */,
 				2A7F105318B562EA006CA100 /* ProgramInput.h */,
 				2A2E083018B5714B0060A535 /* ResourceManager.cpp */,
@@ -161,8 +163,6 @@
 				2AD2E23A18B849400084A524 /* ToolBox.h */,
 				2A798DBD18B84FC000421573 /* Slider.cpp */,
 				2A798DBE18B84FC000421573 /* Slider.h */,
-				2A798DC018B859AE00421573 /* Constant.cpp */,
-				2A798DC118B859AE00421573 /* Constant.h */,
 				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 				2A798DC718B97C8600421573 /* Wire.cpp */,
 				2A798DC818B97C8600421573 /* Wire.h */,
@@ -266,6 +266,19 @@
 				1058C7A2FEA54F0111CA2CBB /* Other Frameworks */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		2A798DE018BAFAD200421573 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				2A798DDD18BAFAB000421573 /* Split.cpp */,
+				2A798DDE18BAFAB000421573 /* Split.h */,
+				2A7F104F18B52C84006CA100 /* Program.cpp */,
+				2A7F105018B52C84006CA100 /* Program.h */,
+				2A798DC018B859AE00421573 /* Constant.cpp */,
+				2A798DC118B859AE00421573 /* Constant.h */,
+			);
+			name = Components;
 			sourceTree = "<group>";
 		};
 		2F1B647182B84E1EB2771F64 /* posix */ = {
@@ -395,6 +408,7 @@
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
 				2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */,
 				11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */,
+				2A798DDF18BAFAB000421573 /* Split.cpp in Sources */,
 				2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */,
 				69D60E2FAA7C495FA7312ACE /* OscPrintReceivedElements.cpp in Sources */,
 				EC591D5058D54D33B166ED5B /* OscReceivedElements.cpp in Sources */,

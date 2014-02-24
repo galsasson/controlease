@@ -1,13 +1,13 @@
 //
-//  Constant.h
+//  Split.h
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#ifndef __Controlease__Constant__
-#define __Controlease__Constant__
+#ifndef __Controlease__Split__
+#define __Controlease__Split__
 
 #include <iostream>
 #include <sstream>
@@ -29,11 +29,11 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Constant : public CanvasComponent
+class Split : public CanvasComponent
 {
 public:
-    Constant(Vec2f p, Vec2f s);
-    ~Constant();
+    Split(Vec2f p, Vec2f s);
+    ~Split();
     
     void initInterface(Vec2f size);
     void update();
@@ -48,7 +48,7 @@ public:
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
-    bool isDragPoint(cease::MouseEvent event);
+    bool isDragPoint( cease::MouseEvent event);
     bool isHotspot( cease::MouseEvent event);
     ConnectionResult* getConnectionStart( cease::MouseEvent event);
     ConnectionResult* getConnectionEnd( cease::MouseEvent event);
@@ -74,20 +74,15 @@ private:
     Rectf canvasRect;
     Rectf rect;
     Rectf titleRect;
+    Rectf plusRect;
     Rectf dragRect;
     Rectf valRect;
     
     // component dragging
-    bool isCompDrag;
     Vec2f compDragAnchor;
     
-    // value dragging
-    float dragStartX;
-    float dragX;
-    bool isValDrag;
-    float startVal;
-
-    OutputNode *outputNode;
+    Vec2f nextOutputPos;
+    vector<OutputNode*> outputNodes;
     InputNode *inputNode;
     
     float nextVal;
@@ -100,4 +95,4 @@ private:
     
 };
 
-#endif /* defined(__Controlease__Constant__) */
+#endif /* defined(__Controlease__Split__) */

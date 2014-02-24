@@ -22,6 +22,7 @@
 #include "ResourceManager.h"
 #include "Program.h"
 #include "Constant.h"
+#include "Split.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"

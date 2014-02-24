@@ -151,6 +151,13 @@ void Constant::mouseUp( cease::MouseEvent event)
 void Constant::mouseWheel( cease::MouseEvent event ) {}
 void Constant::mouseMove( cease::MouseEvent event ) {}
 
+bool Constant::isDragPoint(cease::MouseEvent event)
+{
+    Vec2f local = getLocalCoords(event.getPos());
+    
+    return valRect.contains(local) || titleRect.contains(local);
+}
+
 bool Constant::isHotspot(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());

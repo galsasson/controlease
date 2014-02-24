@@ -47,6 +47,7 @@ public:
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
+    bool isDragPoint(cease::MouseEvent event);
     bool isHotspot(cease::MouseEvent event);
     ConnectionResult* getConnectionStart(cease::MouseEvent event);
     ConnectionResult* getConnectionEnd(cease::MouseEvent event);

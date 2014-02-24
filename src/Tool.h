@@ -19,6 +19,13 @@ using namespace std;
 typedef enum _ToolType {
     TOOL_TYPE_PROGRAM,
     TOOL_TYPE_CONSTANT,
+    TOOL_TYPE_SPLIT,
+    TOOL_TYPE_ADD,
+    TOOL_TYPE_SUB,
+    TOOL_TYPE_MUL,
+    TOOL_TYPE_DIV,
+    TOOL_TYPE_NOISE,
+    TOOL_TYPE_RANDOM,
 } ToolType;
 
 class Tool
