@@ -125,6 +125,9 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_SPLIT:
             addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
+        case TOOL_TYPE_ADD:
+            addComponent(new Add(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            break;
             
         default:
             break;

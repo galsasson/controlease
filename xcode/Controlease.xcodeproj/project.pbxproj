@@ -23,6 +23,7 @@
 		2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD418B998DC00421573 /* OutputNode.cpp */; };
 		2A798DDC18BA7CFE00421573 /* Tool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DDA18BA7CFE00421573 /* Tool.cpp */; };
 		2A798DDF18BAFAB000421573 /* Split.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DDD18BAFAB000421573 /* Split.cpp */; };
+		2A798DE318BB0C5200421573 /* Add.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DE118BB0C5200421573 /* Add.cpp */; };
 		2A7F105118B52C84006CA100 /* Program.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F104F18B52C84006CA100 /* Program.cpp */; };
 		2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F105218B562EA006CA100 /* ProgramInput.cpp */; };
 		2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AD2E23918B849400084A524 /* ToolBox.cpp */; };
@@ -77,6 +78,8 @@
 		2A798DDB18BA7CFE00421573 /* Tool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Tool.h; path = ../src/Tool.h; sourceTree = "<group>"; };
 		2A798DDD18BAFAB000421573 /* Split.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Split.cpp; path = ../src/Split.cpp; sourceTree = "<group>"; };
 		2A798DDE18BAFAB000421573 /* Split.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Split.h; path = ../src/Split.h; sourceTree = "<group>"; };
+		2A798DE118BB0C5200421573 /* Add.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Add.cpp; path = ../src/Add.cpp; sourceTree = "<group>"; };
+		2A798DE218BB0C5200421573 /* Add.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Add.h; path = ../src/Add.h; sourceTree = "<group>"; };
 		2A7F104F18B52C84006CA100 /* Program.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Program.cpp; path = ../src/Program.cpp; sourceTree = "<group>"; };
 		2A7F105018B52C84006CA100 /* Program.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Program.h; path = ../src/Program.h; sourceTree = "<group>"; };
 		2A7F105218B562EA006CA100 /* ProgramInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramInput.cpp; path = ../src/ProgramInput.cpp; sourceTree = "<group>"; };
@@ -271,6 +274,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A798DE118BB0C5200421573 /* Add.cpp */,
+				2A798DE218BB0C5200421573 /* Add.h */,
 				2A798DDD18BAFAB000421573 /* Split.cpp */,
 				2A798DDE18BAFAB000421573 /* Split.h */,
 				2A7F104F18B52C84006CA100 /* Program.cpp */,
@@ -404,6 +409,7 @@
 				C0E223501FF742C793325391 /* OscSender.cpp in Sources */,
 				2A798DC218B859AE00421573 /* Constant.cpp in Sources */,
 				2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */,
+				2A798DE318BB0C5200421573 /* Add.cpp in Sources */,
 				53B663210C164E40B7B58C20 /* IpEndpointName.cpp in Sources */,
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
 				2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */,
