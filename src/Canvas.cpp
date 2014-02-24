@@ -24,8 +24,6 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     fbo = gl::Fbo(virtualSize.x, virtualSize.y);
     
     isMouseDown = false;
-    canvasDrag = false;
-//    mouseHandler = this;
     currentWire = NULL;
     focusComponent = NULL;
 }
@@ -236,7 +234,6 @@ void Canvas::appMouseUp(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
     CanvasComponent *comp = getMouseComponent(cevent.getPos());
-    canvasDrag = false;
     
     // we are dragging a wire
     if (currentWire != NULL) {

@@ -84,8 +84,6 @@ private:
     
     // interaction
     CanvasComponent *focusComponent;
-    //MouseListener *dragHandler;
-    bool canvasDrag;
 
     Vec2f prevMouse;
     bool isMouseDown;
