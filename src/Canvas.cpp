@@ -26,6 +26,7 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     isMouseDown = false;
     currentWire = NULL;
     focusComponent = NULL;
+    dragComponent = NULL;
 }
 
 void Canvas::update()
@@ -128,6 +129,15 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_ADD:
             addComponent(new Add(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
+        case TOOL_TYPE_SUB:
+            addComponent(new Sub(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            break;
+        case TOOL_TYPE_MUL:
+            addComponent(new Mult(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            break;
+        case TOOL_TYPE_DIV:
+            addComponent(new Div(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            break;
             
         default:
             break;
@@ -227,6 +237,7 @@ void Canvas::appMouseUp(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
     CanvasComponent *comp = getMouseComponent(cevent.getPos());
+    dragComponent = NULL;
     
     // we are dragging a wire
     if (currentWire != NULL) {
