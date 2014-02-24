@@ -59,6 +59,8 @@ public:
     
     void appKeyDown( KeyEvent event );
     void appKeyUp( KeyEvent event );
+    
+    void setSize(Vec2f newSize);
 
 
     Vec2f pos;
@@ -84,6 +86,7 @@ private:
     
     // interaction
     CanvasComponent *focusComponent;
+    CanvasComponent *dragComponent;
 
     Vec2f prevMouse;
     bool isMouseDown;

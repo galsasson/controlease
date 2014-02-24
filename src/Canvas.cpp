@@ -174,24 +174,6 @@ ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
     return NULL;
 }
 
-/*
-void Canvas::setMouseHandler(cease::MouseEvent event)
-{
-    // find the component the mouse is above (programs, wires, tools)
-    for (int i=0; i<components.size(); i++)
-    {
-        if (components[i]->contains(event.getPos()))
-        {
-            mouseHandler = (MouseListener*)components[i];
-            return;
-        }
-    }
-    
-    // if nothing else
-    mouseHandler = this;
-}
-*/
-
 CanvasComponent* Canvas::getMouseComponent(Vec2f p)
 {
     for (int i=0; i<components.size(); i++)
@@ -208,6 +190,7 @@ CanvasComponent* Canvas::getMouseComponent(Vec2f p)
 void Canvas::appMouseDown(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    dragComponent = NULL;
     
     if (event.isControlDown()) {
         cevent.pos = event.getPos() - pos;
@@ -222,6 +205,7 @@ void Canvas::appMouseDown(MouseEvent event)
     // check for hot spot in component (draggable elements)
     if (focusComponent->isHotspot(cevent))
     {
+        dragComponent = focusComponent;
         return focusComponent->mouseDown(cevent);
     }
     
@@ -277,8 +261,8 @@ void Canvas::appMouseDrag(MouseEvent event)
         return currentWire->setEnd(cevent.getPos());
     }
     
-    if (focusComponent) {
-        focusComponent->mouseDrag(cevent);
+    if (dragComponent) {
+        dragComponent->mouseDrag(cevent);
     }
 }
 
@@ -295,6 +279,11 @@ void Canvas::appKeyDown(cinder::app::KeyEvent event)
 
 void Canvas::appKeyUp(cinder::app::KeyEvent event)
 {
+}
+
+void Canvas::setSize(Vec2f newSize)
+{
+    size = newSize;
 }
 
 
@@ -414,6 +403,10 @@ void Canvas::deleteComponent(CanvasComponent *comp)
     // if component is also the mouse handler, set it to this
     if (comp == focusComponent) {
         focusComponent = NULL;
+    }
+    
+    if (comp == dragComponent) {
+        dragComponent = NULL;
     }
     
     // now delete the component

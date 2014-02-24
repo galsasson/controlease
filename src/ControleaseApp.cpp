@@ -27,9 +27,11 @@ class ControleaseApp : public AppNative {
 	void keyDown( KeyEvent event );
 	void keyUp( KeyEvent event );
 
-//	void resize();
+	void resize();
     
 private:
+    Vec2f getCanvasSize();
+    Vec2f getToolboxSize();
     Canvas *canvas;
     ToolBox *toolbox;
     
@@ -49,19 +51,13 @@ void ControleaseApp::setup()
     ResourceManager::getInstance().initResources();
     
     canvas = new Canvas();
-    canvas->setup(Vec2f(150, 50), Vec2f(650, 550));
+    canvas->setup(Vec2f(150, 50), getCanvasSize());
     
-    toolbox = new ToolBox(Vec2f(0, 50), Vec2f(150, getWindowHeight()-50));
+    toolbox = new ToolBox(Vec2f(0, 50), getToolboxSize());
     
     Program *p = new Program(Vec2f(400, 250));
     p->setupConnection(8617, 9876);
     canvas->addComponent(p);
-    canvas->addComponent(new Constant(Vec2f(200, 250), Vec2f(130, 40)));
-    canvas->addComponent(new Constant(Vec2f(200, 300), Vec2f(130, 40)));
-    canvas->addComponent(new Constant(Vec2f(200, 350), Vec2f(130, 40)));
-    canvas->addComponent(new Constant(Vec2f(200, 400), Vec2f(130, 40)));
-    canvas->addComponent(new Constant(Vec2f(200, 450), Vec2f(130, 40)));
-    canvas->addComponent(new Constant(Vec2f(200, 500), Vec2f(130, 40)));
     
     // rendering settings
     glEnable(GL_LINE_SMOOTH);
@@ -128,6 +124,21 @@ void ControleaseApp::keyUp( KeyEvent event )
     canvas->appKeyUp(event);
 }
 
+void ControleaseApp::resize()
+{
+    toolbox->setSize(getToolboxSize());
+    canvas->setSize(getCanvasSize());
+}
+
+Vec2f ControleaseApp::getCanvasSize()
+{
+    return Vec2f(getWindowWidth()-150, getWindowHeight()-50);
+}
+
+Vec2f ControleaseApp::getToolboxSize()
+{
+    return Vec2f(150, getWindowHeight()-50);
+}
 
 MouseEvent ControleaseApp::bakeNewEvent(MouseEvent event, Vec2f origin)
 {

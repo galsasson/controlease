@@ -90,7 +90,6 @@ private:
     
     // interaction
     Vec2f prevMouse;
-    bool isMouseDown;
     
     
 };

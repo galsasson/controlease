@@ -30,8 +30,6 @@ Constant::~Constant()
 void Constant::initInterface(Vec2f size)
 {
     rect = Rectf(Vec2f(0, 0), size);
-    Vec2f titleSize = ResourceManager::getInstance().getTextureFont()->measureString("Constant");
-//    titleRect = Rectf(size.x/2 - titleSize.x/2, 2, size.x/2 + titleSize.x/2, size.y/2-2);
     titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
     inputNode = new InputNode(0, this, Vec2f(6, size.y*3/4));
     outputNode = new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4));
@@ -255,7 +253,6 @@ void Constant::updateVal(float newVal)
 {
     val = newVal;
     valStr = getValueString();
-//    console() << valStr << endl;
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
     valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
                     rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);

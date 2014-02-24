@@ -14,7 +14,6 @@ Program::Program(Vec2f _pos)
     rect = Rectf(_pos, _pos+localRect.getSize());
     nextInputPos = Vec2f(6, 28);
     
-    isMouseDown = false;
     connected = false;
 }
 
@@ -108,13 +107,11 @@ Rectf Program::getBounds()
 
 void Program::mouseDown(cease::MouseEvent event)
 {
-    isMouseDown = true;
     prevMouse = event.getPos();
 }
 
 void Program::mouseUp(cease::MouseEvent event)
 {
-    isMouseDown = false;
 }
 
 void Program::mouseWheel(cease::MouseEvent event)

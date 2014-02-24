@@ -56,6 +56,12 @@ bool ToolBox::contains(Vec2f p)
     return rect.contains(p);
 }
 
+void ToolBox::setSize(Vec2f newSize)
+{
+    rect.x2 = rect.x1 + newSize.x;
+    rect.y2 = rect.y1 + newSize.y;
+}
+
 void ToolBox::createTools()
 {
     tools.push_back(new Tool(TOOL_TYPE_PROGRAM, Vec2f(10, 50), Vec2f(rect.getWidth()-20, 20)));

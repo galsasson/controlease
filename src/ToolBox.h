@@ -31,6 +31,7 @@ public:
     Tool* mouseDown( MouseEvent event );
     bool contains(Vec2f p);
 
+    void setSize(Vec2f newSize);
     
 private:
     void createTools();
@@ -39,8 +40,6 @@ private:
     vector<Tool*> tools;
     
     Rectf rect;
-    Vec2f pos;
-    Vec2f size;
 };
 
 #endif /* defined(__Controlease__ToolBox__) */
