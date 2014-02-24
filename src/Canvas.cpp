@@ -24,7 +24,7 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     fbo = gl::Fbo(virtualSize.x, virtualSize.y);
     
     isMouseDown = false;
-    dragHandler = NULL;
+    canvasDrag = false;
 //    mouseHandler = this;
     currentWire = NULL;
     focusComponent = NULL;
@@ -122,7 +122,7 @@ void Canvas::addComponent(Tool *tool)
             addComponent(new Program(topLeft + Vec2f(30, 30)));
             break;
         case TOOL_TYPE_CONSTANT:
-            addComponent(new Constant(topLeft + Vec2f(30, 30), Vec2f(130, 40)));
+            addComponent(new Constant(topLeft + Vec2f(30, 30), Vec2f(80, 40)));
             break;
             
         default:
@@ -210,19 +210,20 @@ CanvasComponent* Canvas::getMouseComponent(Vec2f p)
 void Canvas::appMouseDown(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
-    focusComponent = getMouseComponent(cevent.getPos());
-    dragHandler = NULL;
     
-    if (focusComponent == NULL) {
-        dragHandler = this;
+    if (event.isControlDown()) {
         cevent.pos = event.getPos() - pos;
         return mouseDown(cevent);
+    }
+    
+    focusComponent = getMouseComponent(cevent.getPos());
+    if (focusComponent == NULL) {
+        return;
     }
     
     // check for hot spot in component (draggable elements)
     if (focusComponent->isHotspot(cevent))
     {
-        dragHandler = (MouseListener*)focusComponent;
         return focusComponent->mouseDown(cevent);
     }
     
@@ -235,7 +236,7 @@ void Canvas::appMouseUp(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
     CanvasComponent *comp = getMouseComponent(cevent.getPos());
-    dragHandler = NULL;
+    canvasDrag = false;
     
     // we are dragging a wire
     if (currentWire != NULL) {
@@ -268,20 +269,19 @@ void Canvas::appMouseMove(MouseEvent event)
 
 void Canvas::appMouseDrag(MouseEvent event)
 {
-    cease::MouseEvent cevent;
-    if (dragHandler == this) {
-        cevent = cease::MouseEvent(event.getPos() - pos, event.getWheelIncrement());
-    }
-    else {
-        cevent = cease::MouseEvent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    
+    if (event.isControlDown()) {
+        cevent.pos = event.getPos() - pos;
+        return this->mouseDrag(cevent);
     }
     
     if (currentWire != NULL) {
         return currentWire->setEnd(cevent.getPos());
     }
     
-    if (dragHandler) {
-        dragHandler->mouseDrag(cevent);
+    if (focusComponent) {
+        focusComponent->mouseDrag(cevent);
     }
 }
 
@@ -419,10 +419,6 @@ void Canvas::deleteComponent(CanvasComponent *comp)
         focusComponent = NULL;
     }
     
-    if (comp == dragHandler) {
-        dragHandler = NULL;
-    }
-
     // now delete the component
     for (int i=0; i<components.size(); i++)
     {
