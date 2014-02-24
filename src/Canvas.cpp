@@ -24,7 +24,8 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     fbo = gl::Fbo(virtualSize.x, virtualSize.y);
     
     isMouseDown = false;
-    mouseHandler = this;
+    dragHandler = NULL;
+//    mouseHandler = this;
     currentWire = NULL;
     focusComponent = NULL;
 }
@@ -175,7 +176,7 @@ ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
     return NULL;
 }
 
-
+/*
 void Canvas::setMouseHandler(cease::MouseEvent event)
 {
     // find the component the mouse is above (programs, wires, tools)
@@ -191,79 +192,96 @@ void Canvas::setMouseHandler(cease::MouseEvent event)
     // if nothing else
     mouseHandler = this;
 }
+*/
+
+CanvasComponent* Canvas::getMouseComponent(Vec2f p)
+{
+    for (int i=0; i<components.size(); i++)
+    {
+        if (components[i]->contains(p))
+        {
+            return components[i];
+        }
+    }
+    
+    return NULL;
+}
 
 void Canvas::appMouseDown(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
-    setMouseHandler(cevent);
+    focusComponent = getMouseComponent(cevent.getPos());
+    dragHandler = NULL;
     
-    if (mouseHandler == this) {
-        focusComponent = NULL;
-        mouseHandler->mouseDown(cease::MouseEvent(event.getPos() - pos, event.getWheelIncrement()));
+    if (focusComponent == NULL) {
+        dragHandler = this;
+        cevent.pos = event.getPos() - pos;
+        return mouseDown(cevent);
     }
-    else {
-        ConnectionResult* con = ((CanvasComponent*)mouseHandler)->getConnectionStart(cevent);
-        if (con != NULL && con->type != TYPE_INPUT) {
-            // node was clicked handle it
-            handleConnectionStart(con);
-        }
-        else {
-            // no node was clicked, do the normal gui stuff
-            focusComponent = (CanvasComponent*)mouseHandler;
-            mouseHandler->mouseDown(cevent);
-        }
+    
+    // check for hot spot in component (draggable elements)
+    if (focusComponent->isHotspot(cevent))
+    {
+        dragHandler = (MouseListener*)focusComponent;
+        return focusComponent->mouseDown(cevent);
     }
+    
+    // check for connection node click
+    ConnectionResult *con = focusComponent->getConnectionStart(cevent);
+    handleConnectionStart(con);
 }
 
 void Canvas::appMouseUp(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
-    setMouseHandler(cevent);
+    CanvasComponent *comp = getMouseComponent(cevent.getPos());
+    dragHandler = NULL;
     
-    if (currentWire != NULL)
-    {
-        // special case if user release on canvas
-        if (mouseHandler == this) {
-            handleConnectionEnd(NULL);
+    // we are dragging a wire
+    if (currentWire != NULL) {
+        if (comp == NULL) {
+            return handleConnectionEnd(NULL);
         }
-        else {
-            handleConnectionEnd(((CanvasComponent*)mouseHandler)->getConnectionEnd(cevent));
-        }
+
+        return handleConnectionEnd(comp->getConnectionEnd(cevent));
     }
-    else {
-        mouseHandler->mouseUp(cevent);
+    
+    if (focusComponent == NULL) {
+        return mouseUp(cevent);
     }
+    
+    focusComponent->mouseUp(cevent);
 }
 
 void Canvas::appMouseWheel(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
 //    setMouseHandler(cevent);
-    mouseHandler->mouseWheel(cevent);
+//    mouseHandler->mouseWheel(cevent);
 }
 
 void Canvas::appMouseMove(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
-    mouseHandler->mouseMove(cevent);
+//    mouseHandler->mouseMove(cevent);
 }
 
 void Canvas::appMouseDrag(MouseEvent event)
 {
     cease::MouseEvent cevent;
-    if (mouseHandler == this) {
+    if (dragHandler == this) {
         cevent = cease::MouseEvent(event.getPos() - pos, event.getWheelIncrement());
     }
     else {
         cevent = cease::MouseEvent(getLocalCoords(event.getPos()), event.getWheelIncrement());
     }
     
-    
     if (currentWire != NULL) {
-        currentWire->setEnd(cevent.getPos());
+        return currentWire->setEnd(cevent.getPos());
     }
-    else {
-        mouseHandler->mouseDrag(cevent);
+    
+    if (dragHandler) {
+        dragHandler->mouseDrag(cevent);
     }
 }
 
@@ -273,7 +291,7 @@ void Canvas::appKeyDown(cinder::app::KeyEvent event)
     if (event.getCode() == 8)   // DEL
     {
         if (focusComponent) {
-            deleteFocusComponent();
+            deleteComponent(focusComponent);
         }
     }
 }
@@ -306,7 +324,9 @@ Vec2f Canvas::getLocalCoords(Vec2f worldCoords)
 
 void Canvas::handleConnectionStart(ConnectionResult *con)
 {
-    // currentWire will always be NULL is we got here
+    if (con == NULL) {
+        return;
+    }
     
     // check if we grabbed an already connected wire
     if (con->type == TYPE_DISCONNECT_INPUT) {
@@ -370,14 +390,14 @@ Wire* Canvas::popWireWithNode(Node *node)
     return NULL;
 }
 
-void Canvas::deleteFocusComponent()
+void Canvas::deleteComponent(CanvasComponent *comp)
 {
-    if (focusComponent == NULL) {
+    if (comp == NULL) {
         return;
     }
     
     // first, delete all wires
-    vector<Node*> inodes = focusComponent->getInputNodes();
+    vector<Node*> inodes = comp->getInputNodes();
     for (int i=0; i<inodes.size(); i++)
     {
         Wire *w = popWireWithNode(inodes[i]);
@@ -385,7 +405,7 @@ void Canvas::deleteFocusComponent()
             delete w;
         }
     }
-    vector<Node*> onodes = focusComponent->getOutputNodes();
+    vector<Node*> onodes = comp->getOutputNodes();
     for (int i=0; i<onodes.size(); i++)
     {
         Wire *w = popWireWithNode(onodes[i]);
@@ -395,20 +415,23 @@ void Canvas::deleteFocusComponent()
     }
 
     // if component is also the mouse handler, set it to this
-    if (focusComponent == mouseHandler) {
-        mouseHandler = this;
+    if (comp == focusComponent) {
+        focusComponent = NULL;
+    }
+    
+    if (comp == dragHandler) {
+        dragHandler = NULL;
     }
 
     // now delete the component
     for (int i=0; i<components.size(); i++)
     {
-        if (components[i] == focusComponent)
+        if (components[i] == comp)
         {
             components.erase(components.begin() + i);
-            delete focusComponent;
-            focusComponent = NULL;
+            delete comp;
+            comp = NULL;
         }
     }
-    
 }
 

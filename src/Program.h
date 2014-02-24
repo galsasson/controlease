@@ -39,11 +39,15 @@ public:
     void draw();
     void drawOutline();
     
+    void translate(Vec2f offset);
+    Rectf getBounds();
+    
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
+    bool isHotspot(cease::MouseEvent event);
     ConnectionResult* getConnectionStart(cease::MouseEvent event);
     ConnectionResult* getConnectionEnd(cease::MouseEvent event);
     vector<Node*> getInputNodes();
@@ -77,12 +81,11 @@ private:
     // graphical representation
     void setSize(Vec2f s);
     
+    Rectf rect;
+    Rectf localRect;
+    Rectf titleRect;
     string name;
-    Vec2f nameSize;
-    Vec2f halfNameSize;
-    Vec2f pos;
-    Vec2f size;
-    Vec2f halfSize;
+    Rectf nameRect;
     Vec2f nextInputPos;
     
     // interaction

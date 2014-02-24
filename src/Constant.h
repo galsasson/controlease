@@ -40,11 +40,15 @@ public:
     void draw();
     void drawOutline();
 
+    void translate(Vec2f offset);
+    Rectf getBounds();
+    
     void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
 	void mouseMove( cease::MouseEvent event );
 	void mouseDrag( cease::MouseEvent event );
+    bool isHotspot( cease::MouseEvent event);
     ConnectionResult* getConnectionStart( cease::MouseEvent event);
     ConnectionResult* getConnectionEnd( cease::MouseEvent event);
     vector<Node*> getInputNodes();

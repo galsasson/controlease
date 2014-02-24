@@ -10,8 +10,8 @@
 
 Program::Program(Vec2f _pos)
 {
-    pos = _pos;
-    setSize(Vec2f(200, 20));
+    titleRect = localRect = Rectf(0, 0, 200, 20);
+    rect = Rectf(_pos, _pos+localRect.getSize());
     nextInputPos = Vec2f(6, 28);
     
     isMouseDown = false;
@@ -47,48 +47,35 @@ void Program::update()
     
     if (!connected) {
         return;
-    }    
+    }
 }
 
 void Program::draw()
 {
-    if (!connected) {
-        // draw a non active program
-        gl::pushMatrices();
-        gl::translate(pos);
-        gl::color(1, 1, 1);
-        gl::drawSolidRoundedRect(Rectf(0, 0, size.x, size.y), 3);
-        gl::color(0, 0, 0);
-        gl::drawStrokedRoundedRect(Rectf(0, 0, size.x, size.y), 3);
-        gl::color(1, 0.1, 0.1);
-        gl::drawLine(Vec2f(0, size.y/2), Vec2f(size.x, size.y/2));
-        gl::popMatrices();
-        return;
-    }
-
     gl::pushMatrices();
-    gl::translate(pos);
+    gl::translate(rect.getUpperLeft());
 
     gl::color(1, 1, 1);
-    gl::drawSolidRoundedRect(Rectf(0, 0, size.x, size.y), 3);
+    gl::drawSolidRoundedRect(localRect, 3);
     gl::color(0, 0, 0);
-    gl::drawStrokedRoundedRect(Rectf(0, 0, size.x, size.y), 3);
-    ResourceManager::getInstance().getTextureFont()->drawString(name, Vec2f(size.x/2 - halfNameSize.x, 15));
-    gl::drawLine(Vec2f(0, 20), Vec2f(size.x, 20));
+    gl::drawStrokedRoundedRect(localRect, 3);
 
-    // draw all the input names
-    for (int i=0; i<inputs.size(); i++)
-    {
-        ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 30+i*15));
+    if (connected) {
+        ResourceManager::getInstance().getTextureFont()->drawString(name, nameRect);
+        gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
+
+        // draw all the input names
+        for (int i=0; i<inputs.size(); i++)
+        {
+            ResourceManager::getInstance().getTextureFont()->drawString(inputs[i   ]->getName(), Vec2f(15, 30+i*15));
+        }
+    
+        // draw all input nodes
+        for (int i=0; i<inputNodes.size(); i++)
+        {
+            inputNodes[i]->draw();
+        }
     }
-    
-    // draw all input nodes
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        inputNodes[i]->draw();
-    }
-    
-    
     
     gl::popMatrices();
 }
@@ -96,17 +83,27 @@ void Program::draw()
 void Program::drawOutline()
 {
     gl::pushMatrices();
-    gl::translate(pos-Vec2f(4, 4));
+    gl::translate(rect.getUpperLeft()-Vec2f(4, 4));
     
     glPushAttrib(GL_ENABLE_BIT);
     glLineStipple(1, 0xff00);
     gl::enable(GL_LINE_STIPPLE);
 
     gl::color(0, 0, 0);
-    gl::drawStrokedRect(Rectf(Vec2f(0, 0), Vec2f(size.x+8, size.y+8)));
+    gl::drawStrokedRect(Rectf(Vec2f(0, 0), rect.getSize() + Vec2f(8, 8)));
     
     glPopAttrib();
     gl::popMatrices();
+}
+
+void Program::translate(Vec2f offset)
+{
+    rect += offset;
+}
+
+Rectf Program::getBounds()
+{
+    return rect;
 }
 
 void Program::mouseDown(cease::MouseEvent event)
@@ -131,10 +128,15 @@ void Program::mouseMove(cease::MouseEvent event)
 
 void Program::mouseDrag(cease::MouseEvent event)
 {
-    pos += event.getPos() - prevMouse;
+    rect += event.getPos() - prevMouse;
     prevMouse = event.getPos();
     
     applyBorders();
+}
+
+bool Program::isHotspot(cease::MouseEvent event)
+{
+    return titleRect.contains(getLocalCoords(event.getPos()));
 }
 
 ConnectionResult* Program::getConnectionStart(cease::MouseEvent event)
@@ -190,13 +192,12 @@ vector<Node*> Program::getOutputNodes()
 
 bool Program::contains(Vec2f p)
 {
-    Area a = Area(pos, pos+size);
-    return a.contains(p);
+    return rect.contains(p);
 }
 
 Vec2f Program::getCanvasPos()
 {
-    return pos;
+    return rect.getUpperLeft();
 }
 
 float Program::getValue(int i)
@@ -211,12 +212,12 @@ void Program::setValue(int i, float v)
 
 Vec2f Program::getLocalCoords(Vec2f p)
 {
-    return p-pos;
+    return p-rect.getUpperLeft();
 }
 
 Vec2f Program::getCanvasCoords(Vec2f p)
 {
-    return pos+p;
+    return rect.getUpperLeft()+p;
 }
 
 
@@ -303,8 +304,9 @@ void Program::handleAlive(osc::Message msg)
     }
     
     name = msg.getArgAsString(0);
-    nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
-    halfNameSize = nameSize/2;
+    Vec2f nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
+    nameRect = Rectf(Vec2f(2, 2), Vec2f(2, 2) + nameSize);
+//    halfNameSize = nameSize/2;
 }
 
 void Program::addInput(osc::Message msg)
@@ -312,7 +314,9 @@ void Program::addInput(osc::Message msg)
     ProgramInput *input = new ProgramInput();
     if (input->setup(oscSender, msg)) {
         inputNodes.push_back(new InputNode(inputNodes.size(), this, nextInputPos));
-        setSize(size+Vec2f(0, 15));
+        rect.y2 += 15;
+        localRect.y2 += 15;
+//        setSize(size+Vec2f(0, 15));
         nextInputPos.y += 15;
         inputs.push_back(input);
     }
@@ -321,31 +325,25 @@ void Program::addInput(osc::Message msg)
     }
 }
 
-void Program::setSize(Vec2f s)
-{
-    size = s;
-    halfSize = s/2;
-}
-
 void Program::applyBorders()
 {
-    float x1 = pos.x;
-    float x2 = pos.x + size.x;
-    float y1 = pos.y;
-    float y2 = pos.y + size.y;
+    float x1 = rect.getUpperLeft().x;
+    float x2 = rect.getUpperRight().x;
+    float y1 = rect.getUpperLeft().y;
+    float y2 = rect.getLowerLeft().y;
     
     if (x1 < 0) {
-        pos.x += -x1;
+        rect += Vec2f(-x1, 0);
     }
     else if (x2 > CANVAS_WIDTH) {
-        pos.x -= x2-CANVAS_WIDTH;
+        rect -= Vec2f(x2-CANVAS_WIDTH, 0);
     }
     
     if (y1 < 0) {
-        pos.y += -y1;
+        rect += Vec2f(0, -y1);
     }
     else if (y2 > CANVAS_HEIGHT) {
-        pos.y -= y2-CANVAS_HEIGHT;
+        rect -= Vec2f(0, y2-CANVAS_HEIGHT);
     }
 }
 

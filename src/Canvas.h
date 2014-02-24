@@ -30,6 +30,7 @@
 
 using namespace ci;
 using namespace ci::app;
+using namespace std;
 
 class Canvas : public MouseListener
 {
@@ -37,7 +38,7 @@ public:
     Canvas();
     void setup(Vec2f _pos, Vec2f _size);
     void update();
-    void draw();
+    void draw();    
     void addComponent(CanvasComponent *comp);
     void addComponent(Tool *tool);
 
@@ -67,28 +68,29 @@ public:
     Vec2f scale;
 
 private:
-    void setMouseHandler(cease::MouseEvent event);
+    //void setMouseHandler(cease::MouseEvent event);
     void checkBounds();
     Vec2f getLocalCoords(Vec2f worldCoords);
     void handleConnectionStart(ConnectionResult *con);
     void handleConnectionEnd(ConnectionResult *con);
     Wire* popWireWithNode(Node *node);
-    void deleteFocusComponent();
+    void deleteComponent(CanvasComponent *comp);
+    CanvasComponent* getMouseComponent(Vec2f p);
     
-    boost::container::vector<CanvasComponent*> components;
-    
+    vector<CanvasComponent*> components;
     
     // hold the canvas
     gl::Fbo fbo;
     
     // interaction
     CanvasComponent *focusComponent;
-    MouseListener *mouseHandler;
+    MouseListener *dragHandler;
+//    MouseListener *mouseHandler;
     Vec2f prevMouse;
     bool isMouseDown;
     
     // connecting graph
-    boost::container::vector<Wire*> wires;
+    vector<Wire*> wires;
     Wire* currentWire;
 };
 
