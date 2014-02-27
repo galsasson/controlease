@@ -14,6 +14,7 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DF1BDB96E5D4CBD89FD91F7 /* OscOutboundPacketStream.cpp */; };
 		14A0F1BC8626477E8429059F /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7088C28B5D094C8B88881F63 /* CinderApp.icns */; };
+		2A20D07618BEE800005C206F /* Sine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07418BEE800005C206F /* Sine.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
 		2A798DBF18B84FC000421573 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DBD18B84FC000421573 /* Slider.cpp */; };
@@ -59,6 +60,8 @@
 		26DDD80C5F90432EBDEF38A8 /* NetworkingUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = NetworkingUtils.cpp; path = ../blocks/OSC/src/ip/posix/NetworkingUtils.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		2A20D07418BEE800005C206F /* Sine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sine.cpp; path = ../src/Sine.cpp; sourceTree = "<group>"; };
+		2A20D07518BEE800005C206F /* Sine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sine.h; path = ../src/Sine.h; sourceTree = "<group>"; };
 		2A2E083018B5714B0060A535 /* ResourceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ResourceManager.cpp; path = ../src/ResourceManager.cpp; sourceTree = "<group>"; };
 		2A2E083118B5714B0060A535 /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceManager.h; path = ../src/ResourceManager.h; sourceTree = "<group>"; };
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
@@ -283,6 +286,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A20D07418BEE800005C206F /* Sine.cpp */,
+				2A20D07518BEE800005C206F /* Sine.h */,
 				2A798DE418BB11A900421573 /* Div.cpp */,
 				2A798DE518BB11A900421573 /* Div.h */,
 				2A798DE618BB11A900421573 /* Mult.cpp */,
@@ -422,6 +427,7 @@
 				FE1FFDB9EDE54692A9CAF6E3 /* OscListener.cpp in Sources */,
 				2A798DC918B97C8600421573 /* Wire.cpp in Sources */,
 				2A798DD318B997DF00421573 /* InputNode.cpp in Sources */,
+				2A20D07618BEE800005C206F /* Sine.cpp in Sources */,
 				33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */,
 				C0E223501FF742C793325391 /* OscSender.cpp in Sources */,
 				2A798DC218B859AE00421573 /* Number.cpp in Sources */,
