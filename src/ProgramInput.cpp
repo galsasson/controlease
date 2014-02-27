@@ -11,6 +11,7 @@
 ProgramInput::ProgramInput()
 {
     initialized = false;
+    minVal = maxVal = 0;
 }
 
 bool ProgramInput::setup(osc::Sender *sender, osc::Message msg)
@@ -26,17 +27,17 @@ bool ProgramInput::setup(osc::Sender *sender, osc::Message msg)
         index = msg.getArgAsInt32(2);
         type = (ValueType)msg.getArgAsInt32(3);
         if (type == TYPE_BOOLEAN) {
-            boolVal = !!msg.getArgAsInt32(4);
+            boolVal = !!msg.getArgAsFloat(4);
         }
         else if (type == TYPE_INT32) {
-            intVal = msg.getArgAsInt32(4);
-            minVal = msg.getArgAsInt32(5);
-            maxVal = msg.getArgAsInt32(6);
+            intVal = (int)msg.getArgAsFloat(4);
+//            minVal = msg.getArgAsInt32(5);
+//            maxVal = msg.getArgAsInt32(6);
         }
         else if (type == TYPE_FLOAT) {
             floatVal = msg.getArgAsFloat(4);
-            minVal = msg.getArgAsFloat(5);
-            maxVal = msg.getArgAsFloat(6);
+//            minVal = msg.getArgAsFloat(5);
+//            maxVal = msg.getArgAsFloat(6);
         }
     }
     catch(...) {
@@ -79,7 +80,7 @@ void ProgramInput::sendVal(float val)
         osc::Message msg;
         msg.setAddress(address);
         msg.addIntArg(index);
-        msg.addIntArg(intVal);
+        msg.addFloatArg(intVal);
         oscSender->sendMessage(msg);
 //        console() << "updating value to: " << intVal<<endl;
     }
@@ -96,7 +97,7 @@ void ProgramInput::sendVal(float val)
         osc::Message msg;
         msg.setAddress(address);
         msg.addIntArg(index);
-        msg.addIntArg((int)boolVal);
+        msg.addFloatArg(boolVal);
         oscSender->sendMessage(msg);
     }
 }

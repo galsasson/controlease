@@ -45,8 +45,8 @@ string Tool::getToolName(ToolType t)
     {
         case TOOL_TYPE_PROGRAM:
             return "Program";
-        case TOOL_TYPE_CONSTANT:
-            return "Constant";
+        case TOOL_TYPE_NUMBER:
+            return "Number";
         case TOOL_TYPE_SPLIT:
             return "Split";
         case TOOL_TYPE_ADD:
@@ -61,6 +61,8 @@ string Tool::getToolName(ToolType t)
             return "Noise";
         case TOOL_TYPE_RANDOM:
             return "Random";
+        case TOOL_TYPE_SINE:
+            return "Sine";
     }
     
     return "Unknown";

@@ -65,7 +65,7 @@ void ToolBox::setSize(Vec2f newSize)
 void ToolBox::createTools()
 {
     tools.push_back(new Tool(TOOL_TYPE_PROGRAM, Vec2f(10, 50), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_CONSTANT, Vec2f(10, 75), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_NUMBER, Vec2f(10, 75), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_SPLIT, Vec2f(10, 100), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_ADD, Vec2f(10, 125), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_SUB, Vec2f(10, 150), Vec2f(rect.getWidth()-20, 20)));

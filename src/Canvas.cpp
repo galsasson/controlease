@@ -120,8 +120,8 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_PROGRAM:
             addComponent(new Program(topLeft + Vec2f(30, 30)));
             break;
-        case TOOL_TYPE_CONSTANT:
-            addComponent(new Constant(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+        case TOOL_TYPE_NUMBER:
+            addComponent(new Number(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
         case TOOL_TYPE_SPLIT:
             addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));

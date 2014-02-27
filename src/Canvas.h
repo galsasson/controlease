@@ -21,7 +21,7 @@
 #include "MouseListener.h"
 #include "ResourceManager.h"
 #include "Program.h"
-#include "Constant.h"
+#include "Number.h"
 #include "Split.h"
 #include "Add.h"
 #include "Sub.h"

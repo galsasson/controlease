@@ -16,9 +16,9 @@
 
 typedef enum _ValueType
 {
+    TYPE_FLOAT = 0,
     TYPE_INT32 = 1,
-    TYPE_FLOAT = 2,
-    TYPE_BOOLEAN = 3
+    TYPE_BOOLEAN = 2
 } ValueType;
 
 typedef enum _ConnectionType

@@ -4,8 +4,6 @@
 #include "Canvas.h"
 #include "ToolBox.h"
 #include "Program.h"
-#include "Slider.h"
-#include "Constant.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -56,7 +54,7 @@ void ControleaseApp::setup()
     toolbox = new ToolBox(Vec2f(0, 50), getToolboxSize());
     
     Program *p = new Program(Vec2f(400, 250));
-    p->setupConnection(8617, 9876);
+    p->setupConnection(9191, 9876);
     canvas->addComponent(p);
     
     // rendering settings

@@ -1,14 +1,14 @@
 //
-//  Constant.cpp
+//  Number.cpp
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#include "Constant.h"
+#include "Number.h"
 
-Constant::Constant(Vec2f p, Vec2f s)
+Number::Number(Vec2f p, Vec2f s)
 {
     canvasRect = Rectf(p, p+s);
     initInterface(s);
@@ -21,13 +21,13 @@ Constant::Constant(Vec2f p, Vec2f s)
     immediateChange = false;
 }
 
-Constant::~Constant()
+Number::~Number()
 {
     delete inputNode;
     delete outputNode;
 }
 
-void Constant::initInterface(Vec2f size)
+void Number::initInterface(Vec2f size)
 {
     rect = Rectf(Vec2f(0, 0), size);
     titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
@@ -39,7 +39,7 @@ void Constant::initInterface(Vec2f size)
     isCompDrag = false;
 }
 
-void Constant::update()
+void Number::update()
 {
     if (!immediateChange)
     {
@@ -49,7 +49,7 @@ void Constant::update()
     }
 }
 
-void Constant::draw()
+void Number::draw()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft());
@@ -60,7 +60,7 @@ void Constant::draw()
     gl::drawStrokedRoundedRect(rect, 2);
     
     // draw title
-    ResourceManager::getInstance().getTextureFont()->drawString("Constant", titleRect);
+    ResourceManager::getInstance().getTextureFont()->drawString("Number", titleRect);
     gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
     
     // draw nodes
@@ -71,7 +71,7 @@ void Constant::draw()
     gl::popMatrices();
 }
 
-void Constant::drawOutline()
+void Number::drawOutline()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft() - Vec2f(4, 4));
@@ -88,17 +88,17 @@ void Constant::drawOutline()
     gl::popMatrices();
 }
 
-void Constant::translate(Vec2f offset)
+void Number::translate(Vec2f offset)
 {
     canvasRect += offset;
 }
 
-Rectf Constant::getBounds()
+Rectf Number::getBounds()
 {
     return canvasRect;
 }
 
-void Constant::mouseDown(cease::MouseEvent event)
+void Number::mouseDown(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
@@ -114,7 +114,7 @@ void Constant::mouseDown(cease::MouseEvent event)
     }
 }
 
-void Constant::mouseDrag(cease::MouseEvent event)
+void Number::mouseDrag(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
@@ -135,7 +135,7 @@ void Constant::mouseDrag(cease::MouseEvent event)
     }
 }
 
-void Constant::mouseUp( cease::MouseEvent event)
+void Number::mouseUp( cease::MouseEvent event)
 {
     if (isValDrag) {
         isValDrag = false;
@@ -148,24 +148,24 @@ void Constant::mouseUp( cease::MouseEvent event)
     }
 }
 
-void Constant::mouseWheel( cease::MouseEvent event ) {}
-void Constant::mouseMove( cease::MouseEvent event ) {}
+void Number::mouseWheel( cease::MouseEvent event ) {}
+void Number::mouseMove( cease::MouseEvent event ) {}
 
-bool Constant::isDragPoint(cease::MouseEvent event)
+bool Number::isDragPoint(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
     return valRect.contains(local) || titleRect.contains(local);
 }
 
-bool Constant::isHotspot(cease::MouseEvent event)
+bool Number::isHotspot(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
     return valRect.contains(local) || titleRect.contains(local);
 }
 
-ConnectionResult* Constant::getConnectionStart(cease::MouseEvent event)
+ConnectionResult* Number::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
@@ -186,7 +186,7 @@ ConnectionResult* Constant::getConnectionStart(cease::MouseEvent event)
     return NULL;
 }
 
-ConnectionResult* Constant::getConnectionEnd(cease::MouseEvent event)
+ConnectionResult* Number::getConnectionEnd(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
 
@@ -204,7 +204,7 @@ ConnectionResult* Constant::getConnectionEnd(cease::MouseEvent event)
     return NULL;
 }
 
-vector<Node*> Constant::getInputNodes()
+vector<Node*> Number::getInputNodes()
 {
     vector<Node*> inputs;
     inputs.push_back(inputNode);
@@ -212,7 +212,7 @@ vector<Node*> Constant::getInputNodes()
     return inputs;
 }
 
-vector<Node*> Constant::getOutputNodes()
+vector<Node*> Number::getOutputNodes()
 {
     vector<Node*> outputs;
     outputs.push_back(outputNode);
@@ -221,22 +221,22 @@ vector<Node*> Constant::getOutputNodes()
 }
 
 
-Vec2f Constant::getCanvasPos()
+Vec2f Number::getCanvasPos()
 {
     return canvasRect.getUpperLeft();
 }
 
-bool Constant::contains(Vec2f p)
+bool Number::contains(Vec2f p)
 {
     return canvasRect.contains(p);
 }
 
-float Constant::getValue(int i)
+float Number::getValue(int i)
 {
     return val;
 }
 
-void Constant::setValue(int i, float v)
+void Number::setValue(int i, float v)
 {
     if (immediateChange) {
         updateVal(v);
@@ -246,17 +246,17 @@ void Constant::setValue(int i, float v)
     }
 }
 
-Vec2f Constant::getLocalCoords(Vec2f p)
+Vec2f Number::getLocalCoords(Vec2f p)
 {
     return p-canvasRect.getUpperLeft();
 }
 
-Vec2f Constant::getCanvasCoords(Vec2f p)
+Vec2f Number::getCanvasCoords(Vec2f p)
 {
     return canvasRect.getUpperLeft() + p;
 }
 
-void Constant::updateVal(float newVal)
+void Number::updateVal(float newVal)
 {
     val = newVal;
     valStr = getValueString();
@@ -267,7 +267,7 @@ void Constant::updateVal(float newVal)
     outputNode->updateVal(val);
 }
 
-std::string Constant::getValueString()
+std::string Number::getValueString()
 {
     char buff[128];
     sprintf(buff, "%." FLOAT_PRECISION "f", val);
@@ -276,7 +276,7 @@ std::string Constant::getValueString()
     return str.str();
 }
 
-void Constant::applyBorders()
+void Number::applyBorders()
 {
     float x1 = canvasRect.getUpperLeft().x;
     float x2 = canvasRect.getUpperRight().x;

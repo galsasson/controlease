@@ -1,13 +1,13 @@
 //
-//  Constant.h
+//  Number.h
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#ifndef __Controlease__Constant__
-#define __Controlease__Constant__
+#ifndef __Controlease__Number__
+#define __Controlease__Number__
 
 #include <iostream>
 #include <sstream>
@@ -29,11 +29,11 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Constant : public CanvasComponent
+class Number : public CanvasComponent
 {
 public:
-    Constant(Vec2f p, Vec2f s);
-    ~Constant();
+    Number(Vec2f p, Vec2f s);
+    ~Number();
     
     void initInterface(Vec2f size);
     void update();
@@ -100,4 +100,4 @@ private:
     
 };
 
-#endif /* defined(__Controlease__Constant__) */
+#endif /* defined(__Controlease__Number__) */
