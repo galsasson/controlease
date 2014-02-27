@@ -82,7 +82,6 @@ void ProgramInput::sendVal(float val)
         msg.addIntArg(index);
         msg.addFloatArg(intVal);
         oscSender->sendMessage(msg);
-//        console() << "updating value to: " << intVal<<endl;
     }
     else if (type == TYPE_FLOAT) {
         floatVal = val;

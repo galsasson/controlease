@@ -71,7 +71,8 @@ void ToolBox::createTools()
     tools.push_back(new Tool(TOOL_TYPE_SUB, Vec2f(10, 150), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_MUL, Vec2f(10, 175), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_DIV, Vec2f(10, 200), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_SINE, Vec2f(10, 225), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_RANDOM, Vec2f(10, 225), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_SINE, Vec2f(10, 250), Vec2f(rect.getWidth()-20, 20)));
 }
 
 Vec2f ToolBox::getLocalCoords(Vec2f p)

@@ -1,19 +1,20 @@
 //
-//  Sine.h
+//  Random.h
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#ifndef __Controlease__Sine__
-#define __Controlease__Sine__
+#ifndef __Controlease__Random__
+#define __Controlease__Random__
 
 #include <iostream>
 #include <sstream>
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Rect.h"
+#include "cinder/Rand.h"
 #include <boost/container/vector.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 
@@ -30,11 +31,11 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Sine : public CanvasComponent
+class Random : public CanvasComponent
 {
 public:
-    Sine(Vec2f p, Vec2f s);
-    ~Sine();
+    Random(Vec2f p, Vec2f s);
+    ~Random();
     
     void initInterface(Vec2f size);
     void update();
@@ -83,16 +84,12 @@ private:
     
     OutputNode *outputNode;
     InputNode *inputNode;
-    
+
+    float frequency;
     long lastUpdate;
     double time;
-    float frequency;
     float val;
     std::string valStr;
-    
-    
-    
-    
 };
 
-#endif /* defined(__Controlease__Sine__) */
+#endif /* defined(__Controlease__Random__) */

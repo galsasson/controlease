@@ -1,16 +1,14 @@
 //
-//  Sine.cpp
+//  Random.cpp
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#include "Sine.h"
+#include "Random.h"
 
-#define TWO_PI_DIV_1000 M_PI/500
-
-Sine::Sine(Vec2f p, Vec2f s)
+Random::Random(Vec2f p, Vec2f s)
 {
     canvasRect = Rectf(p, p+s);
     initInterface(s);
@@ -22,13 +20,13 @@ Sine::Sine(Vec2f p, Vec2f s)
     immediateChange = false;
 }
 
-Sine::~Sine()
+Random::~Random()
 {
     delete inputNode;
     delete outputNode;
 }
 
-void Sine::initInterface(Vec2f size)
+void Random::initInterface(Vec2f size)
 {
     rect = Rectf(Vec2f(0, 0), size);
     titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
@@ -36,7 +34,7 @@ void Sine::initInterface(Vec2f size)
     outputNode = new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4));
 }
 
-void Sine::update()
+void Random::update()
 {
     if (frequency == 0 || !inputNode->isConnected()) {
         return;
@@ -45,24 +43,18 @@ void Sine::update()
     timeval timeVal;
     gettimeofday(&timeVal, NULL);
     long millis = (timeVal.tv_sec * 1000) + (timeVal.tv_usec / 1000);
-    
     long frameTime = millis - lastUpdate;
     
-    time += M_PI * 2 * frameTime * frequency / 1000;
-    if (time > M_PI*2) {
-        time -= M_PI*2;
+    time += frameTime;
+    if (time > (float)1000 / frequency) {
+        updateVal(Rand::randFloat());
+        time = 0;
     }
-    else if (time < -M_PI*2)
-    {
-        time += M_PI*2;
-    }
-    
-    updateVal(sin(time));
     
     lastUpdate = millis;
 }
 
-void Sine::draw()
+void Random::draw()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft());
@@ -73,7 +65,7 @@ void Sine::draw()
     gl::drawStrokedRoundedRect(rect, 2);
     
     // draw title
-    ResourceManager::getInstance().getTextureFont()->drawString("Sine", titleRect);
+    ResourceManager::getInstance().getTextureFont()->drawString("Random", titleRect);
     gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
     
     // draw nodes
@@ -84,7 +76,7 @@ void Sine::draw()
     gl::popMatrices();
 }
 
-void Sine::drawOutline()
+void Random::drawOutline()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft() - Vec2f(4, 4));
@@ -101,50 +93,50 @@ void Sine::drawOutline()
     gl::popMatrices();
 }
 
-void Sine::translate(Vec2f offset)
+void Random::translate(Vec2f offset)
 {
     canvasRect += offset;
 }
 
-Rectf Sine::getBounds()
+Rectf Random::getBounds()
 {
     return canvasRect;
 }
 
-void Sine::mouseDown(cease::MouseEvent event)
+void Random::mouseDown(cease::MouseEvent event)
 {
     compDragAnchor = event.getPos();
 }
 
-void Sine::mouseDrag(cease::MouseEvent event)
+void Random::mouseDrag(cease::MouseEvent event)
 {
     canvasRect += event.getPos() - compDragAnchor;
     compDragAnchor = event.getPos();
     applyBorders();
 }
 
-void Sine::mouseUp( cease::MouseEvent event)
+void Random::mouseUp( cease::MouseEvent event)
 {
 }
 
-void Sine::mouseWheel( cease::MouseEvent event ) {}
-void Sine::mouseMove( cease::MouseEvent event ) {}
+void Random::mouseWheel( cease::MouseEvent event ) {}
+void Random::mouseMove( cease::MouseEvent event ) {}
 
-bool Sine::isDragPoint(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-    
-    return titleRect.contains(local);
-}
-
-bool Sine::isHotspot(cease::MouseEvent event)
+bool Random::isDragPoint(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
     return titleRect.contains(local);
 }
 
-ConnectionResult* Sine::getConnectionStart(cease::MouseEvent event)
+bool Random::isHotspot(cease::MouseEvent event)
+{
+    Vec2f local = getLocalCoords(event.getPos());
+    
+    return titleRect.contains(local);
+}
+
+ConnectionResult* Random::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
@@ -165,7 +157,7 @@ ConnectionResult* Sine::getConnectionStart(cease::MouseEvent event)
     return NULL;
 }
 
-ConnectionResult* Sine::getConnectionEnd(cease::MouseEvent event)
+ConnectionResult* Random::getConnectionEnd(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
 
@@ -183,7 +175,7 @@ ConnectionResult* Sine::getConnectionEnd(cease::MouseEvent event)
     return NULL;
 }
 
-vector<Node*> Sine::getInputNodes()
+vector<Node*> Random::getInputNodes()
 {
     vector<Node*> inputs;
     inputs.push_back(inputNode);
@@ -191,7 +183,7 @@ vector<Node*> Sine::getInputNodes()
     return inputs;
 }
 
-vector<Node*> Sine::getOutputNodes()
+vector<Node*> Random::getOutputNodes()
 {
     vector<Node*> outputs;
     outputs.push_back(outputNode);
@@ -200,37 +192,37 @@ vector<Node*> Sine::getOutputNodes()
 }
 
 
-Vec2f Sine::getCanvasPos()
+Vec2f Random::getCanvasPos()
 {
     return canvasRect.getUpperLeft();
 }
 
-bool Sine::contains(Vec2f p)
+bool Random::contains(Vec2f p)
 {
     return canvasRect.contains(p);
 }
 
-float Sine::getValue(int i)
+float Random::getValue(int i)
 {
     return val;
 }
 
-void Sine::setValue(int i, float v)
+void Random::setValue(int i, float v)
 {
     frequency = v;
 }
 
-Vec2f Sine::getLocalCoords(Vec2f p)
+Vec2f Random::getLocalCoords(Vec2f p)
 {
     return p-canvasRect.getUpperLeft();
 }
 
-Vec2f Sine::getCanvasCoords(Vec2f p)
+Vec2f Random::getCanvasCoords(Vec2f p)
 {
     return canvasRect.getUpperLeft() + p;
 }
 
-void Sine::updateVal(float newVal)
+void Random::updateVal(float newVal)
 {
     val = newVal;
     valStr = getValueString();
@@ -241,7 +233,7 @@ void Sine::updateVal(float newVal)
     outputNode->updateVal(val);
 }
 
-std::string Sine::getValueString()
+std::string Random::getValueString()
 {
     char buff[128];
     sprintf(buff, "%." FLOAT_PRECISION "f", val);
@@ -250,7 +242,7 @@ std::string Sine::getValueString()
     return str.str();
 }
 
-void Sine::applyBorders()
+void Random::applyBorders()
 {
     float x1 = canvasRect.getUpperLeft().x;
     float x2 = canvasRect.getUpperRight().x;
