@@ -27,6 +27,7 @@
 #include "Sub.h"
 #include "Mult.h"
 #include "Div.h"
+#include "Sine.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"

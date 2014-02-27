@@ -17,7 +17,6 @@
 		2A20D07618BEE800005C206F /* Sine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07418BEE800005C206F /* Sine.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
-		2A798DBF18B84FC000421573 /* Slider.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DBD18B84FC000421573 /* Slider.cpp */; };
 		2A798DC218B859AE00421573 /* Number.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Number.cpp */; };
 		2A798DC918B97C8600421573 /* Wire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC718B97C8600421573 /* Wire.cpp */; };
 		2A798DD318B997DF00421573 /* InputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD118B997DF00421573 /* InputNode.cpp */; };
@@ -67,8 +66,6 @@
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
 		2A2E083418B58E270060A535 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Canvas.h; path = ../src/Canvas.h; sourceTree = "<group>"; };
 		2A798DBC18B84FC000421573 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../src/Node.h; sourceTree = "<group>"; };
-		2A798DBD18B84FC000421573 /* Slider.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Slider.cpp; path = ../src/Slider.cpp; sourceTree = "<group>"; };
-		2A798DBE18B84FC000421573 /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Slider.h; path = ../src/Slider.h; sourceTree = "<group>"; };
 		2A798DC018B859AE00421573 /* Number.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Number.cpp; path = ../src/Number.cpp; sourceTree = "<group>"; };
 		2A798DC118B859AE00421573 /* Number.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Number.h; path = ../src/Number.h; sourceTree = "<group>"; };
 		2A798DC318B85D6100421573 /* Controlease.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Controlease.h; path = ../src/Controlease.h; sourceTree = "<group>"; };
@@ -176,8 +173,6 @@
 				2AD2E23518B7E4E20084A524 /* MouseListener.h */,
 				2AD2E23918B849400084A524 /* ToolBox.cpp */,
 				2AD2E23A18B849400084A524 /* ToolBox.h */,
-				2A798DBD18B84FC000421573 /* Slider.cpp */,
-				2A798DBE18B84FC000421573 /* Slider.h */,
 				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 				2A798DC718B97C8600421573 /* Wire.cpp */,
 				2A798DC818B97C8600421573 /* Wire.h */,
@@ -446,7 +441,6 @@
 				49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */,
 				4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */,
 				2A798DDC18BA7CFE00421573 /* Tool.cpp in Sources */,
-				2A798DBF18B84FC000421573 /* Slider.cpp in Sources */,
 				DAE7E905601D4DB3A8525A1F /* UdpSocket.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

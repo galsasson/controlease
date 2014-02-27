@@ -138,6 +138,9 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_DIV:
             addComponent(new Div(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
+        case TOOL_TYPE_SINE:
+            addComponent(new Sine(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            break;
             
         default:
             break;
