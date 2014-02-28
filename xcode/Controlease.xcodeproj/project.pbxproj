@@ -15,6 +15,8 @@
 		11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DF1BDB96E5D4CBD89FD91F7 /* OscOutboundPacketStream.cpp */; };
 		14A0F1BC8626477E8429059F /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7088C28B5D094C8B88881F63 /* CinderApp.icns */; };
 		2A20D07618BEE800005C206F /* Sine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07418BEE800005C206F /* Sine.cpp */; };
+		2A20D07918BEFA3C005C206F /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07718BEFA3C005C206F /* Random.cpp */; };
+		2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07A18BF081E005C206F /* ProgramOutput.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
 		2A798DC218B859AE00421573 /* Number.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Number.cpp */; };
@@ -61,6 +63,10 @@
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		2A20D07418BEE800005C206F /* Sine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sine.cpp; path = ../src/Sine.cpp; sourceTree = "<group>"; };
 		2A20D07518BEE800005C206F /* Sine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sine.h; path = ../src/Sine.h; sourceTree = "<group>"; };
+		2A20D07718BEFA3C005C206F /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Random.cpp; path = ../src/Random.cpp; sourceTree = "<group>"; };
+		2A20D07818BEFA3C005C206F /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../src/Random.h; sourceTree = "<group>"; };
+		2A20D07A18BF081E005C206F /* ProgramOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramOutput.cpp; path = ../src/ProgramOutput.cpp; sourceTree = "<group>"; };
+		2A20D07B18BF081E005C206F /* ProgramOutput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ProgramOutput.h; path = ../src/ProgramOutput.h; sourceTree = "<group>"; };
 		2A2E083018B5714B0060A535 /* ResourceManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ResourceManager.cpp; path = ../src/ResourceManager.cpp; sourceTree = "<group>"; };
 		2A2E083118B5714B0060A535 /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceManager.h; path = ../src/ResourceManager.h; sourceTree = "<group>"; };
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
@@ -161,6 +167,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
+				2A20D07B18BF081E005C206F /* ProgramOutput.h */,
 				2A798DE018BAFAD200421573 /* Components */,
 				2A798DC318B85D6100421573 /* Controlease.h */,
 				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
@@ -281,6 +289,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A20D07718BEFA3C005C206F /* Random.cpp */,
+				2A20D07818BEFA3C005C206F /* Random.h */,
 				2A20D07418BEE800005C206F /* Sine.cpp */,
 				2A20D07518BEE800005C206F /* Sine.h */,
 				2A798DE418BB11A900421573 /* Div.cpp */,
@@ -429,10 +439,12 @@
 				2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */,
 				2A798DE318BB0C5200421573 /* Add.cpp in Sources */,
 				53B663210C164E40B7B58C20 /* IpEndpointName.cpp in Sources */,
+				2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */,
 				2A798DEC18BB11A900421573 /* Sub.cpp in Sources */,
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
 				2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */,
 				11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */,
+				2A20D07918BEFA3C005C206F /* Random.cpp in Sources */,
 				2A798DDF18BAFAB000421573 /* Split.cpp in Sources */,
 				2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */,
 				69D60E2FAA7C495FA7312ACE /* OscPrintReceivedElements.cpp in Sources */,

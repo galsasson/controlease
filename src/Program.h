@@ -22,7 +22,9 @@
 #include "ResourceManager.h"
 #include "CanvasComponent.h"
 #include "ProgramInput.h"
+#include "ProgramOutput.h"
 #include "InputNode.h"
+#include "OutputNode.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -65,9 +67,12 @@ private:
     void handleMessages();
     void handleAlive(osc::Message msg);
     void addInput(osc::Message msg);
+    void addOutput(osc::Message msg);
+    void handleOutputMessage(osc::Message msg);
     Vec2f getLocalCoords(Vec2f p);
     Vec2f getCanvasCoords(Vec2f p);
     void applyBorders();
+    void resizeComponent();
     
     int programPort;
     int listenPort;
@@ -79,6 +84,10 @@ private:
     vector<ProgramInput*> inputs;
     vector<InputNode*> inputNodes;
     
+    vector<ProgramOutput*> outputs;
+    vector<OutputNode*> outputNodes;
+//    vector<string> outputNames;
+    
     // graphical representation
     void setSize(Vec2f s);
     
@@ -88,6 +97,7 @@ private:
     string name;
     Rectf nameRect;
     Vec2f nextInputPos;
+    Vec2f nextOutputPos;
     
     // interaction
     Vec2f prevMouse;

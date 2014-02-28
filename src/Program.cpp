@@ -13,6 +13,7 @@ Program::Program(Vec2f _pos)
     titleRect = localRect = Rectf(0, 0, 200, 20);
     rect = Rectf(_pos, _pos+localRect.getSize());
     nextInputPos = Vec2f(6, 28);
+    nextOutputPos = Vec2f(localRect.x2 - 6, 28);
     
     connected = false;
 }
@@ -66,13 +67,22 @@ void Program::draw()
         // draw all the input names
         for (int i=0; i<inputs.size(); i++)
         {
-            ResourceManager::getInstance().getTextureFont()->drawString(inputs[i   ]->getName(), Vec2f(15, 30+i*15));
+            ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 30+i*15));
+        }
+        for (int i=0; i<outputs.size(); i++)
+        {
+            outputs[i]->draw();
         }
     
         // draw all input nodes
         for (int i=0; i<inputNodes.size(); i++)
         {
             inputNodes[i]->draw();
+        }
+        // draw the output nodes
+        for (int i=0; i<outputNodes.size(); i++)
+        {
+            outputNodes[i]->draw();
         }
     }
     
@@ -150,6 +160,18 @@ ConnectionResult* Program::getConnectionStart(cease::MouseEvent event)
         if (inputNodes[i]->contains(local)) {
             if (inputNodes[i]->isConnected()) {
                 return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
+            }
+        }
+    }
+    
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        if (outputNodes[i]->contains(local)) {
+            if (outputNodes[i]->isConnected()) {
+                return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNodes[i]);
+            }
+            else {
+                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
             }
         }
     }
@@ -249,53 +271,63 @@ void Program::handleMessages()
 		osc::Message message;
 		oscListener.getNextMessage( &message );
 		
-		console() << "New message received" << std::endl;
-		console() << "Address: " << message.getAddress() << std::endl;
-		console() << "Num Arg: " << message.getNumArgs() << std::endl;
+//		console() << "New message received" << std::endl;
+//		console() << "Address: " << message.getAddress() << std::endl;
+//		console() << "Num Arg: " << message.getNumArgs() << std::endl;
         
+        if (message.getAddress() == "/oc") {
+            handleOutputMessage(message);
+            continue;
+        }
         if (message.getAddress() == "/alive!") {
             handleAlive(message);
-            return;
+            continue;
         }
-        else if (message.getAddress() == "/input_param") {
+        else if (message.getAddress() == "/input_node") {
             addInput(message);
-            return;
+            continue;
         }
-        else if (message.getAddress() == "/end_params") {
+        else if (message.getAddress() == "/output_node") {
+            addOutput(message);
+            continue;
+        }
+        else if (message.getAddress() == "/end_nodes") {
             if (inputs.size() > 0 && name != "") {
                 connected = true;
             }
-            return;
+            continue;
         }
-        
-		for (int i = 0; i < message.getNumArgs(); i++) {
-			console() << "-- Argument " << i << std::endl;
-			console() << "---- type: " << message.getArgTypeName(i) << std::endl;
-			if( message.getArgType(i) == osc::TYPE_INT32 ) {
-				try {
-					console() << "------ value: "<< message.getArgAsInt32(i) << std::endl;
-				}
-				catch (...) {
-					console() << "Exception reading argument as int32" << std::endl;
-				}
-			}
-			else if( message.getArgType(i) == osc::TYPE_FLOAT ) {
-				try {
-					console() << "------ value: " << message.getArgAsFloat(i) << std::endl;
-				}
-				catch (...) {
-					console() << "Exception reading argument as float" << std::endl;
-				}
-			}
-			else if( message.getArgType(i) == osc::TYPE_STRING) {
-				try {
-					console() << "------ value: " << message.getArgAsString(i).c_str() << std::endl;
-				}
-				catch (...) {
-					console() << "Exception reading argument as string" << std::endl;
-				}
-			}
-		}
+        else {
+            // just print the message
+            for (int i = 0; i < message.getNumArgs(); i++) {
+                console() << "-- Argument " << i << std::endl;
+                console() << "---- type: " << message.getArgTypeName(i) << std::endl;
+                if( message.getArgType(i) == osc::TYPE_INT32 ) {
+                    try {
+                        console() << "------ value: "<< message.getArgAsInt32(i) << std::endl;
+                    }
+                    catch (...) {
+                        console() << "Exception reading argument as int32" << std::endl;
+                    }
+                }
+                else if( message.getArgType(i) == osc::TYPE_FLOAT ) {
+                    try {
+                        console() << "------ value: " << message.getArgAsFloat(i) << std::endl;
+                    }
+                    catch (...) {
+                        console() << "Exception reading argument as float" << std::endl;
+                    }
+                }
+                else if( message.getArgType(i) == osc::TYPE_STRING) {
+                    try {
+                        console() << "------ value: " << message.getArgAsString(i).c_str() << std::endl;
+                    }
+                    catch (...) {
+                        console() << "Exception reading argument as string" << std::endl;
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -316,15 +348,41 @@ void Program::addInput(osc::Message msg)
     ProgramInput *input = new ProgramInput();
     if (input->setup(oscSender, msg)) {
         inputNodes.push_back(new InputNode(inputNodes.size(), this, nextInputPos));
-        rect.y2 += 15;
-        localRect.y2 += 15;
-//        setSize(size+Vec2f(0, 15));
         nextInputPos.y += 15;
         inputs.push_back(input);
+        resizeComponent();
     }
     else {
         delete input;
     }
+}
+
+void Program::addOutput(osc::Message msg)
+{
+    ProgramOutput *poutput = new ProgramOutput();
+    if (poutput->setup(msg, nextOutputPos))
+    {
+        outputs.push_back(poutput);
+        OutputNode *node = new OutputNode(poutput->getIndex(), this, nextOutputPos);
+        node->updateVal(poutput->getValue());
+        outputNodes.push_back(node);
+        nextOutputPos.y += 15;
+        resizeComponent();
+    }
+    else {
+        delete poutput;
+    }
+}
+
+void Program::handleOutputMessage(osc::Message msg)
+{
+    if (msg.getNumArgs() != 2) {
+        return;
+    }
+    
+    int index = msg.getArgAsInt32(0);
+    float val = msg.getArgAsFloat(1);
+    outputNodes[index]->updateVal(val);
 }
 
 void Program::applyBorders()
@@ -347,5 +405,12 @@ void Program::applyBorders()
     else if (y2 > CANVAS_HEIGHT) {
         rect -= Vec2f(0, y2-CANVAS_HEIGHT);
     }
+}
+
+void Program::resizeComponent()
+{
+    int nodeNum = max(inputNodes.size(), outputNodes.size());
+    rect.y2 = rect.y1 + 20 + nodeNum*15;
+    localRect.y2 = 20 + nodeNum*15;
 }
 

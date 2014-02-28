@@ -51,6 +51,8 @@ void InputNode::disconnect(Node *node)
     if (prev == node) {
         prev = NULL;
     }
+    
+    component->setValue(index, 0);
 }
 
 bool InputNode::isConnected()
