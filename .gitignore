@@ -1,4 +1,7 @@
 
+# libs directory (currently v8)
+libs
+
 # xcode build directory
 xcode/build
 

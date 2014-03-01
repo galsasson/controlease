@@ -59,7 +59,13 @@ void Number::draw()
     gl::color(0, 0, 0);
     gl::drawStrokedRoundedRect(rect, 2);
     
+    if (isValDrag) {
+        gl::color(0.95, 0.95, 0.5);
+        gl::drawSolidRect(valRect);
+    }
+    
     // draw title
+    gl::color(0, 0, 0);
     ResourceManager::getInstance().getTextureFont()->drawString("Number", titleRect);
     gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
     
