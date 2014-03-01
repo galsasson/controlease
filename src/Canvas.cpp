@@ -196,6 +196,20 @@ ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
     return NULL;
 }
 
+void Canvas::keyDown(cinder::app::KeyEvent event)
+{
+    if (event.getCode() == 8)   // DEL
+    {
+        if (focusComponent) {
+            deleteComponent(focusComponent);
+        }
+    }
+}
+
+void Canvas::keyUp(cinder::app::KeyEvent event)
+{
+}
+
 CanvasComponent* Canvas::getMouseComponent(Vec2f p)
 {
     for (int i=0; i<components.size(); i++)
@@ -295,16 +309,20 @@ void Canvas::appMouseDrag(MouseEvent event)
 
 void Canvas::appKeyDown(cinder::app::KeyEvent event)
 {
-    if (event.getCode() == 8)   // DEL
+    if (focusComponent)
     {
-        if (focusComponent) {
-            deleteComponent(focusComponent);
+        KeyboardListener *keyListener = focusComponent->getCurrentKeyboardListener();
+        if (keyListener) {
+            return keyListener->keyDown(event);
         }
     }
+    
+    keyDown(event);
 }
 
 void Canvas::appKeyUp(cinder::app::KeyEvent event)
 {
+    keyUp(event);
 }
 
 void Canvas::setSize(Vec2f newSize)

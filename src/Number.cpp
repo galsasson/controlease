@@ -220,6 +220,10 @@ vector<Node*> Number::getOutputNodes()
     return outputs;
 }
 
+KeyboardListener* Number::getCurrentKeyboardListener()
+{
+    return NULL;
+}
 
 Vec2f Number::getCanvasPos()
 {

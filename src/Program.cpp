@@ -15,6 +15,12 @@ Program::Program(Vec2f _pos)
     nextInputPos = Vec2f(6, 28);
     nextOutputPos = Vec2f(localRect.x2 - 6, 28);
     
+    addressInput = new TextInput(Vec2f(5, 4), Vec2f(150, 14));
+    addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
+//    boost::bind(&TextInput::onReturn, this);
+
+    listenPort = Rand::randInt(5000, 9000);
+
     connected = false;
 }
 
@@ -30,14 +36,36 @@ Program::~Program()
     {
         delete inputNodes[i];
     }
+    
+    delete addressInput;
 }
 
-void Program::setupConnection(int oport, int iport)
+void Program::setupConnection(string host, int oport)
 {
+    programHost = host;
     programPort = oport;
-    listenPort = iport;
     
     connect();
+}
+
+void Program::addressInputSet(void)
+{
+    string textVal = addressInput->getValue();
+    
+    string host;
+    int port;
+    
+    int collonIndex = textVal.find(':');
+    if (collonIndex < 0) {
+        return;
+    }
+    
+    host = textVal.substr(0, collonIndex);
+    port = atoi(textVal.substr(collonIndex+1, textVal.size()).c_str());
+    
+    console() << "connecting to host: " << host << ", port "<<port<<endl;
+    
+    setupConnection(host, port);
 }
 
 void Program::update()
@@ -46,6 +74,7 @@ void Program::update()
     handleMessages();
     
     if (!connected) {
+        addressInput->update();
         return;
     }
 }
@@ -85,6 +114,9 @@ void Program::draw()
             outputNodes[i]->draw();
         }
     }
+    else {
+        addressInput->draw();
+    }
     
     gl::popMatrices();
 }
@@ -92,7 +124,13 @@ void Program::draw()
 void Program::drawOutline()
 {
     gl::pushMatrices();
-    gl::translate(rect.getUpperLeft()-Vec2f(4, 4));
+    gl::translate(rect.getUpperLeft());
+    if (!connected)
+    {
+        addressInput->drawInFocus();
+    }
+    
+    gl::translate(Vec2f(-4, -4));
     
     glPushAttrib(GL_ENABLE_BIT);
     glLineStipple(1, 0xff00);
@@ -102,6 +140,7 @@ void Program::drawOutline()
     gl::drawStrokedRect(Rectf(Vec2f(0, 0), rect.getSize() + Vec2f(8, 8)));
     
     glPopAttrib();
+    
     gl::popMatrices();
 }
 
@@ -209,14 +248,28 @@ vector<Node*> Program::getInputNodes()
 
 vector<Node*> Program::getOutputNodes()
 {
-    vector<Node*> outputs;
+    vector<Node*> onodes;
     
-    return outputs;
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        onodes.push_back((Node*)outputNodes[i]);
+    }
+    
+    return onodes;
 }
 
 bool Program::contains(Vec2f p)
 {
     return rect.contains(p);
+}
+
+KeyboardListener* Program::getCurrentKeyboardListener()
+{
+    if (!connected) {
+        return addressInput;
+    }
+    
+    return NULL;
 }
 
 Vec2f Program::getCanvasPos()

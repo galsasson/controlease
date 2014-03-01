@@ -10,8 +10,10 @@
 #define __Controlease__Program__
 
 #include <iostream>
+#include <stdio.h>
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
+#include "cinder/Rand.h"
 #include <boost/container/vector.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
 #include "OscSender.h"
@@ -21,6 +23,7 @@
 #include "ConnectionResult.h"
 #include "ResourceManager.h"
 #include "CanvasComponent.h"
+#include "TextInput.h"
 #include "ProgramInput.h"
 #include "ProgramOutput.h"
 #include "InputNode.h"
@@ -36,11 +39,14 @@ public:
     Program(Vec2f _pos);
     ~Program();
     
-    void setupConnection(int oport, int iport);
+    void setupConnection(string host, int oport);
     void update();
     void draw();
     void drawOutline();
-    
+
+    void addressInputSet(void);
+    void onReturn(void);
+
     void translate(Vec2f offset);
     Rectf getBounds();
     
@@ -56,10 +62,12 @@ public:
     vector<Node*> getInputNodes();
     vector<Node*> getOutputNodes();
     bool contains(Vec2f p);
+    KeyboardListener* getCurrentKeyboardListener();
     
     Vec2f getCanvasPos();
     float getValue(int i);
     void setValue(int i, float v);
+    
     
 
 private:
@@ -74,19 +82,21 @@ private:
     void applyBorders();
     void resizeComponent();
     
+    string programHost;
     int programPort;
     int listenPort;
     
     osc::Sender *oscSender;
     osc::Listener oscListener;
 
+    TextInput *addressInput;
+    
     bool connected;
     vector<ProgramInput*> inputs;
     vector<InputNode*> inputNodes;
     
     vector<ProgramOutput*> outputs;
     vector<OutputNode*> outputNodes;
-//    vector<string> outputNames;
     
     // graphical representation
     void setSize(Vec2f s);

@@ -19,6 +19,7 @@
 
 #include "Controlease.h"
 #include "MouseListener.h"
+#include "KeyboardListener.h"
 #include "ResourceManager.h"
 #include "Program.h"
 #include "Number.h"
@@ -39,7 +40,7 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Canvas : public MouseListener
+class Canvas : public MouseListener, public KeyboardListener
 {
 public:
     Canvas();
@@ -56,7 +57,8 @@ public:
 	void mouseDrag( cease::MouseEvent event );
     bool contains(Vec2f p);
     ConnectionResult* getConnection(cease::MouseEvent event);
-    
+    void keyDown(KeyEvent event);
+    void keyUp(KeyEvent event);
     
     void appMouseDown( MouseEvent event );
 	void appMouseUp( MouseEvent event);

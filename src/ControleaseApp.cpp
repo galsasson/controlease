@@ -50,12 +50,7 @@ void ControleaseApp::setup()
     
     canvas = new Canvas();
     canvas->setup(Vec2f(150, 50), getCanvasSize());
-    
     toolbox = new ToolBox(Vec2f(0, 50), getToolboxSize());
-    
-    Program *p = new Program(Vec2f(400, 250));
-    p->setupConnection(9191, 9876);
-    canvas->addComponent(p);
     
     // rendering settings
     glEnable(GL_LINE_SMOOTH);

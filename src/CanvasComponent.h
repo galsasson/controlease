@@ -9,6 +9,7 @@
 #ifndef __Controlease__Component__
 #define __Controlease__Component__
 
+#include "KeyboardListener.h"
 #include "MouseListener.h"
 #include "ConnectionResult.h"
 #include "Node.h"
@@ -34,6 +35,7 @@ public:
     virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event) = 0;
     virtual vector<Node*> getInputNodes() = 0;
     virtual vector<Node*> getOutputNodes() = 0;
+    virtual KeyboardListener* getCurrentKeyboardListener() {return NULL;};
 };
 
 

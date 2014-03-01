@@ -54,12 +54,15 @@ public:
     ConnectionResult* getConnectionEnd( cease::MouseEvent event);
     vector<Node*> getInputNodes();
     vector<Node*> getOutputNodes();
+    KeyboardListener* getCurrentKeyboardListener();
     
     bool contains(Vec2f p);
     Vec2f getCanvasPos();
     
     float getValue(int i);
     void setValue(int i, float v);
+    
+
     
 private:
     void updateVal(float newVal);
