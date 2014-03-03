@@ -1,6 +1,8 @@
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 
+#include "v8.h"
+
 #include "Canvas.h"
 #include "ToolBox.h"
 #include "Program.h"
@@ -8,6 +10,8 @@
 using namespace ci;
 using namespace ci::app;
 using namespace std;
+
+using namespace v8;
 
 class ControleaseApp : public AppNative {
   public:
@@ -30,6 +34,7 @@ class ControleaseApp : public AppNative {
 private:
     Vec2f getCanvasSize();
     Vec2f getToolboxSize();
+    
     Canvas *canvas;
     ToolBox *toolbox;
     

@@ -20,6 +20,8 @@
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
 		2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71545418C1849B00DA1C39 /* TextInput.cpp */; };
+		2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547718C28B3500DA1C39 /* Exp.cpp */; };
+		2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */; };
 		2A798DC218B859AE00421573 /* Number.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Number.cpp */; };
 		2A798DC918B97C8600421573 /* Wire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC718B97C8600421573 /* Wire.cpp */; };
 		2A798DD318B997DF00421573 /* InputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD118B997DF00421573 /* InputNode.cpp */; };
@@ -74,6 +76,10 @@
 		2A2E083418B58E270060A535 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Canvas.h; path = ../src/Canvas.h; sourceTree = "<group>"; };
 		2A71545418C1849B00DA1C39 /* TextInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextInput.cpp; path = ../src/TextInput.cpp; sourceTree = "<group>"; };
 		2A71545518C1849B00DA1C39 /* TextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextInput.h; path = ../src/TextInput.h; sourceTree = "<group>"; };
+		2A71547718C28B3500DA1C39 /* Exp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exp.cpp; path = ../src/Exp.cpp; sourceTree = "<group>"; };
+		2A71547818C28B3500DA1C39 /* Exp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exp.h; path = ../src/Exp.h; sourceTree = "<group>"; };
+		2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = V8Engine.cpp; path = ../src/V8Engine.cpp; sourceTree = "<group>"; };
+		2A71547B18C2BA0900DA1C39 /* V8Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V8Engine.h; path = ../src/V8Engine.h; sourceTree = "<group>"; };
 		2A798DBC18B84FC000421573 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../src/Node.h; sourceTree = "<group>"; };
 		2A798DC018B859AE00421573 /* Number.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Number.cpp; path = ../src/Number.cpp; sourceTree = "<group>"; };
 		2A798DC118B859AE00421573 /* Number.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Number.h; path = ../src/Number.h; sourceTree = "<group>"; };
@@ -171,12 +177,12 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
 				2AF1CC5118C1365C000A49BB /* GUI elements */,
 				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
 				2A20D07B18BF081E005C206F /* ProgramOutput.h */,
 				2A798DE018BAFAD200421573 /* Components */,
 				2A798DC318B85D6100421573 /* Controlease.h */,
-				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
 				2A7F105218B562EA006CA100 /* ProgramInput.cpp */,
 				2A7F105318B562EA006CA100 /* ProgramInput.h */,
 				2A2E083018B5714B0060A535 /* ResourceManager.cpp */,
@@ -198,6 +204,8 @@
 				2A798DDA18BA7CFE00421573 /* Tool.cpp */,
 				2A798DDB18BA7CFE00421573 /* Tool.h */,
 				2AF1CC5518C137A6000A49BB /* KeyboardListener.h */,
+				2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */,
+				2A71547B18C2BA0900DA1C39 /* V8Engine.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -295,6 +303,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A71547718C28B3500DA1C39 /* Exp.cpp */,
+				2A71547818C28B3500DA1C39 /* Exp.h */,
 				2A20D07718BEFA3C005C206F /* Random.cpp */,
 				2A20D07818BEFA3C005C206F /* Random.h */,
 				2A20D07418BEE800005C206F /* Sine.cpp */,
@@ -441,9 +451,11 @@
 			files = (
 				2A798DEB18BB11A900421573 /* Mult.cpp in Sources */,
 				CC092B884D0940DEACDA3C98 /* ControleaseApp.cpp in Sources */,
+				2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */,
 				2AD2E23B18B849400084A524 /* ToolBox.cpp in Sources */,
 				69535C0D44F7467BBD2DE711 /* OscBundle.cpp in Sources */,
 				2A798DEA18BB11A900421573 /* Div.cpp in Sources */,
+				2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */,
 				FE1FFDB9EDE54692A9CAF6E3 /* OscListener.cpp in Sources */,
 				2A798DC918B97C8600421573 /* Wire.cpp in Sources */,
 				2A798DD318B997DF00421573 /* InputNode.cpp in Sources */,
@@ -493,11 +505,23 @@
 					"$(inherited)",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"$(CINDER_PATH)/boost\"",
+					"\"$(V8_PATH)/include\"",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder_d.a\"";
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder_d.a\"",
+					"\"$(V8_PATH)/out/ia32.debug/libv8_base.ia32.a\"",
+					"\"$(V8_PATH)/out/ia32.debug/libv8_snapshot.a\"",
+					"\"$(V8_PATH)/out/ia32.debug/libicudata.a\"",
+					"\"$(V8_PATH)/out/ia32.debug/libicui18n.a\"",
+					"\"$(V8_PATH)/out/ia32.debug/libicuuc.a\"",
+				);
 				PRODUCT_NAME = Controlease;
 				SYMROOT = ./build;
+				V8_PATH = ../libs/v8;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -516,12 +540,24 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Controlease_Prefix.pch;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				HEADER_SEARCH_PATHS = (
+					"\"$(CINDER_PATH)/boost\"",
+					"\"$(V8_PATH)/include\"",
+				);
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Applications";
-				OTHER_LDFLAGS = "\"$(CINDER_PATH)/lib/libcinder.a\"";
+				OTHER_LDFLAGS = (
+					"\"$(CINDER_PATH)/lib/libcinder.a\"",
+					"\"$(V8_PATH)/out/ia32.release/libv8_snapshot.a\"",
+					"\"$(V8_PATH)/out/ia32.release/libv8_base.ia32.a\"",
+					"\"$(V8_PATH)/out/ia32.release/libicui18n.a\"",
+					"\"$(V8_PATH)/out/ia32.release/libicudata.a\"",
+					"\"$(V8_PATH)/out/ia32.release/libicuuc.a\"",
+				);
 				PRODUCT_NAME = Controlease;
 				STRIP_INSTALLED_PRODUCT = YES;
 				SYMROOT = ./build;
+				V8_PATH = ../libs/v8;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

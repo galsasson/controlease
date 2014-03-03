@@ -11,8 +11,9 @@
 void ResourceManager::initResources()
 {
 //    mFont = Font("Arial", 12);
-//    mFont = Font(loadAsset("Blender-BOOK.ttf"));
-    mTextureFont = gl::TextureFont::create(Font(loadAsset("Blender-BOLD.ttf"), 14));
+//    mFont = Font(loadAsset("Blender-BOOK.ttf"), 14);
+    mFont = Font(loadAsset("Blender-BOLD.ttf"), 14);
+    mTextureFont = gl::TextureFont::create(mFont);
 }
 
 gl::TextureFontRef ResourceManager::getTextureFont()

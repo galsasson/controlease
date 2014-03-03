@@ -44,6 +44,9 @@ private:
     string str;
     Rectf strRect;
     
+    int cursorPos;
+    float cursorX;
+    
     int blinkCounter;
     
     boost::function<void(void)> returnFunction;

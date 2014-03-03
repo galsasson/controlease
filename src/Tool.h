@@ -27,6 +27,7 @@ typedef enum _ToolType {
     TOOL_TYPE_NOISE,
     TOOL_TYPE_RANDOM,
     TOOL_TYPE_SINE,
+    TOOL_TYPE_EXP,
 } ToolType;
 
 class Tool

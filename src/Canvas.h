@@ -30,6 +30,7 @@
 #include "Div.h"
 #include "Random.h"
 #include "Sine.h"
+#include "Exp.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"

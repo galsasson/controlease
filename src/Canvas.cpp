@@ -121,7 +121,7 @@ void Canvas::addComponent(Tool *tool)
             addComponent(new Program(topLeft + Vec2f(30, 30)));
             break;
         case TOOL_TYPE_NUMBER:
-            addComponent(new Number(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            addComponent(new ::Number(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
         case TOOL_TYPE_SPLIT:
             addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
@@ -144,7 +144,10 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_SINE:
             addComponent(new Sine(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-            
+        case TOOL_TYPE_EXP:
+            addComponent(new Exp(topLeft + Vec2f(30, 30), Vec2f(250, 50)));
+            break;
+
         default:
             break;
     }

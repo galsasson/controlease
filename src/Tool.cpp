@@ -63,6 +63,8 @@ string Tool::getToolName(ToolType t)
             return "Random";
         case TOOL_TYPE_SINE:
             return "Sine";
+        case TOOL_TYPE_EXP:
+            return "Expression";
     }
     
     return "Unknown";
