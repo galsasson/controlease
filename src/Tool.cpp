@@ -61,8 +61,8 @@ string Tool::getToolName(ToolType t)
             return "Noise";
         case TOOL_TYPE_RANDOM:
             return "Random";
-        case TOOL_TYPE_SINE:
-            return "Sine";
+        case TOOL_TYPE_OSCILLATOR:
+            return "Oscillator";
         case TOOL_TYPE_EXP:
             return "Expression";
     }

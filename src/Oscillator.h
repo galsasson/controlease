@@ -1,13 +1,13 @@
 //
-//  Sine.h
+//  Oscillator.h
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#ifndef __Controlease__Sine__
-#define __Controlease__Sine__
+#ifndef __Controlease__Oscillator__
+#define __Controlease__Oscillator__
 
 #include <iostream>
 #include <sstream>
@@ -30,11 +30,11 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
-class Sine : public CanvasComponent
+class Oscillator : public CanvasComponent
 {
 public:
-    Sine(Vec2f p, Vec2f s);
-    ~Sine();
+    Oscillator(Vec2f p, Vec2f s);
+    ~Oscillator();
     
     void initInterface(Vec2f size);
     void update();
@@ -95,4 +95,4 @@ private:
     
 };
 
-#endif /* defined(__Controlease__Sine__) */
+#endif /* defined(__Controlease__Oscillator__) */

@@ -18,7 +18,7 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     pos = _pos;
     size = _size;
     virtualSize = Vec2f(CANVAS_WIDTH, CANVAS_HEIGHT);
-    topLeft = Vec2f(0, 0);
+    topLeft = Vec2f(CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
     scale = Vec2f(1, 1);
     
     fbo = gl::Fbo(virtualSize.x, virtualSize.y);
@@ -50,7 +50,7 @@ void Canvas::draw()
     gl::pushMatrices();
     gl::scale((Vec2f)getWindowSize() / (Vec2f)fbo.getSize() * scale);
 
-    gl::clear(Color(1, 1, 1));
+    gl::clear(Color(0.9, 0.9, 0.9));
     gl::color(0.75, 0.75, 0.75);
     gl::lineWidth(1);
 
@@ -141,8 +141,8 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_RANDOM:
             addComponent(new Random(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_SINE:
-            addComponent(new Sine(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+        case TOOL_TYPE_OSCILLATOR:
+            addComponent(new Oscillator(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
         case TOOL_TYPE_EXP:
             addComponent(new Exp(topLeft + Vec2f(30, 30), Vec2f(250, 50)));

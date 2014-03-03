@@ -64,16 +64,17 @@ void ToolBox::setSize(Vec2f newSize)
 
 void ToolBox::createTools()
 {
-    tools.push_back(new Tool(TOOL_TYPE_PROGRAM, Vec2f(10, 50), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_NUMBER, Vec2f(10, 75), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_SPLIT, Vec2f(10, 100), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_ADD, Vec2f(10, 125), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_SUB, Vec2f(10, 150), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_MUL, Vec2f(10, 175), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_DIV, Vec2f(10, 200), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_RANDOM, Vec2f(10, 225), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_SINE, Vec2f(10, 250), Vec2f(rect.getWidth()-20, 20)));
-    tools.push_back(new Tool(TOOL_TYPE_EXP, Vec2f(10, 275), Vec2f(rect.getWidth()-20, 20)));
+    float startY = 10;
+    tools.push_back(new Tool(TOOL_TYPE_PROGRAM, Vec2f(10, startY), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_NUMBER, Vec2f(10, startY+25), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_SPLIT, Vec2f(10, startY+50), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_ADD, Vec2f(10, startY+75), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_SUB, Vec2f(10, startY+100), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_MUL, Vec2f(10, startY+125), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_DIV, Vec2f(10, startY+150), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_RANDOM, Vec2f(10, startY+175), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_OSCILLATOR, Vec2f(10, startY+200), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_EXP, Vec2f(10, startY+225), Vec2f(rect.getWidth()-20, 20)));
 }
 
 Vec2f ToolBox::getLocalCoords(Vec2f p)

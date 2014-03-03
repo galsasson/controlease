@@ -29,7 +29,7 @@
 #include "Mult.h"
 #include "Div.h"
 #include "Random.h"
-#include "Sine.h"
+#include "Oscillator.h"
 #include "Exp.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"

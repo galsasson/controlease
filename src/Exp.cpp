@@ -46,99 +46,6 @@ void Exp::initInterface(Vec2f size)
     codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
 }
 
-void Exp::v8Getter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
-{
-    Local<Object> self = info.Holder();
-    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
-    Exp *component = (Exp*)wrap->Value();
-    ReturnValue<Value> ret = info.GetReturnValue();
-    if (component->ivals.size() > index) {
-        ret.Set(component->ivals[index]);
-    }
-}
-
-void Exp::v8Setter(uint32_t index, Local<Value> val, const PropertyCallbackInfo<Value>& info)
-{
-    Local<Object> self = info.Holder();
-    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
-    Exp *component = (Exp*)wrap->Value();
-    if (component->outputNodes.size() > index) {
-        component->outputNodes[index]->updateVal(val->NumberValue());
-    }
-    ReturnValue<Value> ret = info.GetReturnValue();
-    ret.Set(true);
-}
-
-void Exp::compileAndRun(std::string code)
-{
-    /* compile the script */
-    // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
-
-    // add interceptors to inputs and outputs
-    Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
-    globalIn->SetInternalFieldCount(1);
-    globalIn->SetIndexedPropertyHandler(v8Getter);
-    Handle<ObjectTemplate> globalOut = ObjectTemplate::New(Isolate::GetCurrent());
-    globalOut->SetInternalFieldCount(1);
-    globalOut->SetIndexedPropertyHandler(v8Getter, v8Setter);
-    
-    
-    // Create a new context.
-    Handle<Context> context = Context::New(Isolate::GetCurrent(), NULL);
-
-    // Enter the context for compiling and running the hello world script.
-    Context::Scope context_scope(context);
-
-    Local<Object> objIn = globalIn->NewInstance();
-    objIn->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
-    Local<Object> objOut = globalOut->NewInstance();
-    objOut->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
-    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "inn"), objIn);
-    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "out"), objOut);
-
-    pContext.Reset(Isolate::GetCurrent(), context);
-    
-    // Create a string containing the JavaScript source code.
-    Handle<String> source = String::NewFromUtf8(Isolate::GetCurrent(), code.c_str());
-    
-    // Compile the source code.
-    Handle<Script> localScript = Script::Compile(source);
-    if (localScript.IsEmpty()) {
-        return;
-    }
-    
-    localScript->Run();
-    
-    // find 'loop' function
-    Handle<String> process_name = String::NewFromUtf8(Isolate::GetCurrent(), "loop");
-    Handle<Value> process_val = context->Global()->Get(process_name);
-    if (!process_val->IsFunction()) {
-        console() << "could not find 'loop' function."<<endl;
-        return;
-    }
-    
-    Handle<Function> loopFunction = Handle<Function>::Cast(process_val);
-    pFunction.Reset(Isolate::GetCurrent(), loopFunction);
-}
-
-void Exp::runCompiledScript()
-{
-    if (pFunction.IsEmpty()) {
-        return;
-    }
-    
-    // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
-    
-    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
-    
-    Context::Scope context_scope(context);
-    
-    Local<Function> loopFunction = Local<Function>::New(Isolate::GetCurrent(), pFunction);
-    loopFunction->Call(context->Global(), 0, NULL);
-}
-
 void Exp::inputEnterPressed()
 {
     isEditing = false;
@@ -438,4 +345,132 @@ void Exp::resizeComponent()
     int maxNodes = max(inputNodes.size(), outputNodes.size());
     canvasRect.y2 = canvasRect.y1 + 26 + 9*maxNodes;
     rect.y2 = 26 + 9*maxNodes;
+}
+
+void Exp::v8Getter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
+{
+    Local<Object> self = info.Holder();
+    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
+    Exp *component = (Exp*)wrap->Value();
+    ReturnValue<Value> ret = info.GetReturnValue();
+    if (component->ivals.size() > index) {
+        ret.Set(component->ivals[index]);
+    }
+}
+
+void Exp::v8Setter(uint32_t index, Local<Value> val, const PropertyCallbackInfo<Value>& info)
+{
+    Local<Object> self = info.Holder();
+    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
+    Exp *component = (Exp*)wrap->Value();
+    if (component->outputNodes.size() > index) {
+        component->outputNodes[index]->updateVal(val->NumberValue());
+    }
+    ReturnValue<Value> ret = info.GetReturnValue();
+    ret.Set(true);
+}
+
+void Exp::compileAndRun(std::string code)
+{
+    /* compile the script */
+    // Create a stack-allocated handle scope.
+    HandleScope handle_scope(Isolate::GetCurrent());
+
+    // add the map function
+    Handle<ObjectTemplate> global = ObjectTemplate::New(Isolate::GetCurrent());
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "map"), FunctionTemplate::New(Isolate::GetCurrent(), v8Map));
+    
+    // add interceptors to inputs and outputs
+    Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
+    globalIn->SetInternalFieldCount(1);
+    globalIn->SetIndexedPropertyHandler(v8Getter);
+    Handle<ObjectTemplate> globalOut = ObjectTemplate::New(Isolate::GetCurrent());
+    globalOut->SetInternalFieldCount(1);
+    globalOut->SetIndexedPropertyHandler(v8Getter, v8Setter);
+    
+    
+    // Create a new context.
+    Handle<Context> context = Context::New(Isolate::GetCurrent(), NULL, global);
+    
+    // Enter the context for compiling and running the hello world script.
+    Context::Scope context_scope(context);
+    
+    Local<Object> objIn = globalIn->NewInstance();
+    objIn->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
+    Local<Object> objOut = globalOut->NewInstance();
+    objOut->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
+    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "inn"), objIn);
+    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "out"), objOut);
+    
+    pContext.Reset(Isolate::GetCurrent(), context);
+    
+    // Create a string containing the JavaScript source code.
+    Handle<String> source = String::NewFromUtf8(Isolate::GetCurrent(), code.c_str());
+    
+    // Compile the source code.
+    Handle<Script> localScript = Script::Compile(source);
+    if (localScript.IsEmpty()) {
+        return;
+    }
+    
+    localScript->Run();
+    
+    // find 'loop' function
+    Handle<String> process_name = String::NewFromUtf8(Isolate::GetCurrent(), "loop");
+    Handle<Value> process_val = context->Global()->Get(process_name);
+    if (!process_val->IsFunction()) {
+        console() << "could not find 'loop' function."<<endl;
+        return;
+    }
+    
+    Handle<Function> loopFunction = Handle<Function>::Cast(process_val);
+    pFunction.Reset(Isolate::GetCurrent(), loopFunction);
+}
+
+void Exp::runCompiledScript()
+{
+    if (pFunction.IsEmpty()) {
+        return;
+    }
+    
+    // Create a stack-allocated handle scope.
+    HandleScope handle_scope(Isolate::GetCurrent());
+    
+    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    
+    Context::Scope context_scope(context);
+    
+    Local<Function> loopFunction = Local<Function>::New(Isolate::GetCurrent(), pFunction);
+    loopFunction->Call(context->Global(), 0, NULL);
+}
+
+void Exp::v8Map(const FunctionCallbackInfo<v8::Value> &args)
+{
+    console() << "map called\n";
+    
+    if (args.Length() < 5) {
+        return;
+    }
+    
+    HandleScope scope(args.GetIsolate());
+    
+    // do clamp
+    float n = args[0]->NumberValue();
+    float nMin = args[1]->NumberValue();
+    float nMax = args[2]->NumberValue();
+    
+    if (n<=nMin) {
+        args.GetReturnValue().Set(args[3]->NumberValue());
+        return;
+    }
+    else if (n>=nMax) {
+        args.GetReturnValue().Set(args[4]->NumberValue());
+        return;
+    }
+    
+    args.GetReturnValue().Set(lmap(args[0]->NumberValue(),
+                                   args[1]->NumberValue(),
+                                   args[2]->NumberValue(),
+                                   args[3]->NumberValue(),
+                                   args[4]->NumberValue()));
 }

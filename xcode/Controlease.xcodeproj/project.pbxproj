@@ -14,7 +14,6 @@
 		00B784B60FF439BC000DE1D7 /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B784B20FF439BC000DE1D7 /* CoreAudio.framework */; };
 		11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1DF1BDB96E5D4CBD89FD91F7 /* OscOutboundPacketStream.cpp */; };
 		14A0F1BC8626477E8429059F /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = 7088C28B5D094C8B88881F63 /* CinderApp.icns */; };
-		2A20D07618BEE800005C206F /* Sine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07418BEE800005C206F /* Sine.cpp */; };
 		2A20D07918BEFA3C005C206F /* Random.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07718BEFA3C005C206F /* Random.cpp */; };
 		2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07A18BF081E005C206F /* ProgramOutput.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
@@ -22,6 +21,7 @@
 		2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71545418C1849B00DA1C39 /* TextInput.cpp */; };
 		2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547718C28B3500DA1C39 /* Exp.cpp */; };
 		2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */; };
+		2A71547F18C456EA00DA1C39 /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547D18C456EA00DA1C39 /* Oscillator.cpp */; };
 		2A798DC218B859AE00421573 /* Number.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Number.cpp */; };
 		2A798DC918B97C8600421573 /* Wire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC718B97C8600421573 /* Wire.cpp */; };
 		2A798DD318B997DF00421573 /* InputNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DD118B997DF00421573 /* InputNode.cpp */; };
@@ -64,8 +64,6 @@
 		26DDD80C5F90432EBDEF38A8 /* NetworkingUtils.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.cpp; name = NetworkingUtils.cpp; path = ../blocks/OSC/src/ip/posix/NetworkingUtils.cpp; sourceTree = "<group>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
-		2A20D07418BEE800005C206F /* Sine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Sine.cpp; path = ../src/Sine.cpp; sourceTree = "<group>"; };
-		2A20D07518BEE800005C206F /* Sine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Sine.h; path = ../src/Sine.h; sourceTree = "<group>"; };
 		2A20D07718BEFA3C005C206F /* Random.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Random.cpp; path = ../src/Random.cpp; sourceTree = "<group>"; };
 		2A20D07818BEFA3C005C206F /* Random.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Random.h; path = ../src/Random.h; sourceTree = "<group>"; };
 		2A20D07A18BF081E005C206F /* ProgramOutput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ProgramOutput.cpp; path = ../src/ProgramOutput.cpp; sourceTree = "<group>"; };
@@ -80,6 +78,8 @@
 		2A71547818C28B3500DA1C39 /* Exp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exp.h; path = ../src/Exp.h; sourceTree = "<group>"; };
 		2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = V8Engine.cpp; path = ../src/V8Engine.cpp; sourceTree = "<group>"; };
 		2A71547B18C2BA0900DA1C39 /* V8Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V8Engine.h; path = ../src/V8Engine.h; sourceTree = "<group>"; };
+		2A71547D18C456EA00DA1C39 /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Oscillator.cpp; path = ../src/Oscillator.cpp; sourceTree = "<group>"; };
+		2A71547E18C456EA00DA1C39 /* Oscillator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Oscillator.h; path = ../src/Oscillator.h; sourceTree = "<group>"; };
 		2A798DBC18B84FC000421573 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../src/Node.h; sourceTree = "<group>"; };
 		2A798DC018B859AE00421573 /* Number.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Number.cpp; path = ../src/Number.cpp; sourceTree = "<group>"; };
 		2A798DC118B859AE00421573 /* Number.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Number.h; path = ../src/Number.h; sourceTree = "<group>"; };
@@ -303,12 +303,12 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A71547D18C456EA00DA1C39 /* Oscillator.cpp */,
+				2A71547E18C456EA00DA1C39 /* Oscillator.h */,
 				2A71547718C28B3500DA1C39 /* Exp.cpp */,
 				2A71547818C28B3500DA1C39 /* Exp.h */,
 				2A20D07718BEFA3C005C206F /* Random.cpp */,
 				2A20D07818BEFA3C005C206F /* Random.h */,
-				2A20D07418BEE800005C206F /* Sine.cpp */,
-				2A20D07518BEE800005C206F /* Sine.h */,
 				2A798DE418BB11A900421573 /* Div.cpp */,
 				2A798DE518BB11A900421573 /* Div.h */,
 				2A798DE618BB11A900421573 /* Mult.cpp */,
@@ -459,7 +459,6 @@
 				FE1FFDB9EDE54692A9CAF6E3 /* OscListener.cpp in Sources */,
 				2A798DC918B97C8600421573 /* Wire.cpp in Sources */,
 				2A798DD318B997DF00421573 /* InputNode.cpp in Sources */,
-				2A20D07618BEE800005C206F /* Sine.cpp in Sources */,
 				33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */,
 				C0E223501FF742C793325391 /* OscSender.cpp in Sources */,
 				2A798DC218B859AE00421573 /* Number.cpp in Sources */,
@@ -476,6 +475,7 @@
 				2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */,
 				69D60E2FAA7C495FA7312ACE /* OscPrintReceivedElements.cpp in Sources */,
 				EC591D5058D54D33B166ED5B /* OscReceivedElements.cpp in Sources */,
+				2A71547F18C456EA00DA1C39 /* Oscillator.cpp in Sources */,
 				2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */,
 				2A7F105118B52C84006CA100 /* Program.cpp in Sources */,
 				49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */,
