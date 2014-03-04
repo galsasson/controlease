@@ -8,18 +8,21 @@
 
 #include "TextInput.h"
 
-TextInput::TextInput(Vec2f p, Vec2f s)
+TextInput::TextInput(Vec2f p, Vec2f s, bool multiline)
 {
     canvasRect = Rectf(p, p+s);
     localRect = Rectf(0, 0, s.x, s.y);
+    isMultiline = multiline;
     
     blinkCounter = 0;
     
     str = "";
-    strRect = Rectf(0, 0, 0, s.y);
-    
+    fontHeight = ResourceManager::getInstance().getTextureFont()->getAscent() +
+    ResourceManager::getInstance().getTextureFont()->getDescent();
+
     cursorPos = 0;
-    cursorX = 0;
+    cursorLocation = Vec2f(0,0);
+    strRect = Rectf(0, 0, 0, fontHeight);
 }
 
 void TextInput::update()
@@ -48,7 +51,7 @@ void TextInput::drawInFocus()
 
     // draw blinking cursor
     if (blinkCounter > 10) {
-        gl::drawLine(Vec2f(cursorX, 0), Vec2f(cursorX, strRect.getHeight()));
+        gl::drawLine(cursorLocation, cursorLocation + Vec2f(0, fontHeight));
     }
     
     gl::popMatrices();
@@ -59,8 +62,13 @@ void TextInput::keyDown(cinder::app::KeyEvent event)
 //    console() << event.getCode() << endl;
     
     if (event.getCode() == event.KEY_RETURN) {
-        // handle ENTER
-        if (!returnFunction.empty()) {
+        if (isMultiline && event.isShiftDown()) {
+            // SHIFT enter: do enter
+            str.insert(cursorPos, 1, event.getChar());
+            cursorPos++;
+        }
+        else if (!returnFunction.empty()) {
+            // handle ENTER
             returnFunction();
         }
     }
@@ -90,8 +98,10 @@ void TextInput::keyDown(cinder::app::KeyEvent event)
     }
     
     Vec2f strSize = ResourceManager::getInstance().getTextureFont()->measureString(str);
-    strRect = Rectf(0, 0, strSize.x, localRect.getHeight());
-    cursorX = ResourceManager::getInstance().getTextureFont()->measureString(str.substr(0, cursorPos)).x;
+    strRect = Rectf(0, 0, strSize.x, strSize.y);
+
+    setCursorLocation();
+    updateSize();
 }
 
 void TextInput::keyUp(cinder::app::KeyEvent event)
@@ -103,4 +113,76 @@ void TextInput::onReturn(boost::function<void(void)> func)
 {
     returnFunction = func;
 }
+
+int TextInput::getNumLines()
+{
+    int lines=1;
+    for (int i=0; i<str.length(); i++)
+    {
+        if (str[i] == 13) {
+            lines++;
+        }
+    }
+    
+    return lines;
+}
+
+Vec2f TextInput::getTextSize()
+{
+    return localRect.getSize();
+}
+
+int TextInput::getLineStart(std::string text, int pos)
+{
+    if (pos==0) {
+        return 0;
+    }
+    int index = text.rfind(13, pos-1);
+    
+    if (index < 0) {
+        return 0;
+    }
+    return index+1;
+}
+
+std::string TextInput::getLineUntil(std::string text, int pos)
+{
+    int start = getLineStart(text, pos);
+    return text.substr(start, pos-start);
+}
+
+int TextInput::getLineIndex(std::string text, int pos)
+{
+    int lines=0;
+    for (int i=0; i<pos; i++)
+    {
+        if (text[i] == 13) {
+            lines++;
+        }
+    }
+    return lines;
+}
+
+void TextInput::setCursorLocation()
+{
+    std::string line = getLineUntil(str, cursorPos);
+    
+    cursorLocation.x = ResourceManager::getInstance().getTextureFont()->measureString(line).x;
+    cursorLocation.y = (float)getLineIndex(str, cursorPos)*fontHeight;
+    
+    if (cursorLocation.y < 0) {
+        cursorLocation.y = 0;
+    }
+}
+
+void TextInput::updateSize()
+{
+    localRect = strRect;
+    localRect.y2 = getNumLines()*fontHeight;
+    canvasRect.x2 = localRect.x2;
+    canvasRect.y2 = localRect.y2;
+}
+
+
+
 

@@ -42,7 +42,7 @@ void Exp::initInterface(Vec2f size)
     ivals.push_back(0);
     
     textEditRect = Rectf(22, 22, size.x-20, size.y-2);
-    codeInput = new TextInput(Vec2f(25, 25), Vec2f(size.x-40, 14));
+    codeInput = new TextInput(Vec2f(25, 25), Vec2f(size.x-40, 14), true);
     codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
 }
 
@@ -56,7 +56,7 @@ void Exp::inputEnterPressed()
     }
     
     std::ostringstream str;
-    str << "var loop = function() {"<<codeInput->getValue()<<"}";
+    str << "var time=0; var loop = function() {"<<codeInput->getValue()<<"}";
 
     compileAndRun(str.str());
 }
@@ -64,6 +64,7 @@ void Exp::inputEnterPressed()
 void Exp::update()
 {
     codeInput->update();
+    resizeComponent();
 
     runCompiledScript();
 }
@@ -343,11 +344,19 @@ void Exp::applyBorders()
 void Exp::resizeComponent()
 {
     int maxNodes = max(inputNodes.size(), outputNodes.size());
-    canvasRect.y2 = canvasRect.y1 + 26 + 9*maxNodes;
-    rect.y2 = 26 + 9*maxNodes;
+    float heightNeededForNodes = 26 + 9*maxNodes;
+    float heightNeededForText = 26 + codeInput->getTextSize().y;
+    
+    float neededHeight = max(heightNeededForNodes, heightNeededForText);
+    
+    canvasRect.y2 = canvasRect.y1 + neededHeight;
+    rect.y2 = neededHeight;
 }
 
-void Exp::v8Getter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
+
+
+
+void Exp::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
 {
     Local<Object> self = info.Holder();
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
@@ -358,8 +367,21 @@ void Exp::v8Getter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
     }
 }
 
-void Exp::v8Setter(uint32_t index, Local<Value> val, const PropertyCallbackInfo<Value>& info)
+void Exp::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
 {
+    Local<Object> self = info.Holder();
+    Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
+    Exp *component = (Exp*)wrap->Value();
+    ReturnValue<Value> ret = info.GetReturnValue();
+    if (component->ivals.size() > index) {
+        ret.Set(component->outputNodes[index]->getLastVal());
+    }
+}
+
+void Exp::v8OutSetter(uint32_t index, Local<Value> val, const PropertyCallbackInfo<Value>& info)
+{
+    console() << "setter on index = " <<index<<endl;
+    
     Local<Object> self = info.Holder();
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     Exp *component = (Exp*)wrap->Value();
@@ -383,11 +405,10 @@ void Exp::compileAndRun(std::string code)
     // add interceptors to inputs and outputs
     Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
     globalIn->SetInternalFieldCount(1);
-    globalIn->SetIndexedPropertyHandler(v8Getter);
+    globalIn->SetIndexedPropertyHandler(v8InGetter);
     Handle<ObjectTemplate> globalOut = ObjectTemplate::New(Isolate::GetCurrent());
     globalOut->SetInternalFieldCount(1);
-    globalOut->SetIndexedPropertyHandler(v8Getter, v8Setter);
-    
+    globalOut->SetIndexedPropertyHandler(v8OutGetter, v8OutSetter);
     
     // Create a new context.
     Handle<Context> context = Context::New(Isolate::GetCurrent(), NULL, global);
@@ -446,8 +467,6 @@ void Exp::runCompiledScript()
 
 void Exp::v8Map(const FunctionCallbackInfo<v8::Value> &args)
 {
-    console() << "map called\n";
-    
     if (args.Length() < 5) {
         return;
     }

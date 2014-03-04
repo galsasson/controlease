@@ -33,7 +33,7 @@ void InputNode::draw()
 
 bool InputNode::contains(Vec2f p)
 {
-    return (p-pos).length() <= 3;
+    return (p-pos).length() <= 5;
 }
 
 void InputNode::updateVal(float val)

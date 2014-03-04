@@ -14,6 +14,8 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     component = comp;
     pos = p;
     
+    lastVal = 0;
+    
     next = NULL;
     prev = NULL;
 }
@@ -33,12 +35,13 @@ void OutputNode::draw()
 
 bool OutputNode::contains(Vec2f p)
 {
-    return (p-pos).length() <= 3;
+    return (p-pos).length() <= 5;
 }
 
 void OutputNode::updateVal(float val)
 {
     if (next != NULL) {
+        lastVal = val;
         next->updateVal(val);
     }
 }

@@ -31,11 +31,14 @@ public:
     void disconnect(Node *node);
     bool isConnected();
     
+    float getLastVal() { return lastVal; }
+    
     Vec2f getCanvasPos();
     
 private:
     Vec2f pos;
     int index;
+    float lastVal;
     
     // the component
     CanvasComponent *component;
