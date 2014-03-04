@@ -380,8 +380,6 @@ void Exp::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &inf
 
 void Exp::v8OutSetter(uint32_t index, Local<Value> val, const PropertyCallbackInfo<Value>& info)
 {
-    console() << "setter on index = " <<index<<endl;
-    
     Local<Object> self = info.Holder();
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     Exp *component = (Exp*)wrap->Value();
