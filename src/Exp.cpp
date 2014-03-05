@@ -365,6 +365,10 @@ void Exp::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info
     if (component->ivals.size() > index) {
         ret.Set(component->ivals[index]);
     }
+    else {
+        // return 0 if no input exists
+        ret.Set(0);
+    }
 }
 
 void Exp::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
