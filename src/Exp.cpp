@@ -56,7 +56,7 @@ void Exp::inputEnterPressed()
     }
     
     std::ostringstream str;
-    str << "var time=0; var loop = function() {"<<codeInput->getValue()<<"}";
+    str << "var time=0; var update = function() {"<<codeInput->getValue()<<"}";
 
     compileAndRun(str.str());
 }
@@ -438,16 +438,16 @@ void Exp::compileAndRun(std::string code)
     
     localScript->Run();
     
-    // find 'loop' function
-    Handle<String> process_name = String::NewFromUtf8(Isolate::GetCurrent(), "loop");
-    Handle<Value> process_val = context->Global()->Get(process_name);
-    if (!process_val->IsFunction()) {
-        console() << "could not find 'loop' function."<<endl;
+    // find 'update' function
+    Handle<String> function_name = String::NewFromUtf8(Isolate::GetCurrent(), "update");
+    Handle<Value> function_val = context->Global()->Get(function_name);
+    if (!function_val->IsFunction()) {
+        console() << "could not find 'update' function."<<endl;
         return;
     }
     
-    Handle<Function> loopFunction = Handle<Function>::Cast(process_val);
-    pFunction.Reset(Isolate::GetCurrent(), loopFunction);
+    Handle<Function> updateFunction = Handle<Function>::Cast(function_val);
+    pFunction.Reset(Isolate::GetCurrent(), updateFunction);
 }
 
 void Exp::runCompiledScript()
