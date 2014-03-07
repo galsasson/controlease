@@ -19,6 +19,11 @@ Tool::Tool(ToolType t, Vec2f pos, Vec2f size)
     textRect = Rectf(size/2 - strSize/2, size/2 + strSize/2);
 }
 
+Tool::Tool(ToolType t, Vec2f pos, Vec2f size, string src) : Tool(t, pos, size)
+{
+    source = src;
+}
+
 void Tool::draw()
 {
     gl::pushMatrices();
@@ -65,6 +70,8 @@ string Tool::getToolName(ToolType t)
             return "Oscillator";
         case TOOL_TYPE_EXP:
             return "Expression";
+        case TOOL_TYPE_JS:
+            return "javascript";
     }
     
     return "Unknown";

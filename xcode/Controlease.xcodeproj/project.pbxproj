@@ -18,6 +18,8 @@
 		2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07A18BF081E005C206F /* ProgramOutput.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
+		2A697E0E18C81C7800ACA9D2 /* JSComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */; };
+		2A697E1618C9475400ACA9D2 /* components in Resources */ = {isa = PBXBuildFile; fileRef = 2A697E1518C9475400ACA9D2 /* components */; };
 		2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71545418C1849B00DA1C39 /* TextInput.cpp */; };
 		2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547718C28B3500DA1C39 /* Exp.cpp */; };
 		2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */; };
@@ -72,6 +74,9 @@
 		2A2E083118B5714B0060A535 /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceManager.h; path = ../src/ResourceManager.h; sourceTree = "<group>"; };
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
 		2A2E083418B58E270060A535 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Canvas.h; path = ../src/Canvas.h; sourceTree = "<group>"; };
+		2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSComponent.cpp; path = ../src/JSComponent.cpp; sourceTree = "<group>"; };
+		2A697E0D18C81C7800ACA9D2 /* JSComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSComponent.h; path = ../src/JSComponent.h; sourceTree = "<group>"; };
+		2A697E1518C9475400ACA9D2 /* components */ = {isa = PBXFileReference; lastKnownFileType = folder; name = components; path = ../resources/components; sourceTree = "<group>"; };
 		2A71545418C1849B00DA1C39 /* TextInput.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = TextInput.cpp; path = ../src/TextInput.cpp; sourceTree = "<group>"; };
 		2A71545518C1849B00DA1C39 /* TextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextInput.h; path = ../src/TextInput.h; sourceTree = "<group>"; };
 		2A71547718C28B3500DA1C39 /* Exp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exp.cpp; path = ../src/Exp.cpp; sourceTree = "<group>"; };
@@ -263,6 +268,7 @@
 		29B97314FDCFA39411CA2CEA /* tunnelvars */ = {
 			isa = PBXGroup;
 			children = (
+				2A697E1518C9475400ACA9D2 /* components */,
 				01B97315FEAEA392516A2CEA /* Blocks */,
 				29B97315FDCFA39411CA2CEA /* Headers */,
 				080E96DDFE201D6D7F000001 /* Source */,
@@ -303,6 +309,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */,
+				2A697E0D18C81C7800ACA9D2 /* JSComponent.h */,
 				2A71547D18C456EA00DA1C39 /* Oscillator.cpp */,
 				2A71547E18C456EA00DA1C39 /* Oscillator.h */,
 				2A71547718C28B3500DA1C39 /* Exp.cpp */,
@@ -438,6 +446,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2A697E1618C9475400ACA9D2 /* components in Resources */,
 				14A0F1BC8626477E8429059F /* CinderApp.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -481,6 +490,7 @@
 				49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */,
 				4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */,
 				2A798DDC18BA7CFE00421573 /* Tool.cpp in Sources */,
+				2A697E0E18C81C7800ACA9D2 /* JSComponent.cpp in Sources */,
 				DAE7E905601D4DB3A8525A1F /* UdpSocket.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

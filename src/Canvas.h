@@ -31,6 +31,7 @@
 #include "Random.h"
 #include "Oscillator.h"
 #include "Exp.h"
+#include "JSComponent.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"

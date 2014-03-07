@@ -75,6 +75,7 @@ void ToolBox::createTools()
     tools.push_back(new Tool(TOOL_TYPE_RANDOM, Vec2f(10, startY+175), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_OSCILLATOR, Vec2f(10, startY+200), Vec2f(rect.getWidth()-20, 20)));
     tools.push_back(new Tool(TOOL_TYPE_EXP, Vec2f(10, startY+225), Vec2f(rect.getWidth()-20, 20)));
+    tools.push_back(new Tool(TOOL_TYPE_JS, Vec2f(10, startY+250), Vec2f(rect.getWidth()-20, 20)));
 }
 
 Vec2f ToolBox::getLocalCoords(Vec2f p)

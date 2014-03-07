@@ -147,6 +147,9 @@ void Canvas::addComponent(Tool *tool)
         case TOOL_TYPE_EXP:
             addComponent(new Exp(topLeft + Vec2f(30, 30), Vec2f(250, 50)));
             break;
+        case TOOL_TYPE_JS:
+            addComponent(new JSComponent(topLeft + Vec2f(30, 30), "test.js"));
+            break;
 
         default:
             break;

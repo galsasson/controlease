@@ -36,6 +36,9 @@ void draw()
       p.drawLineTo(p2, c.get("Minimum distance"));
     }
   }
+  
+  c.set("Mouse X", mouseX);
+  c.set("Mouse Y", mouseY);
 }
 
 void initControls()
@@ -45,4 +48,7 @@ void initControls()
   c.addInput("Particle size", 8);
   c.addInput("Minimum distance", 30);
   c.addInput("Line width", 1);
+  
+  c.addOutput("Mouse X", 0);
+  c.addOutput("Mouse Y", 0);
 }

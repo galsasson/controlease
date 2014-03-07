@@ -6,8 +6,8 @@
 //
 //
 
-#ifndef __Controlease__Component__
-#define __Controlease__Component__
+#ifndef __Controlease__CanvasComponent__
+#define __Controlease__CanvasComponent__
 
 #include "KeyboardListener.h"
 #include "MouseListener.h"
@@ -39,4 +39,4 @@ public:
 };
 
 
-#endif /* defined(__Controlease__Component__) */
+#endif /* defined(__Controlease__CanvasComponent__) */

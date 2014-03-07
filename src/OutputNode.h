@@ -34,9 +34,10 @@ public:
     float getLastVal() { return lastVal; }
     
     Vec2f getCanvasPos();
-    
-private:
+
     Vec2f pos;
+
+private:
     int index;
     float lastVal;
     
