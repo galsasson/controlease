@@ -17,7 +17,7 @@ JSComponent::JSComponent(Vec2f p, string filename)
     titleRect = Rectf(4, 2, localRect.x2, 20);
     nextInputPos = Vec2f(6, 26);
     nextOutputPos = Vec2f(localRect.x2 - 6, 26);
-    jsRect = Rectf(15, 25, 0, 0);
+    jsRect = Rectf(15, 26, 0, 0);
     jsFilename = filename;
     
     initComponent();
@@ -96,7 +96,14 @@ void JSComponent::draw()
     }
     
     // call draw of js component
+//    gl::color(0.7, 0.7, 0.7);
+//    gl::drawSolidRect(jsRect);
+
+    gl::pushMatrices();
+    gl::translate(jsRect.getUpperLeft() + jsRect.getSize()/2);
+    gl::color(0, 0, 0);
     callV8Function(pDrawFunc);
+    gl::popMatrices();
     
     gl::popMatrices();
 }
@@ -318,7 +325,7 @@ void JSComponent::resizeComponent()
     int maxNodes = max(inputNodes.size(), outputNodes.size());
     float heightNeededForNodes = 26 + 9*maxNodes;
     float heightNeededForComponent = jsRect.getHeight();
-    float neededHeight = max(heightNeededForNodes, heightNeededForComponent);
+    float neededHeight = jsRect.y1 + 6 + max(heightNeededForNodes, heightNeededForComponent);
     
     float neededWidth = jsRect.getWidth() + 30;
     
@@ -412,9 +419,12 @@ void JSComponent::compileAndRun(std::string code)
 
     // add callback functions
     Handle<ObjectTemplate> global = ObjectTemplate::New(Isolate::GetCurrent());
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "map"), FunctionTemplate::New(Isolate::GetCurrent(), v8Map));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "init"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8InitCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "setGuiSize"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetGuiSizeCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceMap"), FunctionTemplate::New(Isolate::GetCurrent(), v8Map));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceInit"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8InitCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetGuiSize"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetGuiSizeCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceEllipse"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawEllipseCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceRect"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawRectCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceLine"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawLineCB, External::New(Isolate::GetCurrent(), this)));
     
     // add interceptors to inputs and outputs
     Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
@@ -522,6 +532,36 @@ void JSComponent::v8SetGuiSize(const FunctionCallbackInfo<v8::Value> &args)
     initGUI(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()));
 }
 
+void JSComponent::v8DrawEllipse(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() < 4) {
+        return;
+    }
+    
+    gl::drawStrokedEllipse(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), args[2]->NumberValue(), args[3]->NumberValue());
+}
+
+void JSComponent::v8DrawLine(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() < 4) {
+        return;
+    }
+    
+    gl::drawLine(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), Vec2f(args[2]->NumberValue(), args[3]->NumberValue()));
+}
+
+void JSComponent::v8DrawRect(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() < 4) {
+        return;
+    }
+    
+    float x2 = args[0]->NumberValue() + args[2]->NumberValue();
+    float y2 = args[1]->NumberValue() + args[3]->NumberValue();
+    
+    gl::drawStrokedRect(Rectf(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), Vec2f(x2, y2)));
+}
+
 
 void JSComponent::v8Map(const FunctionCallbackInfo<v8::Value> &args)
 {
@@ -564,4 +604,27 @@ void JSComponent::v8SetGuiSizeCB(const FunctionCallbackInfo<v8::Value> &args)
     Local<External> wrap = Local<External>::Cast(args.Data());
     JSComponent *comp = (JSComponent*)wrap->Value();
     return comp->v8SetGuiSize(args);
+}
+
+void JSComponent::v8DrawEllipseCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8DrawEllipse(args);
+    
+}
+
+void JSComponent::v8DrawLineCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8DrawLine(args);
+    
+}
+
+void JSComponent::v8DrawRectCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8DrawRect(args);
 }

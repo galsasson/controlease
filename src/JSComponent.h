@@ -112,8 +112,11 @@ private:
     static void v8SetGuiSizeCB(const FunctionCallbackInfo<v8::Value>& args);
     // * draw funtions:
     // draw ellipse
+    static void v8DrawEllipseCB(const FunctionCallbackInfo<v8::Value>& args);
     // draw line
+    static void v8DrawLineCB(const FunctionCallbackInfo<v8::Value>& args);
     // draw rect
+    static void v8DrawRectCB(const FunctionCallbackInfo<v8::Value>& args);
     // draw string
     // * interaction
     // mousedown
@@ -124,6 +127,9 @@ private:
     // init function ( init(name, width, height) )
     void v8Init(const FunctionCallbackInfo<v8::Value>& args);
     void v8SetGuiSize(const FunctionCallbackInfo<v8::Value>& args);
+    void v8DrawEllipse(const FunctionCallbackInfo<v8::Value>& args);
+    void v8DrawLine(const FunctionCallbackInfo<v8::Value>& args);
+    void v8DrawRect(const FunctionCallbackInfo<v8::Value>& args);
     
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);

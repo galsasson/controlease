@@ -148,7 +148,7 @@ void Canvas::addComponent(Tool *tool)
             addComponent(new Exp(topLeft + Vec2f(30, 30), Vec2f(250, 50)));
             break;
         case TOOL_TYPE_JS:
-            addComponent(new JSComponent(topLeft + Vec2f(30, 30), "test.js"));
+            addComponent(new JSComponent(topLeft + Vec2f(30, 30), "clock.js"));
             break;
 
         default:
