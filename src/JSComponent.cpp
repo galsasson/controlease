@@ -8,17 +8,17 @@
 
 #include "JSComponent.h"
 
-JSComponent::JSComponent(Vec2f p, string filename)
+JSComponent::JSComponent(Vec2f p, fs::path script)
 {
-    compName = "javascript";
+    compName = script.filename().replace_extension("").string();
     Vec2f size(10, 0);
     canvasRect = Rectf(p, size);
     localRect = Rectf(Vec2f(0, 0), Vec2f(10, 30));
     titleRect = Rectf(4, 2, localRect.x2, 20);
     nextInputPos = Vec2f(6, 26);
     nextOutputPos = Vec2f(localRect.x2 - 6, 26);
-    jsRect = Rectf(15, 26, 0, 0);
-    jsFilename = filename;
+    jsRect = Rectf(10, 26, 0, 0);
+    jsScript = script;
     
     initComponent();
 }
@@ -143,23 +143,39 @@ void JSComponent::mouseDown(cease::MouseEvent event)
 
     if (titleRect.contains(local)) {
         // drag the component
+        isDragging = true;
         compDragAnchor = event.getPos();
     }
-    else {
+    else if (jsRect.contains(local)) {
         // call mouse down of js component
+        callV8MouseFunction(pMouseDownFunc, local.x - jsRect.x1, local.y - jsRect.y1);
     }
 }
 
 void JSComponent::mouseDrag(cease::MouseEvent event)
 {
-    canvasRect += event.getPos() - compDragAnchor;
-    compDragAnchor = event.getPos();
-    applyBorders();
+    Vec2f local = getLocalCoords(event.getPos());
+    if (isDragging)
+    {
+        canvasRect += event.getPos() - compDragAnchor;
+        compDragAnchor = event.getPos();
+        applyBorders();
+    }
+    else if (jsRect.contains(local)) {
+        // call drag on js component
+        callV8MouseFunction(pMouseDragFunc, local.x - jsRect.x1, local.y - jsRect.y1);
+    }
 }
 
 void JSComponent::mouseUp( cease::MouseEvent event)
 {
+    isDragging = false;
+    
     // call mouse up of js component
+    Vec2f local = getLocalCoords(event.getPos());
+    if (jsRect.contains(local)) {
+        callV8MouseFunction(pMouseUpFunc, local.x - jsRect.x1, local.y - jsRect.y1);
+    }
 }
 
 void JSComponent::mouseWheel( cease::MouseEvent event ) {}
@@ -169,7 +185,7 @@ bool JSComponent::isDragPoint(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
-    return titleRect.contains(local);
+    return titleRect.contains(local) || jsRect.contains(local);
 }
 
 bool JSComponent::isHotspot(cease::MouseEvent event)
@@ -327,7 +343,7 @@ void JSComponent::resizeComponent()
     float heightNeededForComponent = jsRect.getHeight();
     float neededHeight = jsRect.y1 + 6 + max(heightNeededForNodes, heightNeededForComponent);
     
-    float neededWidth = jsRect.getWidth() + 30;
+    float neededWidth = jsRect.getWidth() + 19;
     
     canvasRect.y2 = canvasRect.y1 + neededHeight;
     localRect.y2 = neededHeight;
@@ -345,11 +361,9 @@ void JSComponent::resizeComponent()
 
 void JSComponent::initComponent()
 {
-    stringstream ss;
-    ss << getAppPath().c_str()<<"/Contents/Resources/components/" << jsFilename;
-    ifstream jsfile(ss.str());
+    ifstream jsfile(jsScript.string());
     if (!jsfile.is_open()) {
-        console() << "error: cannot find file '"<<ss.str()<<"'"<<endl;
+        console() << "error: cannot find file '"<<jsScript.string()<<"'"<<endl;
         return;
     }
     
@@ -467,9 +481,12 @@ void JSComponent::compileAndRun(std::string code)
     if (!getFunction(context, "update", pUpdateFunc)) {
         return;
     }
-    if (!getFunction(context, "draw", pDrawFunc)) {
-        return;
-    }
+    
+    // not mandatory
+    getFunction(context, "draw", pDrawFunc);
+    getFunction(context, "mousedown", pMouseDownFunc);
+    getFunction(context, "mouseup", pMouseUpFunc);
+    getFunction(context, "mousedrag", pMouseDragFunc);
     
     callV8Function(pSetupFunc);
 }
@@ -493,10 +510,10 @@ bool JSComponent::callV8Function(Persistent<v8::Function> &func)
     return true;
 }
 
-void JSComponent::scriptRunUpdate()
+bool JSComponent::callV8MouseFunction(Persistent<v8::Function> &func, float x, float y)
 {
-    if (pUpdateFunc.IsEmpty()) {
-        return;
+    if (func.IsEmpty()) {
+        return false;
     }
     
     // Create a stack-allocated handle scope.
@@ -506,9 +523,18 @@ void JSComponent::scriptRunUpdate()
     
     Context::Scope context_scope(context);
     
-    Local<Function> updateFunction = Local<Function>::New(Isolate::GetCurrent(), pUpdateFunc);
-    updateFunction->Call(context->Global(), 0, NULL);
+    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), func);
+    
+    Handle<Value> args[2];
+    args[0] = v8::Number::New(Isolate::GetCurrent(), x);
+    args[1] = v8::Number::New(Isolate::GetCurrent(), y);
+    
+    localFunction->Call(context->Global(), 2, args);
+    
+    return true;
 }
+
+
 
 void JSComponent::v8Init(const FunctionCallbackInfo<v8::Value> &args)
 {

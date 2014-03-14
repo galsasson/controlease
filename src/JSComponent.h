@@ -37,7 +37,7 @@ using namespace v8;
 class JSComponent : public CanvasComponent
 {
 public:
-    JSComponent(Vec2f p, string filename);
+    JSComponent(Vec2f p, fs::path script);
     ~JSComponent();
     
     void initNodes(int nIns, int nOuts);
@@ -83,6 +83,7 @@ private:
     
     // component dragging
     Vec2f compDragAnchor;
+    bool isDragging;
     
     Vec2f nextOutputPos;
     Vec2f nextInputPos;
@@ -94,7 +95,7 @@ private:
     /***********************/
     /* V8 (javascript) API */
     /***********************/
-    std::string jsFilename;
+    fs::path jsScript;
     std::string compName;
     void initComponent();
     
@@ -133,11 +134,9 @@ private:
     
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);
+    bool callV8MouseFunction(Persistent<Function> &func, float x, float y);
     
     void compileAndRun(std::string code);
-    void scriptRunSetup();
-    void scriptRunUpdate();
-    void scriptRunDraw();
     void scriptRunMouseDown();
     void scriptRunMouseUp();
     Persistent<Context> pContext;
@@ -146,6 +145,7 @@ private:
     Persistent<Function> pDrawFunc;
     Persistent<Function> pMouseDownFunc;
     Persistent<Function> pMouseUpFunc;
+    Persistent<Function> pMouseDragFunc;
     
 };
 

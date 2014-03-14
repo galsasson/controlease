@@ -110,45 +110,46 @@ void Canvas::addComponent(CanvasComponent *comp)
     components.push_back(comp);
 }
 
-void Canvas::addComponent(Tool *tool)
+void Canvas::addComponent(ComponentButton* button)
 {
-    if (tool == NULL) {
+    if (button == NULL) {
         return;
     }
     
-    switch (tool->type) {
-        case TOOL_TYPE_PROGRAM:
+    switch (button->type) {
+        case COMPONENT_TYPE_PROGRAM:
             addComponent(new Program(topLeft + Vec2f(30, 30)));
             break;
-        case TOOL_TYPE_NUMBER:
+        case COMPONENT_TYPE_NUMBER:
             addComponent(new ::Number(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_SPLIT:
+        case COMPONENT_TYPE_SPLIT:
             addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_ADD:
+        case COMPONENT_TYPE_ADD:
             addComponent(new Add(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_SUB:
+        case COMPONENT_TYPE_SUB:
             addComponent(new Sub(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_MUL:
+        case COMPONENT_TYPE_MUL:
             addComponent(new Mult(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_DIV:
+        case COMPONENT_TYPE_DIV:
             addComponent(new Div(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_RANDOM:
+        case COMPONENT_TYPE_RANDOM:
             addComponent(new Random(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_OSCILLATOR:
+        case COMPONENT_TYPE_OSCILLATOR:
             addComponent(new Oscillator(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case TOOL_TYPE_EXP:
+        case COMPONENT_TYPE_EXP:
             addComponent(new Exp(topLeft + Vec2f(30, 30), Vec2f(250, 50)));
             break;
-        case TOOL_TYPE_JS:
-            addComponent(new JSComponent(topLeft + Vec2f(30, 30), "clock.js"));
+        case COMPONENT_TYPE_JS:
+            console() << "creating new component: "<<button->source<<endl;
+            addComponent(new JSComponent(topLeft + Vec2f(30, 30), button->source));
             break;
 
         default:
@@ -231,7 +232,7 @@ CanvasComponent* Canvas::getMouseComponent(Vec2f p)
 
 void Canvas::appMouseDown(MouseEvent event)
 {
-    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
     dragComponent = NULL;
     
     if (event.isControlDown()) {
@@ -261,7 +262,7 @@ void Canvas::appMouseDown(MouseEvent event)
 
 void Canvas::appMouseUp(MouseEvent event)
 {
-    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
     CanvasComponent *comp = getMouseComponent(cevent.getPos());
     dragComponent = NULL;
     
@@ -283,20 +284,23 @@ void Canvas::appMouseUp(MouseEvent event)
 
 void Canvas::appMouseWheel(MouseEvent event)
 {
-    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
 //    setMouseHandler(cevent);
 //    mouseHandler->mouseWheel(cevent);
 }
 
 void Canvas::appMouseMove(MouseEvent event)
 {
-    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
 //    mouseHandler->mouseMove(cevent);
 }
 
 void Canvas::appMouseDrag(MouseEvent event)
 {
-    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement());
+    if (event.isShiftDown()) {
+        console() << "drag shift down!"<<endl;
+    }
+    cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
     
     if (event.isControlDown()) {
         cevent.pos = event.getPos() - pos;

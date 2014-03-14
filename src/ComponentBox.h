@@ -1,45 +1,47 @@
 //
-//  ToolBox.h
+//  ComponentBox.h
 //  Controlease
 //
 //  Created by Gal Sasson on 2/21/14.
 //
 //
 
-#ifndef __Controlease__ToolBox__
-#define __Controlease__ToolBox__
+#ifndef __Controlease__ComponentBox__
+#define __Controlease__ComponentBox__
 
 #include <iostream>
+#include <sstream>
 #include "cinder/app/App.h"
 #include "cinder/gl/gl.h"
 
 #include <vector>
 #include "MouseListener.h"
-#include "Tool.h"
+#include "ComponentButton.h"
 
 using namespace ci;
 using namespace ci::gl;
 using namespace std;
 
-class ToolBox
+class ComponentBox
 {
 public:
-    ToolBox(Vec2f p, Vec2f s);
+    ComponentBox(Vec2f p, Vec2f s);
     void update();
     void draw();
     
-    Tool* mouseDown( MouseEvent event );
+    ComponentButton* mouseDown( MouseEvent event );
     bool contains(Vec2f p);
 
     void setSize(Vec2f newSize);
     
 private:
-    void createTools();
+    void createButtons();
+    void createJSButtons(float y);
     Vec2f getLocalCoords(Vec2f p);
     
-    vector<Tool*> tools;
+    vector<ComponentButton*> buttons;
     
     Rectf rect;
 };
 
-#endif /* defined(__Controlease__ToolBox__) */
+#endif /* defined(__Controlease__ComponentBox__) */

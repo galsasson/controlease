@@ -4,7 +4,7 @@
 #include "v8.h"
 
 #include "Canvas.h"
-#include "ToolBox.h"
+#include "ComponentBox.h"
 #include "Program.h"
 
 using namespace ci;
@@ -33,10 +33,10 @@ class ControleaseApp : public AppNative {
     
 private:
     Vec2f getCanvasSize();
-    Vec2f getToolboxSize();
+    Vec2f getCompboxSize();
     
     Canvas *canvas;
-    ToolBox *toolbox;
+    ComponentBox *compbox;
     
     MouseEvent bakeNewEvent(MouseEvent event, Vec2f origin);
     MouseEvent bakeCanvasMouseEvent(MouseEvent event);
@@ -56,7 +56,7 @@ void ControleaseApp::setup()
     
     canvas = new Canvas();
     canvas->setup(Vec2f(150, 50), getCanvasSize());
-    toolbox = new ToolBox(Vec2f(0, 50), getToolboxSize());
+    compbox = new ComponentBox(Vec2f(0, 50), getCompboxSize());
     
     // rendering settings
     glEnable(GL_LINE_SMOOTH);
@@ -65,7 +65,7 @@ void ControleaseApp::setup()
 
 void ControleaseApp::update()
 {
-    toolbox->update();
+    compbox->update();
     canvas->update();
 }
 
@@ -74,7 +74,7 @@ void ControleaseApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 0.7, 0.7, 0.7 ) );
     
-    toolbox->draw();
+    compbox->draw();
     canvas->draw();
     
 }
@@ -85,10 +85,10 @@ void ControleaseApp::mouseDown( MouseEvent event )
     if (canvas->contains(event.getPos())) {
         canvas->appMouseDown(event);
     }
-    else if (toolbox->contains(event.getPos())) {
-        Tool *tool = toolbox->mouseDown(event);
-        if (tool != NULL) {
-            canvas->addComponent(tool);
+    else if (compbox->contains(event.getPos())) {
+        ComponentButton *button = compbox->mouseDown(event);
+        if (button != NULL) {
+            canvas->addComponent(button);
         }
     }
 }
@@ -125,7 +125,7 @@ void ControleaseApp::keyUp( KeyEvent event )
 
 void ControleaseApp::resize()
 {
-    toolbox->setSize(getToolboxSize());
+    compbox->setSize(getCompboxSize());
     canvas->setSize(getCanvasSize());
 }
 
@@ -134,7 +134,7 @@ Vec2f ControleaseApp::getCanvasSize()
     return Vec2f(getWindowWidth()-150, getWindowHeight()-50);
 }
 
-Vec2f ControleaseApp::getToolboxSize()
+Vec2f ControleaseApp::getCompboxSize()
 {
     return Vec2f(150, getWindowHeight()-50);
 }

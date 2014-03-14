@@ -36,7 +36,7 @@
 #include "CanvasComponent.h"
 #include "Node.h"
 #include "Wire.h"
-#include "Tool.h"
+#include "ComponentButton.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -50,7 +50,7 @@ public:
     void update();
     void draw();    
     void addComponent(CanvasComponent *comp);
-    void addComponent(Tool *tool);
+    void addComponent(ComponentButton *button);
 
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);

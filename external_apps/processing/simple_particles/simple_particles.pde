@@ -8,7 +8,7 @@ void setup()
 {
   size(500, 500);
   smooth();
-  frameRate(60);
+  frameRate(30);
   
   particles = new ArrayList<Particle>();
   for (int i=0; i<100; i++)

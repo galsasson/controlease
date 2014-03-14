@@ -22,12 +22,14 @@ namespace cease {
     class MouseEvent
     {
     public:
-        MouseEvent() { pos = Vec2f(0, 0); wheelInc = 0; }
-        MouseEvent(Vec2f p, float w) { pos = p; wheelInc = w; }
+        MouseEvent() { pos = Vec2f(0, 0); wheelInc = 0; keyModifiers = 0; }
+        MouseEvent(Vec2f p, float w) { pos = p; wheelInc = w; keyModifiers = 0; }
+        MouseEvent(Vec2f p, float w, uint32_t modifiers) { pos = p; wheelInc = w; keyModifiers = modifiers; }
         Vec2f getPos() { return pos; }
         float getWheelIncrement() { return wheelInc; }
         Vec2f pos;
         float wheelInc;
+        uint32_t keyModifiers;
     };
 }
 

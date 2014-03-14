@@ -16,7 +16,7 @@ Number::Number(Vec2f p, Vec2f s)
     startVal = 0;
     nextVal = 0;
     updateVal(0);
-    valInc = 1;
+    valInc = 0.1;
     
     immediateChange = false;
 }
@@ -124,13 +124,20 @@ void Number::mouseDrag(cease::MouseEvent event)
 {
     Vec2f local = getLocalCoords(event.getPos());
     
+    console() << "mouse drag "<<event.getPos().x<<endl;
+    if (event.keyModifiers&MouseEvent::SHIFT_DOWN)
+    {
+        console() << "number mouse drag shift down"<<endl;
+    }
+    
     if (isValDrag) {
         dragX = local.x;
         if (immediateChange) {
             updateVal(startVal + (dragX - dragStartX) * valInc);
         }
         else {
-            nextVal = startVal + (dragX - dragStartX) * valInc;
+            float inc = (event.keyModifiers&MouseEvent::SHIFT_DOWN)?valInc*50:valInc;
+            nextVal = startVal + (dragX - dragStartX) * inc;
         }
     }
 
