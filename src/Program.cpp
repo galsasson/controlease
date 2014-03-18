@@ -10,18 +10,21 @@
 
 Program::Program(Vec2f _pos)
 {
-    titleRect = localRect = Rectf(0, 0, 200, 20);
+    titleRect = Rectf(5, 0, 200, 20);
+    localRect = Rectf(0, 0, 200, 40);
     rect = Rectf(_pos, _pos+localRect.getSize());
     nextInputPos = Vec2f(6, 28);
     nextOutputPos = Vec2f(localRect.x2 - 6, 28);
     
-    addressInput = new TextInput(Vec2f(5, 4), Vec2f(150, 14));
+    textInputRect = Rectf(7, 22, 200, 36);
+    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
     addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
-//    boost::bind(&TextInput::onReturn, this);
 
     listenPort = Rand::randInt(5000, 9000);
+    name = "Program";
 
     connected = false;
+    isEditing = false;
 }
 
 Program::~Program()
@@ -73,7 +76,7 @@ void Program::update()
     // handle incoming messages from the program
     handleMessages();
     
-    if (!connected) {
+    if (!connected && isEditing) {
         addressInput->update();
         return;
     }
@@ -89,10 +92,10 @@ void Program::draw()
     gl::color(0, 0, 0);
     gl::drawStrokedRoundedRect(localRect, 3);
 
-    if (connected) {
-        ResourceManager::getInstance().getTextureFont()->drawString(name, nameRect);
-        gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
+    ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
+    gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
 
+    if (connected) {
         // draw all the input names
         for (int i=0; i<inputs.size(); i++)
         {
@@ -156,6 +159,16 @@ Rectf Program::getBounds()
 
 void Program::mouseDown(cease::MouseEvent event)
 {
+    Vec2f local = getLocalCoords(event.getPos());
+    isEditing = false;
+    
+    if (!connected) {
+        if (textInputRect.contains(local)) {
+            isEditing = true;
+            return;
+        }
+    }
+
     prevMouse = event.getPos();
 }
 
@@ -182,7 +195,8 @@ void Program::mouseDrag(cease::MouseEvent event)
 
 bool Program::isHotspot(cease::MouseEvent event)
 {
-    return titleRect.contains(getLocalCoords(event.getPos()));
+    Vec2f local = getLocalCoords(event.getPos());
+    return titleRect.contains(local) || textInputRect.contains(local);
 }
 
 bool Program::isDragPoint(cease::MouseEvent event)
@@ -265,7 +279,7 @@ bool Program::contains(Vec2f p)
 
 KeyboardListener* Program::getCurrentKeyboardListener()
 {
-    if (!connected) {
+    if (!connected && isEditing) {
         return addressInput;
     }
     

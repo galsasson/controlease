@@ -16,6 +16,7 @@
 #include "cinder/gl/gl.h"
 #include "cinder/Rect.h"
 #include <boost/container/vector.hpp>
+#include "cinder/Perlin.h"
 #include "v8.h"
 
 
@@ -81,6 +82,11 @@ private:
     Rectf titleRect;
     Rectf jsRect;
     
+    // color of js drawings
+    Color jsColor;
+    Vec3f jsColorVec;
+    Perlin perlin;
+    
     // component dragging
     Vec2f compDragAnchor;
     bool isDragging;
@@ -107,30 +113,27 @@ private:
     static void v8OutSetter(uint32_t index, Local<Value> value, const PropertyCallbackInfo<Value>& info);
     // 'map' function
     static void v8Map(const FunctionCallbackInfo<v8::Value>& args);
-    // init function ( init(name, width, height) )
     static void v8InitCB(const FunctionCallbackInfo<v8::Value>& args);
-    // set number of inputs
     static void v8SetGuiSizeCB(const FunctionCallbackInfo<v8::Value>& args);
-    // * draw funtions:
-    // draw ellipse
     static void v8DrawEllipseCB(const FunctionCallbackInfo<v8::Value>& args);
-    // draw line
     static void v8DrawLineCB(const FunctionCallbackInfo<v8::Value>& args);
-    // draw rect
     static void v8DrawRectCB(const FunctionCallbackInfo<v8::Value>& args);
     // draw string
-    // * interaction
-    // mousedown
-    // mouseup
-    // mousemove
-    // mousedrag
+    static void v8SetBrightnessCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8SetBWCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8SetHueCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8NoiseCB(const FunctionCallbackInfo<v8::Value>& args);
     
-    // init function ( init(name, width, height) )
-    void v8Init(const FunctionCallbackInfo<v8::Value>& args);
-    void v8SetGuiSize(const FunctionCallbackInfo<v8::Value>& args);
-    void v8DrawEllipse(const FunctionCallbackInfo<v8::Value>& args);
-    void v8DrawLine(const FunctionCallbackInfo<v8::Value>& args);
-    void v8DrawRect(const FunctionCallbackInfo<v8::Value>& args);
+    
+    void v8Init(const FunctionCallbackInfo<v8::Value>& args); // (name, inputs, outputs)
+    void v8SetGuiSize(const FunctionCallbackInfo<v8::Value>& args); // (width, height)
+    void v8DrawEllipse(const FunctionCallbackInfo<v8::Value>& args); // (cx, cy, w, h)
+    void v8DrawLine(const FunctionCallbackInfo<v8::Value>& args); // (sx, sy, tx, ty)
+    void v8DrawRect(const FunctionCallbackInfo<v8::Value>& args); // (ulx, uly, width, height)
+    void v8SetBrightness(const FunctionCallbackInfo<v8::Value>& args); // (0-1)
+    void v8SetBW(const FunctionCallbackInfo<v8::Value>& args);   // (0-1)
+    void v8SetHue(const FunctionCallbackInfo<v8::Value>& args); // (0-1)
+    void v8Noise(const FunctionCallbackInfo<v8::Value>& args);
     
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);

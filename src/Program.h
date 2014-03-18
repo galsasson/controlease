@@ -98,6 +98,9 @@ private:
     vector<ProgramOutput*> outputs;
     vector<OutputNode*> outputNodes;
     
+    bool isEditing;
+    Rectf textInputRect;
+    
     // graphical representation
     void setSize(Vec2f s);
     

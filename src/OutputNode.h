@@ -40,6 +40,7 @@ public:
 private:
     int index;
     float lastVal;
+    bool bFillEllipse;
     
     // the component
     CanvasComponent *component;

@@ -19,6 +19,8 @@ JSComponent::JSComponent(Vec2f p, fs::path script)
     nextOutputPos = Vec2f(localRect.x2 - 6, 26);
     jsRect = Rectf(10, 26, 0, 0);
     jsScript = script;
+    jsColor = Color(0, 0, 0);
+    jsColorVec = Vec3f(0, 0, 0);
     
     initComponent();
 }
@@ -96,12 +98,9 @@ void JSComponent::draw()
     }
     
     // call draw of js component
-//    gl::color(0.7, 0.7, 0.7);
-//    gl::drawSolidRect(jsRect);
-
     gl::pushMatrices();
     gl::translate(jsRect.getUpperLeft() + jsRect.getSize()/2);
-    gl::color(0, 0, 0);
+    gl::color(jsColor);
     callV8Function(pDrawFunc);
     gl::popMatrices();
     
@@ -439,6 +438,11 @@ void JSComponent::compileAndRun(std::string code)
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceEllipse"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawEllipseCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceRect"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawRectCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceLine"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawLineCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBrightness"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBrightnessCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBW"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBWCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceHue"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetHueCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceNoise"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8NoiseCB, External::New(Isolate::GetCurrent(), this)));
+    
     
     // add interceptors to inputs and outputs
     Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
@@ -588,6 +592,40 @@ void JSComponent::v8DrawRect(const FunctionCallbackInfo<v8::Value> &args)
     gl::drawStrokedRect(Rectf(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), Vec2f(x2, y2)));
 }
 
+void JSComponent::v8SetBrightness(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 1) {
+        console() << "warning: wrong args to v8SetBrightness!"<<endl;
+    }
+    
+    jsColorVec.z = args[0]->NumberValue();
+//    console() << "HSV = "<<jsColorVec<<endl;
+    jsColor.set(ColorModel::CM_HSV, jsColorVec);
+    gl::color(jsColor);
+}
+
+void JSComponent::v8SetBW(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 1) {
+        console() << "warning: wrong args to v8SetHue!"<<endl;
+    }
+    
+    jsColorVec.y = 1-args[0]->NumberValue();
+    jsColor.set(ColorModel::CM_HSV, jsColorVec);
+    gl::color(jsColor);
+}
+
+void JSComponent::v8SetHue(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 1) {
+        console() << "warning: wrong args to v8SetHue!"<<endl;
+    }
+    
+    jsColorVec.x = args[0]->NumberValue();
+    jsColor.set(ColorModel::CM_HSV, jsColorVec);
+    gl::color(jsColor);
+}
+
 
 void JSComponent::v8Map(const FunctionCallbackInfo<v8::Value> &args)
 {
@@ -617,6 +655,39 @@ void JSComponent::v8Map(const FunctionCallbackInfo<v8::Value> &args)
                                    args[3]->NumberValue(),
                                    args[4]->NumberValue()));
 }
+
+void JSComponent::v8Noise(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length()<1) {
+        console() << "warning: no arguments for v8Noise!"<<endl;
+        return;
+    }
+    
+    if (args.Length() == 1)
+    {
+        args.GetReturnValue().Set(perlin.noise(args[0]->NumberValue()));
+    }
+    else if (args.Length() == 2)
+    {
+        args.GetReturnValue().Set(perlin.noise(args[0]->NumberValue(), args[1]->NumberValue()));
+    }
+    else if (args.Length() == 3)
+    {
+        args.GetReturnValue().Set(perlin.noise(args[0]->NumberValue(), args[1]->NumberValue(), args[2]->NumberValue()));
+    }
+    else {
+        console() << "warning: v8Noise arguments: (<x>, [y], [z])"<<endl;
+        return;
+    }
+}
+
+#define V8_STATIC_CALLBACK(X) \
+    void JSComponent::aCB(const FunctionCallbackInfo<v8::Value> &args) \
+    { \
+        Local<External> wrap = Local<External>::Cast(args.Data()); \
+        JSComponent *comp = (JSComponent*)wrap->Value(); \
+        return comp->X(args); \
+    }
 
 void JSComponent::v8InitCB(const FunctionCallbackInfo<v8::Value> &args)
 {
@@ -653,4 +724,32 @@ void JSComponent::v8DrawRectCB(const FunctionCallbackInfo<v8::Value> &args)
     Local<External> wrap = Local<External>::Cast(args.Data());
     JSComponent *comp = (JSComponent*)wrap->Value();
     return comp->v8DrawRect(args);
+}
+
+void JSComponent::v8SetBrightnessCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8SetBrightness(args);
+}
+
+void JSComponent::v8SetBWCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8SetBW(args);
+}
+
+void JSComponent::v8SetHueCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8SetHue(args);
+}
+
+void JSComponent::v8NoiseCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8Noise(args);
 }

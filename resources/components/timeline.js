@@ -52,10 +52,13 @@ var draw = function()
 {
     ceRect(-framesby2, -heightby2, frames, height);
     
+    ceBrightness(0.5);
     for (var i=0; i<frames; i++)
     {
         ceLine(i-framesby2, heightby2, i-framesby2, heightby2-values[i]);
     }
+    
+    ceBrightness(0);
     ceLine(tlPos-framesby2, heightby2, tlPos-framesby2, -heightby2);
 }
 
@@ -73,7 +76,7 @@ var mousedown = function(_x, _y)
 var mousedrag = function(_x, _y)
 {
     var f = Math.floor(_x)-5;
-    if (f<0 || f>frames) {
+    if (f<0 || f>=frames) {
         return;
     }
     

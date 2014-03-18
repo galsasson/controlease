@@ -102,6 +102,7 @@ private:
     static void v8OutGetter(uint32_t index, const PropertyCallbackInfo<Value>& info);
     static void v8OutSetter(uint32_t index, Local<Value> value, const PropertyCallbackInfo<Value>& info);
     static void v8Map(const FunctionCallbackInfo<v8::Value>& args);
+    
     void compileAndRun(std::string code);
     void runCompiledScript();
     Persistent<Context> pContext;

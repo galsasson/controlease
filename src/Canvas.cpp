@@ -67,7 +67,8 @@ void Canvas::draw()
     gl::color(0, 0, 0);
     for (int i=0; i<components.size(); i++)
     {
-        components[i]->draw();
+        if (components[i] != focusComponent)
+            components[i]->draw();
     }
 
     // draw focused component

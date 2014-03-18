@@ -48,6 +48,8 @@ void ControleaseApp::prepareSettings(cinder::app::AppBasic::Settings *settings)
     settings->enableHighDensityDisplay();
     settings->setWindowSize(800, 600);
     settings->setFrameRate(30);
+    
+    settings->enablePowerManagement(true);
 }
 
 void ControleaseApp::setup()

@@ -15,6 +15,7 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     pos = p;
     
     lastVal = 0;
+    bFillEllipse = false;
     
     next = NULL;
     prev = NULL;
@@ -27,8 +28,16 @@ OutputNode::~OutputNode()
 
 void OutputNode::draw()
 {
-    gl::color(1, 1, 1);
-    gl::drawSolidCircle(pos, 3);
+    if (bFillEllipse) {
+        gl::color(0.7, 0.7, 0.7);
+        gl::drawSolidCircle(pos, 3);
+        bFillEllipse = false;
+    }
+    else {
+        gl::color(1, 1, 1);
+        gl::drawSolidCircle(pos, 3);
+    }
+    
     gl::color(0, 0, 0);
     gl::drawStrokedCircle(pos, 3);
 }
@@ -40,6 +49,7 @@ bool OutputNode::contains(Vec2f p)
 
 void OutputNode::updateVal(float val)
 {
+    bFillEllipse = true;
     if (next != NULL) {
         lastVal = val;
         next->updateVal(val);
