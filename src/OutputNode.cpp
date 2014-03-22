@@ -7,6 +7,7 @@
 //
 
 #include "OutputNode.h"
+#include "CanvasComponent.h"
 
 OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
 {
@@ -14,11 +15,12 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     component = comp;
     pos = p;
     
-    lastVal = 0;
     bFillEllipse = false;
     
     next = NULL;
     prev = NULL;
+    lastVal = 0;
+    name = "Output";
 }
 
 OutputNode::~OutputNode()
@@ -50,8 +52,8 @@ bool OutputNode::contains(Vec2f p)
 void OutputNode::updateVal(float val)
 {
     bFillEllipse = true;
+    lastVal = val;
     if (next != NULL) {
-        lastVal = val;
         next->updateVal(val);
     }
 }
@@ -59,7 +61,8 @@ void OutputNode::updateVal(float val)
 void OutputNode::connect(Node *node)
 {
     next = node;
-    updateVal(component->getValue(index));
+    lastVal = component->getValue(index);
+    updateVal(lastVal);
 }
 
 void OutputNode::disconnect(Node *node)

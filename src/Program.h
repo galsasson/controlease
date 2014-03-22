@@ -93,10 +93,10 @@ private:
     
     bool connected;
     vector<ProgramInput*> inputs;
-    vector<InputNode*> inputNodes;
+//    vector<InputNode*> inputNodes;
     
     vector<ProgramOutput*> outputs;
-    vector<OutputNode*> outputNodes;
+//    vector<OutputNode*> outputNodes;
     
     bool isEditing;
     Rectf textInputRect;

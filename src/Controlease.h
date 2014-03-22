@@ -14,6 +14,8 @@
 #define CANVAS_WIDTH    2048
 #define CANVAS_HEIGHT   4096
 
+#include <string>
+#include <sstream>
 
 typedef enum _ValueType
 {
@@ -30,5 +32,15 @@ typedef enum _ConnectionType
     TYPE_DISCONNECT_INPUT = 3,
     TYPE_DISCONNECT_OUTPUT = 4,
 } ConnectionType;
+
+
+static std::string getValueString(float val)
+{
+    char buff[128];
+    sprintf(buff, "%." FLOAT_PRECISION "f", val);
+    std::ostringstream str;
+    str << buff;
+    return str.str();
+}
 
 #endif

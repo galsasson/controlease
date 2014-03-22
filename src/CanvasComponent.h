@@ -13,6 +13,8 @@
 #include "MouseListener.h"
 #include "ConnectionResult.h"
 #include "Node.h"
+#include "InputNode.h"
+#include "OutputNode.h"
 #include <vector>
 
 using namespace std;
@@ -21,21 +23,26 @@ class CanvasComponent : public MouseListener
 {
 public:
     virtual ~CanvasComponent() {};
-    virtual void update() = 0;
-    virtual void draw() = 0;
-    virtual void drawOutline() = 0;
-    virtual void translate(Vec2f offset) = 0;
-    virtual Rectf getBounds() = 0;
-    virtual Vec2f getCanvasPos() = 0;
-    virtual float getValue(int i) = 0;
-    virtual void setValue(int i, float v) = 0;
-    virtual bool isDragPoint(cease::MouseEvent event) = 0;
-    virtual bool isHotspot(cease::MouseEvent event) = 0;
-    virtual ConnectionResult* getConnectionStart( cease::MouseEvent event) = 0;
-    virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event) = 0;
-    virtual vector<Node*> getInputNodes() = 0;
-    virtual vector<Node*> getOutputNodes() = 0;
+    virtual void update() {};
+    virtual void draw() {};
+    virtual void drawOutline() {};
+    virtual void translate(Vec2f offset) {};
+    virtual Rectf getBounds() {return Rectf(0, 0, 0, 0);};
+    virtual Vec2f getCanvasPos() {return Vec2f(0, 0);};
+    virtual float getValue(int i) {return 0;};
+    virtual void setValue(int i, float v) {};
+    virtual bool isDragPoint(cease::MouseEvent event) {return false;};
+    virtual bool isHotspot(cease::MouseEvent event) {return false;};
+    virtual ConnectionResult* getConnectionStart( cease::MouseEvent event) { return NULL; };
+    virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event) { return NULL; };
+    virtual vector<Node*> getInputNodes() { return vector<Node*>(); };
+    virtual vector<Node*> getOutputNodes() { return vector<Node*>(); };
     virtual KeyboardListener* getCurrentKeyboardListener() {return NULL;};
+    virtual Node* getNodeBelow(cease::MouseEvent event);
+    
+protected:
+    vector<InputNode*> inputNodes;
+    vector<OutputNode*> outputNodes;
 };
 
 

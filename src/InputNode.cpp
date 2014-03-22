@@ -7,6 +7,7 @@
 //
 
 #include "InputNode.h"
+#include "CanvasComponent.h"
 
 InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
 {
@@ -16,6 +17,8 @@ InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
     
     next = NULL;
     prev = NULL;
+    lastVal = 0;
+    name = "Input";
 }
 
 InputNode::~InputNode()
@@ -38,6 +41,7 @@ bool InputNode::contains(Vec2f p)
 
 void InputNode::updateVal(float val)
 {
+    lastVal = val;
     component->setValue(index, val);
 }
 
@@ -52,6 +56,7 @@ void InputNode::disconnect(Node *node)
         prev = NULL;
     }
     
+    lastVal = 0;
     component->setValue(index, 0);
 }
 

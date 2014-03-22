@@ -12,10 +12,12 @@
 #include <iostream>
 #include "cinder/app/App.h"
 #include "Node.h"
-#include "CanvasComponent.h"
+//#include "CanvasComponent.h"
 
 using namespace ci;
 using namespace ci::gl;
+
+class CanvasComponent;
 
 class InputNode : public Node
 {

@@ -37,6 +37,7 @@
 #include "Node.h"
 #include "Wire.h"
 #include "ComponentButton.h"
+#include "NodeInfoBox.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -105,6 +106,9 @@ private:
     // connecting graph
     vector<Wire*> wires;
     Wire* currentWire;
+    
+    // node info box
+    NodeInfoBox *infoBox;
 };
 
 

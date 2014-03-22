@@ -27,6 +27,7 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     currentWire = NULL;
     focusComponent = NULL;
     dragComponent = NULL;
+    infoBox = NULL;
 }
 
 void Canvas::update()
@@ -38,6 +39,10 @@ void Canvas::update()
     for (int i=0; i<wires.size(); i++)
     {
         wires[i]->update();
+    }
+    
+    if (infoBox != NULL) {
+        infoBox->update();
     }
 }
 
@@ -84,6 +89,10 @@ void Canvas::draw()
     }
     if (currentWire != NULL) {
         currentWire->draw();
+    }
+    
+    if (infoBox != NULL) {
+        infoBox->draw();
     }
 
     gl::popMatrices();
@@ -293,6 +302,35 @@ void Canvas::appMouseWheel(MouseEvent event)
 void Canvas::appMouseMove(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
+
+    // look for node underneath cursor to display NodeInfoBox (tooltip)
+    for (int i=0; i<components.size(); i++)
+    {
+        Node *n = components[i]->getNodeBelow(cevent);
+        if (n == NULL) {
+            continue;
+        }
+        
+        if (infoBox != NULL) {
+            if (infoBox->node == n) {
+                // we are currently showing this node info box
+                return;
+            }
+            
+            // this is a different info box
+            delete infoBox;
+            infoBox = NULL;
+        }
+        
+        infoBox = new NodeInfoBox(n);
+        return;
+    }
+    
+    if (infoBox != NULL) {
+        delete infoBox;
+        infoBox = NULL;
+    }
+
 //    mouseHandler->mouseMove(cevent);
 }
 

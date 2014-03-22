@@ -92,8 +92,8 @@ private:
     
     Vec2f nextOutputPos;
     Vec2f nextInputPos;
-    vector<OutputNode*> outputNodes;
-    vector<InputNode*> inputNodes;
+//    vector<OutputNode*> outputNodes;
+//    vector<InputNode*> inputNodes;
     
     vector<float> ivals;
     

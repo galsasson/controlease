@@ -81,7 +81,7 @@ private:
     Vec2f compDragAnchor;
     
     OutputNode *outputNode;
-    vector<InputNode*> inputNodes;
+//    vector<InputNode*> inputNodes;
     
     float nextVal;
     vector<float> vals;

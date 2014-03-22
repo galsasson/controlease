@@ -11,11 +11,13 @@
 
 #include <iostream>
 #include "cinder/app/App.h"
-#include "CanvasComponent.h"
+//#include "CanvasComponent.h"
 #include "Node.h"
 
 using namespace ci;
 using namespace ci::gl;
+
+class CanvasComponent;
 
 class OutputNode : public Node
 {
@@ -39,7 +41,6 @@ public:
 
 private:
     int index;
-    float lastVal;
     bool bFillEllipse;
     
     // the component

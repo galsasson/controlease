@@ -18,6 +18,8 @@
 		2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07A18BF081E005C206F /* ProgramOutput.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
+		2A49CAE518DDE83400348E6A /* NodeInfoBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */; };
+		2A49CAE718DDEF2900348E6A /* CanvasComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */; };
 		2A697E0E18C81C7800ACA9D2 /* JSComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */; };
 		2A697E1618C9475400ACA9D2 /* components in Resources */ = {isa = PBXBuildFile; fileRef = 2A697E1518C9475400ACA9D2 /* components */; };
 		2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71545418C1849B00DA1C39 /* TextInput.cpp */; };
@@ -74,6 +76,9 @@
 		2A2E083118B5714B0060A535 /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceManager.h; path = ../src/ResourceManager.h; sourceTree = "<group>"; };
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
 		2A2E083418B58E270060A535 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Canvas.h; path = ../src/Canvas.h; sourceTree = "<group>"; };
+		2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeInfoBox.cpp; path = ../src/NodeInfoBox.cpp; sourceTree = "<group>"; };
+		2A49CAE418DDE83400348E6A /* NodeInfoBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeInfoBox.h; path = ../src/NodeInfoBox.h; sourceTree = "<group>"; };
+		2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CanvasComponent.cpp; path = ../src/CanvasComponent.cpp; sourceTree = "<group>"; };
 		2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSComponent.cpp; path = ../src/JSComponent.cpp; sourceTree = "<group>"; };
 		2A697E0D18C81C7800ACA9D2 /* JSComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSComponent.h; path = ../src/JSComponent.h; sourceTree = "<group>"; };
 		2A697E1518C9475400ACA9D2 /* components */ = {isa = PBXFileReference; lastKnownFileType = folder; name = components; path = ../resources/components; sourceTree = "<group>"; };
@@ -199,7 +204,6 @@
 				2A2E083318B58E270060A535 /* Canvas.cpp */,
 				2A2E083418B58E270060A535 /* Canvas.h */,
 				2AD2E23518B7E4E20084A524 /* MouseListener.h */,
-				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 				2A798DC718B97C8600421573 /* Wire.cpp */,
 				2A798DC818B97C8600421573 /* Wire.h */,
 				2A798DD118B997DF00421573 /* InputNode.cpp */,
@@ -211,6 +215,10 @@
 				2AF1CC5518C137A6000A49BB /* KeyboardListener.h */,
 				2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */,
 				2A71547B18C2BA0900DA1C39 /* V8Engine.h */,
+				2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */,
+				2A49CAE418DDE83400348E6A /* NodeInfoBox.h */,
+				2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */,
+				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -478,6 +486,7 @@
 				2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */,
 				2A798DEC18BB11A900421573 /* Sub.cpp in Sources */,
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
+				2A49CAE518DDE83400348E6A /* NodeInfoBox.cpp in Sources */,
 				2A798DD618B998DC00421573 /* OutputNode.cpp in Sources */,
 				11F61514388D4262BBED262A /* OscOutboundPacketStream.cpp in Sources */,
 				2A20D07918BEFA3C005C206F /* Random.cpp in Sources */,
@@ -488,6 +497,7 @@
 				2A71547F18C456EA00DA1C39 /* Oscillator.cpp in Sources */,
 				2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */,
 				2A7F105118B52C84006CA100 /* Program.cpp in Sources */,
+				2A49CAE718DDEF2900348E6A /* CanvasComponent.cpp in Sources */,
 				49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */,
 				4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */,
 				2A697E0E18C81C7800ACA9D2 /* JSComponent.cpp in Sources */,
