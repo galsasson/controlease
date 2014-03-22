@@ -47,9 +47,6 @@ public:
     void addressInputSet(void);
     void onReturn(void);
 
-    void translate(Vec2f offset);
-    Rectf getBounds();
-    
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
@@ -57,14 +54,8 @@ public:
 	void mouseDrag( cease::MouseEvent event );
     bool isDragPoint(cease::MouseEvent event);
     bool isHotspot(cease::MouseEvent event);
-    ConnectionResult* getConnectionStart(cease::MouseEvent event);
-    ConnectionResult* getConnectionEnd(cease::MouseEvent event);
-    vector<Node*> getInputNodes();
-    vector<Node*> getOutputNodes();
-    bool contains(Vec2f p);
     KeyboardListener* getCurrentKeyboardListener();
     
-    Vec2f getCanvasPos();
     float getValue(int i);
     void setValue(int i, float v);
     
@@ -77,8 +68,6 @@ private:
     void addInput(osc::Message msg);
     void addOutput(osc::Message msg);
     void handleOutputMessage(osc::Message msg);
-    Vec2f getLocalCoords(Vec2f p);
-    Vec2f getCanvasCoords(Vec2f p);
     void applyBorders();
     void resizeComponent();
     
@@ -93,10 +82,7 @@ private:
     
     bool connected;
     vector<ProgramInput*> inputs;
-//    vector<InputNode*> inputNodes;
-    
     vector<ProgramOutput*> outputs;
-//    vector<OutputNode*> outputNodes;
     
     bool isEditing;
     Rectf textInputRect;
@@ -104,7 +90,6 @@ private:
     // graphical representation
     void setSize(Vec2f s);
     
-    Rectf rect;
     Rectf localRect;
     Rectf titleRect;
     string name;

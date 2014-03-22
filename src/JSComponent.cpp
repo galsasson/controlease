@@ -27,13 +27,6 @@ JSComponent::JSComponent(Vec2f p, fs::path script)
 
 JSComponent::~JSComponent()
 {
-    for (int i=0; i<inputNodes.size(); i++) {
-        delete inputNodes[i];
-    }
-    for (int i=0; i<outputNodes.size(); i++) {
-        delete outputNodes[i];
-    }
-    
     pSetupFunc.Reset();
     pUpdateFunc.Reset();
     pDrawFunc.Reset();
@@ -138,7 +131,7 @@ Rectf JSComponent::getBounds()
 
 void JSComponent::mouseDown(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
 
     if (titleRect.contains(local)) {
         // drag the component
@@ -153,7 +146,7 @@ void JSComponent::mouseDown(cease::MouseEvent event)
 
 void JSComponent::mouseDrag(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     if (isDragging)
     {
         canvasRect += event.getPos() - compDragAnchor;
@@ -171,7 +164,7 @@ void JSComponent::mouseUp( cease::MouseEvent event)
     isDragging = false;
     
     // call mouse up of js component
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     if (jsRect.contains(local)) {
         callV8MouseFunction(pMouseUpFunc, local.x - jsRect.x1, local.y - jsRect.y1);
     }
@@ -182,105 +175,17 @@ void JSComponent::mouseMove( cease::MouseEvent event ) {}
 
 bool JSComponent::isDragPoint(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local) || jsRect.contains(local);
 }
 
 bool JSComponent::isHotspot(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local) ||
             jsRect.contains(local);
-}
-
-ConnectionResult* JSComponent::getConnectionStart(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        if (inputNodes[i]->contains(local)) {
-            if (inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
-            }
-        }
-    }
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        if (outputNodes[i]->contains(local)) {
-            if (outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNodes[i]);
-            }
-            else {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
-            }
-        }
-    }
-
-    return NULL;
-}
-
-ConnectionResult* JSComponent::getConnectionEnd(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        if (inputNodes[i]->contains(local)) {
-            if (!inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
-            }
-        }
-    }
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        if (outputNodes[i]->contains(local)) {
-            if (!outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
-            }
-        }
-    }
-    
-    return NULL;
-}
-
-vector<Node*> JSComponent::getInputNodes()
-{
-    vector<Node*> inputs;
-    
-    for (int i=0; i<inputNodes.size(); i++) {
-        inputs.push_back((Node*)inputNodes[i]);
-    }
-    
-    return inputs;
-}
-
-vector<Node*> JSComponent::getOutputNodes()
-{
-    vector<Node*> outputs;
-    
-    for (int i=0; i<outputNodes.size(); i++) {
-        outputs.push_back((Node*)outputNodes[i]);
-    }
-    
-    return outputs;
-}
-
-KeyboardListener* JSComponent::getCurrentKeyboardListener()
-{
-    return NULL;
-}
-
-Vec2f JSComponent::getCanvasPos()
-{
-    return canvasRect.getUpperLeft();
-}
-
-bool JSComponent::contains(Vec2f p)
-{
-    return canvasRect.contains(p);
 }
 
 float JSComponent::getValue(int i)
@@ -300,16 +205,6 @@ void JSComponent::setValue(int i, float v)
     }
     
     ivals[i] = v;
-}
-
-Vec2f JSComponent::getLocalCoords(Vec2f p)
-{
-    return p-canvasRect.getUpperLeft();
-}
-
-Vec2f JSComponent::getCanvasCoords(Vec2f p)
-{
-    return canvasRect.getUpperLeft() + p;
 }
 
 void JSComponent::applyBorders()

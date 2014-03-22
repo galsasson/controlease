@@ -28,6 +28,7 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     focusComponent = NULL;
     dragComponent = NULL;
     infoBox = NULL;
+    bMagnifyingGlass = false;
 }
 
 void Canvas::update()
@@ -136,21 +137,6 @@ void Canvas::addComponent(ComponentButton* button)
         case COMPONENT_TYPE_SPLIT:
             addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
-        case COMPONENT_TYPE_ADD:
-            addComponent(new Add(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
-        case COMPONENT_TYPE_SUB:
-            addComponent(new Sub(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
-        case COMPONENT_TYPE_MUL:
-            addComponent(new Mult(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
-        case COMPONENT_TYPE_DIV:
-            addComponent(new Div(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
-        case COMPONENT_TYPE_RANDOM:
-            addComponent(new Random(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
         case COMPONENT_TYPE_OSCILLATOR:
             addComponent(new Oscillator(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
@@ -215,16 +201,25 @@ ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
 
 void Canvas::keyDown(cinder::app::KeyEvent event)
 {
+    console() << "keyDown: "<<event.getCode()<<endl;
+    
     if (event.getCode() == 8)   // DEL
     {
         if (focusComponent) {
             deleteComponent(focusComponent);
         }
     }
+    else if (event.getCode() == 122)    // 'z'
+    {
+        bMagnifyingGlass = true;
+    }
 }
 
 void Canvas::keyUp(cinder::app::KeyEvent event)
 {
+    if (event.getCode() == 122) {
+        bMagnifyingGlass = false;
+    }
 }
 
 CanvasComponent* Canvas::getMouseComponent(Vec2f p)
@@ -301,6 +296,10 @@ void Canvas::appMouseWheel(MouseEvent event)
 
 void Canvas::appMouseMove(MouseEvent event)
 {
+//    if (!bMagnifyingGlass) {
+//        return;
+//    }
+    
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
 
     // look for node underneath cursor to display NodeInfoBox (tooltip)
@@ -500,6 +499,12 @@ void Canvas::deleteComponent(CanvasComponent *comp)
     
     if (comp == dragComponent) {
         dragComponent = NULL;
+    }
+    
+    // remove nodeinfobox
+    if (infoBox != NULL) {
+        delete infoBox;
+        infoBox = NULL;
     }
     
     // now delete the component

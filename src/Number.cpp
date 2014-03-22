@@ -23,16 +23,14 @@ Number::Number(Vec2f p, Vec2f s)
 
 Number::~Number()
 {
-    delete inputNode;
-    delete outputNode;
 }
 
 void Number::initInterface(Vec2f size)
 {
     rect = Rectf(Vec2f(0, 0), size);
     titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
-    inputNode = new InputNode(0, this, Vec2f(6, size.y*3/4));
-    outputNode = new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4));
+    inputNodes.push_back(new InputNode(0, this, Vec2f(6, size.y*3/4)));
+    outputNodes.push_back(new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4)));
     
     dragStartX = dragX = 0;
     isValDrag = false;
@@ -70,8 +68,8 @@ void Number::draw()
     gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
     
     // draw nodes
-    inputNode->draw();
-    outputNode->draw();
+    inputNodes[0]->draw();
+    outputNodes[0]->draw();
     
     ResourceManager::getInstance().getTextureFont()->drawString(valStr, valRect);
     gl::popMatrices();
@@ -94,19 +92,9 @@ void Number::drawOutline()
     gl::popMatrices();
 }
 
-void Number::translate(Vec2f offset)
-{
-    canvasRect += offset;
-}
-
-Rectf Number::getBounds()
-{
-    return canvasRect;
-}
-
 void Number::mouseDown(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     if (valRect.contains(local)) {
         isValDrag = true;
@@ -122,7 +110,7 @@ void Number::mouseDown(cease::MouseEvent event)
 
 void Number::mouseDrag(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     console() << "mouse drag "<<event.getPos().x<<endl;
     if (event.keyModifiers&MouseEvent::SHIFT_DOWN)
@@ -166,86 +154,16 @@ void Number::mouseMove( cease::MouseEvent event ) {}
 
 bool Number::isDragPoint(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return valRect.contains(local) || titleRect.contains(local);
 }
 
 bool Number::isHotspot(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return valRect.contains(local) || titleRect.contains(local);
-}
-
-ConnectionResult* Number::getConnectionStart(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-    
-    if (inputNode->contains(local)) {
-        if (inputNode->isConnected()) {
-            return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNode);
-        }
-    }
-    else if (outputNode->contains(local)) {
-        if (outputNode->isConnected()) {
-            return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNode);
-        }
-        else {
-            return new ConnectionResult(TYPE_OUTPUT, outputNode);
-        }
-    }
-
-    return NULL;
-}
-
-ConnectionResult* Number::getConnectionEnd(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    if (inputNode->contains(local)) {
-        if (!inputNode->isConnected()) {
-            return new ConnectionResult(TYPE_INPUT, inputNode);
-        }
-    }
-    else if (outputNode->contains(local)) {
-        if (!outputNode->isConnected()) {
-            return new ConnectionResult(TYPE_OUTPUT, outputNode);
-        }
-    }
-    
-    return NULL;
-}
-
-vector<Node*> Number::getInputNodes()
-{
-    vector<Node*> inputs;
-    inputs.push_back(inputNode);
-    
-    return inputs;
-}
-
-vector<Node*> Number::getOutputNodes()
-{
-    vector<Node*> outputs;
-    outputs.push_back(outputNode);
-    
-    return outputs;
-}
-
-KeyboardListener* Number::getCurrentKeyboardListener()
-{
-    return NULL;
-}
-
-Vec2f Number::getCanvasPos()
-{
-    return canvasRect.getUpperLeft();
-}
-
-bool Number::contains(Vec2f p)
-{
-    return canvasRect.contains(p);
 }
 
 float Number::getValue(int i)
@@ -263,16 +181,6 @@ void Number::setValue(int i, float v)
     }
 }
 
-Vec2f Number::getLocalCoords(Vec2f p)
-{
-    return p-canvasRect.getUpperLeft();
-}
-
-Vec2f Number::getCanvasCoords(Vec2f p)
-{
-    return canvasRect.getUpperLeft() + p;
-}
-
 void Number::updateVal(float newVal)
 {
     val = newVal;
@@ -281,7 +189,7 @@ void Number::updateVal(float newVal)
     valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
                     rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);
     
-    outputNode->updateVal(val);
+    outputNodes[0]->updateVal(val);
 }
 
 std::string Number::getValueString()

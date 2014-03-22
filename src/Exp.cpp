@@ -18,13 +18,6 @@ Exp::Exp(Vec2f p, Vec2f s)
 
 Exp::~Exp()
 {
-    for (int i=0; i<inputNodes.size(); i++) {
-        delete inputNodes[i];
-    }
-    for (int i=0; i<outputNodes.size(); i++) {
-        delete outputNodes[i];
-    }
-    
     pFunction.Reset();
     pContext.Reset();
 }
@@ -140,7 +133,7 @@ Rectf Exp::getBounds()
 
 void Exp::mouseDown(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     isEditing = false;
     
     if (outPlusRect.contains(local)) {
@@ -182,92 +175,19 @@ void Exp::mouseMove( cease::MouseEvent event ) {}
 
 bool Exp::isDragPoint(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local);
 }
 
 bool Exp::isHotspot(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local) ||
         inPlusRect.contains(local) ||
         outPlusRect.contains(local) ||
         textEditRect.contains(local);
-}
-
-ConnectionResult* Exp::getConnectionStart(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        if (inputNodes[i]->contains(local)) {
-            if (inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
-            }
-        }
-    }
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        if (outputNodes[i]->contains(local)) {
-            if (outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNodes[i]);
-            }
-            else {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
-            }
-        }
-    }
-
-    return NULL;
-}
-
-ConnectionResult* Exp::getConnectionEnd(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        if (inputNodes[i]->contains(local)) {
-            if (!inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
-            }
-        }
-    }
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        if (outputNodes[i]->contains(local)) {
-            if (!outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
-            }
-        }
-    }
-    
-    return NULL;
-}
-
-vector<Node*> Exp::getInputNodes()
-{
-    vector<Node*> inputs;
-    
-    for (int i=0; i<inputNodes.size(); i++) {
-        inputs.push_back((Node*)inputNodes[i]);
-    }
-    
-    return inputs;
-}
-
-vector<Node*> Exp::getOutputNodes()
-{
-    vector<Node*> outputs;
-    
-    for (int i=0; i<outputNodes.size(); i++) {
-        outputs.push_back((Node*)outputNodes[i]);
-    }
-    
-    return outputs;
 }
 
 KeyboardListener* Exp::getCurrentKeyboardListener()
@@ -277,16 +197,6 @@ KeyboardListener* Exp::getCurrentKeyboardListener()
     }
     
     return NULL;
-}
-
-Vec2f Exp::getCanvasPos()
-{
-    return canvasRect.getUpperLeft();
-}
-
-bool Exp::contains(Vec2f p)
-{
-    return canvasRect.contains(p);
 }
 
 float Exp::getValue(int i)
@@ -306,16 +216,6 @@ void Exp::setValue(int i, float v)
     }
     
     ivals[i] = v;
-}
-
-Vec2f Exp::getLocalCoords(Vec2f p)
-{
-    return p-canvasRect.getUpperLeft();
-}
-
-Vec2f Exp::getCanvasCoords(Vec2f p)
-{
-    return canvasRect.getUpperLeft() + p;
 }
 
 void Exp::applyBorders()

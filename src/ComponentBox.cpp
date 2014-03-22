@@ -68,16 +68,11 @@ void ComponentBox::createButtons()
     buttons.push_back(new ComponentButton(COMPONENT_TYPE_PROGRAM, Vec2f(10, startY), Vec2f(rect.getWidth()-20, 20)));
     buttons.push_back(new ComponentButton(COMPONENT_TYPE_NUMBER, Vec2f(10, startY+25), Vec2f(rect.getWidth()-20, 20)));
     buttons.push_back(new ComponentButton(COMPONENT_TYPE_SPLIT, Vec2f(10, startY+50), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_ADD, Vec2f(10, startY+75), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_SUB, Vec2f(10, startY+100), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_MUL, Vec2f(10, startY+125), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_DIV, Vec2f(10, startY+150), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_RANDOM, Vec2f(10, startY+175), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_OSCILLATOR, Vec2f(10, startY+200), Vec2f(rect.getWidth()-20, 20)));
-    buttons.push_back(new ComponentButton(COMPONENT_TYPE_EXP, Vec2f(10, startY+225), Vec2f(rect.getWidth()-20, 20)));
+    buttons.push_back(new ComponentButton(COMPONENT_TYPE_OSCILLATOR, Vec2f(10, startY+75), Vec2f(rect.getWidth()-20, 20)));
+    buttons.push_back(new ComponentButton(COMPONENT_TYPE_EXP, Vec2f(10, startY+100), Vec2f(rect.getWidth()-20, 20)));
 //    buttons.push_back(new ComponentButton(COMPONENT_TYPE_JS, Vec2f(10, startY+250), Vec2f(rect.getWidth()-20, 20)));
     
-    createJSButtons(startY+250);
+    createJSButtons(startY+125);
 }
 
 void ComponentBox::createJSButtons(float y)

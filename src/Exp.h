@@ -54,16 +54,8 @@ public:
 	void mouseDrag( cease::MouseEvent event );
     bool isDragPoint( cease::MouseEvent event);
     bool isHotspot( cease::MouseEvent event);
-    ConnectionResult* getConnectionStart( cease::MouseEvent event);
-    ConnectionResult* getConnectionEnd( cease::MouseEvent event);
-    vector<Node*> getInputNodes();
-    vector<Node*> getOutputNodes();
-    
     KeyboardListener* getCurrentKeyboardListener();
     void inputEnterPressed();
-    
-    bool contains(Vec2f p);
-    Vec2f getCanvasPos();
     
     float getValue(int i);
     void setValue(int i, float v);
@@ -76,10 +68,6 @@ private:
     bool isEditing;
     Rectf textEditRect;
     
-    Vec2f getLocalCoords(Vec2f p);
-    Vec2f getCanvasCoords(Vec2f p);
-    
-    Rectf canvasRect;
     Rectf rect;
     Rectf titleRect;
     Rectf inPlusRect;

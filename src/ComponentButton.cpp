@@ -65,18 +65,6 @@ string ComponentButton::getComponentName()
             return "Number";
         case COMPONENT_TYPE_SPLIT:
             return "Split";
-        case COMPONENT_TYPE_ADD:
-            return "Add";
-        case COMPONENT_TYPE_SUB:
-            return "Substract";
-        case COMPONENT_TYPE_MUL:
-            return "Multiply";
-        case COMPONENT_TYPE_DIV:
-            return "Divide";
-        case COMPONENT_TYPE_NOISE:
-            return "Noise";
-        case COMPONENT_TYPE_RANDOM:
-            return "Random";
         case COMPONENT_TYPE_OSCILLATOR:
             return "Oscillator";
         case COMPONENT_TYPE_EXP:

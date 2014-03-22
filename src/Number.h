@@ -40,9 +40,6 @@ public:
     void draw();
     void drawOutline();
 
-    void translate(Vec2f offset);
-    Rectf getBounds();
-    
     void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);
 	void mouseWheel( cease::MouseEvent event );
@@ -50,19 +47,9 @@ public:
 	void mouseDrag( cease::MouseEvent event );
     bool isDragPoint(cease::MouseEvent event);
     bool isHotspot( cease::MouseEvent event);
-    ConnectionResult* getConnectionStart( cease::MouseEvent event);
-    ConnectionResult* getConnectionEnd( cease::MouseEvent event);
-    vector<Node*> getInputNodes();
-    vector<Node*> getOutputNodes();
-    KeyboardListener* getCurrentKeyboardListener();
-    
-    bool contains(Vec2f p);
-    Vec2f getCanvasPos();
     
     float getValue(int i);
     void setValue(int i, float v);
-    
-
     
 private:
     void updateVal(float newVal);
@@ -71,10 +58,6 @@ private:
     
     bool immediateChange;
     
-    Vec2f getLocalCoords(Vec2f p);
-    Vec2f getCanvasCoords(Vec2f p);
-    
-    Rectf canvasRect;
     Rectf rect;
     Rectf titleRect;
     Rectf dragRect;
@@ -90,9 +73,6 @@ private:
     bool isValDrag;
     float startVal;
 
-    OutputNode *outputNode;
-    InputNode *inputNode;
-    
     float nextVal;
     float val;
     std::string valStr;

@@ -24,21 +24,19 @@ Oscillator::Oscillator(Vec2f p, Vec2f s)
 
 Oscillator::~Oscillator()
 {
-    delete inputNode;
-    delete outputNode;
 }
 
 void Oscillator::initInterface(Vec2f size)
 {
     rect = Rectf(Vec2f(0, 0), size);
     titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
-    inputNode = new InputNode(0, this, Vec2f(6, size.y*3/4));
-    outputNode = new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4));
+    inputNodes.push_back(new InputNode(0, this, Vec2f(6, size.y*3/4)));
+    outputNodes.push_back(new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4)));
 }
 
 void Oscillator::update()
 {
-    if (frequency == 0 || !inputNode->isConnected()) {
+    if (frequency == 0 || !inputNodes[0]->isConnected()) {
         return;
     }
     
@@ -77,8 +75,8 @@ void Oscillator::draw()
     gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
     
     // draw nodes
-    inputNode->draw();
-    outputNode->draw();
+    inputNodes[0]->draw();
+    outputNodes[0]->draw();
     
     ResourceManager::getInstance().getTextureFont()->drawString(valStr, valRect);
     gl::popMatrices();
@@ -132,82 +130,16 @@ void Oscillator::mouseMove( cease::MouseEvent event ) {}
 
 bool Oscillator::isDragPoint(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local);
 }
 
 bool Oscillator::isHotspot(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local);
-}
-
-ConnectionResult* Oscillator::getConnectionStart(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-    
-    if (inputNode->contains(local)) {
-        if (inputNode->isConnected()) {
-            return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNode);
-        }
-    }
-    else if (outputNode->contains(local)) {
-        if (outputNode->isConnected()) {
-            return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNode);
-        }
-        else {
-            return new ConnectionResult(TYPE_OUTPUT, outputNode);
-        }
-    }
-
-    return NULL;
-}
-
-ConnectionResult* Oscillator::getConnectionEnd(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    if (inputNode->contains(local)) {
-        if (!inputNode->isConnected()) {
-            return new ConnectionResult(TYPE_INPUT, inputNode);
-        }
-    }
-    else if (outputNode->contains(local)) {
-        if (!outputNode->isConnected()) {
-            return new ConnectionResult(TYPE_OUTPUT, outputNode);
-        }
-    }
-    
-    return NULL;
-}
-
-vector<Node*> Oscillator::getInputNodes()
-{
-    vector<Node*> inputs;
-    inputs.push_back(inputNode);
-    
-    return inputs;
-}
-
-vector<Node*> Oscillator::getOutputNodes()
-{
-    vector<Node*> outputs;
-    outputs.push_back(outputNode);
-    
-    return outputs;
-}
-
-
-Vec2f Oscillator::getCanvasPos()
-{
-    return canvasRect.getUpperLeft();
-}
-
-bool Oscillator::contains(Vec2f p)
-{
-    return canvasRect.contains(p);
 }
 
 float Oscillator::getValue(int i)
@@ -220,16 +152,6 @@ void Oscillator::setValue(int i, float v)
     frequency = v;
 }
 
-Vec2f Oscillator::getLocalCoords(Vec2f p)
-{
-    return p-canvasRect.getUpperLeft();
-}
-
-Vec2f Oscillator::getCanvasCoords(Vec2f p)
-{
-    return canvasRect.getUpperLeft() + p;
-}
-
 void Oscillator::updateVal(float newVal)
 {
     val = newVal;
@@ -238,7 +160,7 @@ void Oscillator::updateVal(float newVal)
     valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
                     rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);
     
-    outputNode->updateVal(val);
+    outputNodes[0]->updateVal(val);
 }
 
 std::string Oscillator::getValueString()

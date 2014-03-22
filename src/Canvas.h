@@ -24,11 +24,6 @@
 #include "Program.h"
 #include "Number.h"
 #include "Split.h"
-#include "Add.h"
-#include "Sub.h"
-#include "Mult.h"
-#include "Div.h"
-#include "Random.h"
 #include "Oscillator.h"
 #include "Exp.h"
 #include "JSComponent.h"
@@ -109,6 +104,7 @@ private:
     
     // node info box
     NodeInfoBox *infoBox;
+    bool bMagnifyingGlass;
 };
 
 

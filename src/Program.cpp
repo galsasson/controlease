@@ -12,7 +12,7 @@ Program::Program(Vec2f _pos)
 {
     titleRect = Rectf(5, 0, 200, 20);
     localRect = Rectf(0, 0, 200, 40);
-    rect = Rectf(_pos, _pos+localRect.getSize());
+    canvasRect = Rectf(_pos, _pos+localRect.getSize());
     nextInputPos = Vec2f(6, 28);
     nextOutputPos = Vec2f(localRect.x2 - 6, 28);
     
@@ -34,10 +34,9 @@ Program::~Program()
     {
         delete inputs[i];
     }
-    
-    for (int i=0; i<inputNodes.size(); i++)
+    for (int i=0; i<outputs.size(); i++)
     {
-        delete inputNodes[i];
+        delete outputs[i];
     }
     
     delete addressInput;
@@ -85,7 +84,7 @@ void Program::update()
 void Program::draw()
 {
     gl::pushMatrices();
-    gl::translate(rect.getUpperLeft());
+    gl::translate(canvasRect.getUpperLeft());
 
     gl::color(1, 1, 1);
     gl::drawSolidRoundedRect(localRect, 3);
@@ -127,7 +126,7 @@ void Program::draw()
 void Program::drawOutline()
 {
     gl::pushMatrices();
-    gl::translate(rect.getUpperLeft());
+    gl::translate(canvasRect.getUpperLeft());
     if (!connected)
     {
         addressInput->drawInFocus();
@@ -140,26 +139,16 @@ void Program::drawOutline()
     gl::enable(GL_LINE_STIPPLE);
 
     gl::color(0, 0, 0);
-    gl::drawStrokedRect(Rectf(Vec2f(0, 0), rect.getSize() + Vec2f(8, 8)));
+    gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
     
     glPopAttrib();
     
     gl::popMatrices();
 }
 
-void Program::translate(Vec2f offset)
-{
-    rect += offset;
-}
-
-Rectf Program::getBounds()
-{
-    return rect;
-}
-
 void Program::mouseDown(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     isEditing = false;
     
     if (!connected) {
@@ -187,7 +176,7 @@ void Program::mouseMove(cease::MouseEvent event)
 
 void Program::mouseDrag(cease::MouseEvent event)
 {
-    rect += event.getPos() - prevMouse;
+    canvasRect += event.getPos() - prevMouse;
     prevMouse = event.getPos();
     
     applyBorders();
@@ -195,86 +184,13 @@ void Program::mouseDrag(cease::MouseEvent event)
 
 bool Program::isHotspot(cease::MouseEvent event)
 {
-    Vec2f local = getLocalCoords(event.getPos());
+    Vec2f local = toLocal(event.getPos());
     return titleRect.contains(local) || textInputRect.contains(local);
 }
 
 bool Program::isDragPoint(cease::MouseEvent event)
 {
-    return titleRect.contains(getLocalCoords(event.getPos()));
-}
-
-ConnectionResult* Program::getConnectionStart(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        if (inputNodes[i]->contains(local)) {
-            if (inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
-            }
-        }
-    }
-    
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        if (outputNodes[i]->contains(local)) {
-            if (outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNodes[i]);
-            }
-            else {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
-            }
-        }
-    }
-    
-    return NULL;
-}
-
-ConnectionResult* Program::getConnectionEnd(cease::MouseEvent event)
-{
-    Vec2f local = getLocalCoords(event.getPos());
-    
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        if (inputNodes[i]->contains(local)) {
-            if (!inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
-            }
-        }
-    }
-    
-    return NULL;
-}
-
-vector<Node*> Program::getInputNodes()
-{
-    vector<Node*> inodes;
-    
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        inodes.push_back((Node*)inputNodes[i]);
-        
-    }
-    return inodes;
-}
-
-vector<Node*> Program::getOutputNodes()
-{
-    vector<Node*> onodes;
-    
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        onodes.push_back((Node*)outputNodes[i]);
-    }
-    
-    return onodes;
-}
-
-bool Program::contains(Vec2f p)
-{
-    return rect.contains(p);
+    return titleRect.contains(toLocal(event.getPos()));
 }
 
 KeyboardListener* Program::getCurrentKeyboardListener()
@@ -286,11 +202,6 @@ KeyboardListener* Program::getCurrentKeyboardListener()
     return NULL;
 }
 
-Vec2f Program::getCanvasPos()
-{
-    return rect.getUpperLeft();
-}
-
 float Program::getValue(int i)
 {
     return inputs[i]->getValue();
@@ -300,17 +211,6 @@ void Program::setValue(int i, float v)
 {
     inputs[i]->sendVal(v);
 }
-
-Vec2f Program::getLocalCoords(Vec2f p)
-{
-    return p-rect.getUpperLeft();
-}
-
-Vec2f Program::getCanvasCoords(Vec2f p)
-{
-    return rect.getUpperLeft()+p;
-}
-
 
 void Program::connect()
 {
@@ -454,30 +354,30 @@ void Program::handleOutputMessage(osc::Message msg)
 
 void Program::applyBorders()
 {
-    float x1 = rect.getUpperLeft().x;
-    float x2 = rect.getUpperRight().x;
-    float y1 = rect.getUpperLeft().y;
-    float y2 = rect.getLowerLeft().y;
+    float x1 = canvasRect.getUpperLeft().x;
+    float x2 = canvasRect.getUpperRight().x;
+    float y1 = canvasRect.getUpperLeft().y;
+    float y2 = canvasRect.getLowerLeft().y;
     
     if (x1 < 0) {
-        rect += Vec2f(-x1, 0);
+        canvasRect += Vec2f(-x1, 0);
     }
     else if (x2 > CANVAS_WIDTH) {
-        rect -= Vec2f(x2-CANVAS_WIDTH, 0);
+        canvasRect -= Vec2f(x2-CANVAS_WIDTH, 0);
     }
     
     if (y1 < 0) {
-        rect += Vec2f(0, -y1);
+        canvasRect += Vec2f(0, -y1);
     }
     else if (y2 > CANVAS_HEIGHT) {
-        rect -= Vec2f(0, y2-CANVAS_HEIGHT);
+        canvasRect -= Vec2f(0, y2-CANVAS_HEIGHT);
     }
 }
 
 void Program::resizeComponent()
 {
     int nodeNum = max(inputNodes.size(), outputNodes.size());
-    rect.y2 = rect.y1 + 20 + nodeNum*15;
+    canvasRect.y2 = canvasRect.y1 + 20 + nodeNum*15;
     localRect.y2 = 20 + nodeNum*15;
 }
 
