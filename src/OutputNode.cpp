@@ -15,7 +15,7 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     component = comp;
     pos = p;
     
-    bFillEllipse = false;
+    bFillEllipse = true;
     
     next = NULL;
     prev = NULL;
@@ -30,14 +30,16 @@ OutputNode::~OutputNode()
 
 void OutputNode::draw()
 {
+    gl::color(ResourceManager::getInstance().getColor(4));
+    gl::drawSolidCircle(pos, 3);
+
     if (bFillEllipse) {
-        gl::color(0.7, 0.7, 0.7);
+        gl::color(0, 0, 0, 0.5);
         gl::drawSolidCircle(pos, 3);
-        bFillEllipse = false;
+//        bFillEllipse = false;
     }
     else {
-        gl::color(1, 1, 1);
-        gl::drawSolidCircle(pos, 3);
+        bFillEllipse = true;
     }
     
     gl::color(0, 0, 0);
@@ -51,7 +53,7 @@ bool OutputNode::contains(Vec2f p)
 
 void OutputNode::updateVal(float val)
 {
-    bFillEllipse = true;
+    bFillEllipse = false;
     lastVal = val;
     if (next != NULL) {
         next->updateVal(val);

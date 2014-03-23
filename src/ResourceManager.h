@@ -10,12 +10,14 @@
 #define __Controlease__ResourceManager__
 
 #include <iostream>
+#include <vector>
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/TextureFont.h"
 
 using namespace ci;
 using namespace ci::app;
+using namespace std;
 
 class ResourceManager
 {
@@ -29,6 +31,7 @@ public:
     
     void initResources();
     gl::TextureFontRef getTextureFont();
+    Colorf getColor(int index);
 private:
     ResourceManager() {};
     // Dont forget to declare these two. You want to make sure they
@@ -39,5 +42,6 @@ private:
     
     Font mFont;
     gl::TextureFontRef mTextureFont;
+    vector<Colorf> colors;
 };
 #endif /* defined(__tunnelvars__ResourceManager__) */

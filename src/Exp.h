@@ -61,7 +61,6 @@ public:
     void setValue(int i, float v);
     
 private:
-    void applyBorders();
     void resizeComponent();
     
     TextInput* codeInput;

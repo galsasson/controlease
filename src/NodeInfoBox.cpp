@@ -16,7 +16,7 @@ NodeInfoBox::NodeInfoBox(Node *n)
 void NodeInfoBox::setNode(Node *n)
 {
     node = n;
-    Vec2f pos = n->getCanvasPos() + Vec2f(-30, 10);
+    Vec2f pos = n->getCanvasPos() + Vec2f(20, -50);
     canvasRect = Rectf(0, 0, 0, 0);
     canvasRect.offset(pos);
     float nameWidth = ResourceManager::getInstance().getTextureFont()->measureString(n->name).length();

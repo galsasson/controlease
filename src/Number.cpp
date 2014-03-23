@@ -184,42 +184,10 @@ void Number::setValue(int i, float v)
 void Number::updateVal(float newVal)
 {
     val = newVal;
-    valStr = getValueString();
+    valStr = getValueString(val);
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
     valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
                     rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);
     
     outputNodes[0]->updateVal(val);
-}
-
-std::string Number::getValueString()
-{
-    char buff[128];
-    sprintf(buff, "%." FLOAT_PRECISION "f", val);
-    std::ostringstream str;
-    str << buff;
-    return str.str();
-}
-
-void Number::applyBorders()
-{
-    float x1 = canvasRect.getUpperLeft().x;
-    float x2 = canvasRect.getUpperRight().x;
-    float y1 = canvasRect.getUpperLeft().y;
-    float y2 = canvasRect.getLowerRight().y;
-    
-    if (x1 < 0) {
-        canvasRect += Vec2f(-x1, 0);
-    }
-    else if (x2 > CANVAS_WIDTH) {
-        canvasRect -= Vec2f(x2-CANVAS_WIDTH, 0);
-    }
-    
-    if (y1 < 0) {
-        canvasRect += Vec2f(0, -y1);
-    }
-    else if (y2 > CANVAS_HEIGHT) {
-        canvasRect -= Vec2f(0, y2-CANVAS_HEIGHT);
-    }
-    
 }

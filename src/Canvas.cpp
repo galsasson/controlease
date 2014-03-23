@@ -56,8 +56,8 @@ void Canvas::draw()
     gl::pushMatrices();
     gl::scale((Vec2f)getWindowSize() / (Vec2f)fbo.getSize() * scale);
 
-    gl::clear(Color(0.9, 0.9, 0.9));
-    gl::color(0.75, 0.75, 0.75);
+    gl::clear(Color(0.8, 0.8, 0.8));
+    gl::color(0.6, 0.6, 0.6);
     gl::lineWidth(1);
 
     for (float x=0; x<=virtualSize.x; x+=40)
@@ -135,7 +135,7 @@ void Canvas::addComponent(ComponentButton* button)
             addComponent(new ::Number(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
         case COMPONENT_TYPE_SPLIT:
-            addComponent(new Split(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            addComponent(new Split(topLeft + Vec2f(30, 30)));
             break;
         case COMPONENT_TYPE_OSCILLATOR:
             addComponent(new Oscillator(topLeft + Vec2f(30, 30), Vec2f(100, 40)));

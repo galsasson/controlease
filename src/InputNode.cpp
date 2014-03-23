@@ -19,6 +19,8 @@ InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
     prev = NULL;
     lastVal = 0;
     name = "Input";
+    
+    bFillEllipse = true;
 }
 
 InputNode::~InputNode()
@@ -28,8 +30,17 @@ InputNode::~InputNode()
 
 void InputNode::draw()
 {
-    gl::color(1, 1, 1);
+    gl::color(ResourceManager::getInstance().getColor(2));
     gl::drawSolidCircle(pos, 3);
+    
+    if (bFillEllipse) {
+        gl::color(0, 0, 0, 0.5);
+        gl::drawSolidCircle(pos, 3);
+    }
+    else {
+        bFillEllipse = true;
+    }
+    
     gl::color(0, 0, 0);
     gl::drawStrokedCircle(pos, 3);
 }
@@ -41,6 +52,7 @@ bool InputNode::contains(Vec2f p)
 
 void InputNode::updateVal(float val)
 {
+    bFillEllipse = false;
     lastVal = val;
     component->setValue(index, val);
 }

@@ -28,6 +28,7 @@ public:
     virtual void drawOutline() {};
     virtual void translate(Vec2f offset);
     virtual Rectf getBounds();
+    virtual void applyBorders();
     virtual Vec2f getCanvasPos();
     virtual float getValue(int i) {return 0;};
     virtual void setValue(int i, float v) {};

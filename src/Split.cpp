@@ -8,14 +8,14 @@
 
 #include "Split.h"
 
-Split::Split(Vec2f p, Vec2f s)
+Split::Split(Vec2f p)
 {
+    Vec2f s(40, 50);
     canvasRect = Rectf(p, p+s);
     initInterface(s);
     
     nextVal = 0;
     updateVal(0);
-    valInc = 1;
     
     immediateChange = false;
 }
@@ -29,7 +29,7 @@ void Split::initInterface(Vec2f size)
     rect = Rectf(Vec2f(0, 0), size);
     titleRect = Rectf(2, 2, size.x-20, 20);
     plusRect = Rectf(size.x-12, 5, size.x-2, 15);
-    inputNodes.push_back(new InputNode(0, this, Vec2f(6, size.y*3/4)));
+    inputNodes.push_back(new InputNode(0, this, Vec2f(6, 26)));
     for (int i=0; i<2; i++)
     {
         outputNodes.push_back(new OutputNode(i, this, Vec2f(size.x - 6, titleRect.y2 + 6 + i*9)));
@@ -72,7 +72,6 @@ void Split::draw()
         outputNodes[i]->draw();
     }
     
-    ResourceManager::getInstance().getTextureFont()->drawString(valStr, valRect);
     gl::popMatrices();
 }
 
@@ -163,36 +162,9 @@ void Split::setValue(int i, float v)
 void Split::updateVal(float newVal)
 {
     val = newVal;
-    valStr = getValueString(val);
-    Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
-    valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
-                    rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);
-    
+
     for (int i=0; i<outputNodes.size(); i++)
     {
         outputNodes[i]->updateVal(val);
     }
-}
-
-void Split::applyBorders()
-{
-    float x1 = canvasRect.getUpperLeft().x;
-    float x2 = canvasRect.getUpperRight().x;
-    float y1 = canvasRect.getUpperLeft().y;
-    float y2 = canvasRect.getLowerRight().y;
-    
-    if (x1 < 0) {
-        canvasRect += Vec2f(-x1, 0);
-    }
-    else if (x2 > CANVAS_WIDTH) {
-        canvasRect -= Vec2f(x2-CANVAS_WIDTH, 0);
-    }
-    
-    if (y1 < 0) {
-        canvasRect += Vec2f(0, -y1);
-    }
-    else if (y2 > CANVAS_HEIGHT) {
-        canvasRect -= Vec2f(0, y2-CANVAS_HEIGHT);
-    }
-    
 }

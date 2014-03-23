@@ -32,7 +32,7 @@ using namespace std;
 class Split : public CanvasComponent
 {
 public:
-    Split(Vec2f p, Vec2f s);
+    Split(Vec2f p);
     ~Split();
     
     void initInterface(Vec2f size);
@@ -56,7 +56,6 @@ public:
     
 private:
     void updateVal(float newVal);
-    void applyBorders();
     
     bool immediateChange;
     
@@ -64,7 +63,6 @@ private:
     Rectf titleRect;
     Rectf plusRect;
     Rectf dragRect;
-    Rectf valRect;
     
     // component dragging
     Vec2f compDragAnchor;
@@ -73,8 +71,6 @@ private:
     
     float nextVal;
     float val;
-    std::string valStr;
-    float valInc;
     
     
     

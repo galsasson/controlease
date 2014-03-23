@@ -13,6 +13,7 @@ JSComponent::JSComponent(Vec2f p, fs::path script)
     compName = script.filename().replace_extension("").string();
     Vec2f size(10, 0);
     canvasRect = Rectf(p, size);
+    originRect = canvasRect;
     localRect = Rectf(Vec2f(0, 0), Vec2f(10, 30));
     titleRect = Rectf(4, 2, localRect.x2, 20);
     nextInputPos = Vec2f(6, 26);
@@ -98,6 +99,9 @@ void JSComponent::draw()
     gl::popMatrices();
     
     gl::popMatrices();
+
+    gl::color(255, 0, 0);
+    gl::drawStrokedRect(originRect);
 }
 
 void JSComponent::drawOutline()
@@ -121,7 +125,8 @@ void JSComponent::drawOutline()
 
 void JSComponent::translate(Vec2f offset)
 {
-    canvasRect += offset;
+    console() << "warning: don't use JScomponent::translate"<<endl;
+//    canvasRect += offset;
 }
 
 Rectf JSComponent::getBounds()
@@ -149,7 +154,8 @@ void JSComponent::mouseDrag(cease::MouseEvent event)
     Vec2f local = toLocal(event.getPos());
     if (isDragging)
     {
-        canvasRect += event.getPos() - compDragAnchor;
+        originRect += (event.getPos() - compDragAnchor);
+        canvasRect += (event.getPos() - compDragAnchor);
         compDragAnchor = event.getPos();
         applyBorders();
     }
@@ -201,33 +207,11 @@ float JSComponent::getValue(int i)
 void JSComponent::setValue(int i, float v)
 {
     if (i >= ivals.size()) {
+        console() << "warning: index "<<i<<"?? are you crazy? what value are you setting?"<<endl;
         return;
     }
     
     ivals[i] = v;
-}
-
-void JSComponent::applyBorders()
-{
-    float x1 = canvasRect.getUpperLeft().x;
-    float x2 = canvasRect.getUpperRight().x;
-    float y1 = canvasRect.getUpperLeft().y;
-    float y2 = canvasRect.getLowerRight().y;
-    
-    if (x1 < 0) {
-        canvasRect += Vec2f(-x1, 0);
-    }
-    else if (x2 > CANVAS_WIDTH) {
-        canvasRect -= Vec2f(x2-CANVAS_WIDTH, 0);
-    }
-    
-    if (y1 < 0) {
-        canvasRect += Vec2f(0, -y1);
-    }
-    else if (y2 > CANVAS_HEIGHT) {
-        canvasRect -= Vec2f(0, y2-CANVAS_HEIGHT);
-    }
-    
 }
 
 void JSComponent::resizeComponent()
@@ -244,6 +228,8 @@ void JSComponent::resizeComponent()
     canvasRect.x2 = canvasRect.x1 + neededWidth;
     localRect.x2 = neededWidth;
     titleRect.x2 = neededWidth;
+    
+    originRect = canvasRect;
     
     // push outputs to the right
     for (int i=0; i<outputNodes.size(); i++)
@@ -337,6 +323,8 @@ void JSComponent::compileAndRun(std::string code)
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBW"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBWCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceHue"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetHueCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceNoise"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8NoiseCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetOffset"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetOffsetCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceGetPosition"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8GetPositionCB, External::New(Isolate::GetCurrent(), this)));
     
     
     // add interceptors to inputs and outputs
@@ -433,7 +421,11 @@ bool JSComponent::callV8MouseFunction(Persistent<v8::Function> &func, float x, f
     return true;
 }
 
-
+/*****************************************************************************/
+/*****************************************************************************/
+/* v8 functions                                                              */
+/*****************************************************************************/
+/*****************************************************************************/
 
 void JSComponent::v8Init(const FunctionCallbackInfo<v8::Value> &args)
 {
@@ -453,6 +445,8 @@ void JSComponent::v8SetGuiSize(const FunctionCallbackInfo<v8::Value> &args)
     if (args.Length() < 2) {
         return;
     }
+
+    HandleScope scope(args.GetIsolate());
     
     initGUI(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()));
 }
@@ -462,6 +456,8 @@ void JSComponent::v8DrawEllipse(const FunctionCallbackInfo<v8::Value> &args)
     if (args.Length() < 4) {
         return;
     }
+
+    HandleScope scope(args.GetIsolate());
     
     gl::drawStrokedEllipse(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), args[2]->NumberValue(), args[3]->NumberValue());
 }
@@ -472,6 +468,8 @@ void JSComponent::v8DrawLine(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
     
+    HandleScope scope(args.GetIsolate());
+
     gl::drawLine(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), Vec2f(args[2]->NumberValue(), args[3]->NumberValue()));
 }
 
@@ -481,6 +479,8 @@ void JSComponent::v8DrawRect(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
     
+    HandleScope scope(args.GetIsolate());
+
     float x2 = args[0]->NumberValue() + args[2]->NumberValue();
     float y2 = args[1]->NumberValue() + args[3]->NumberValue();
     
@@ -493,6 +493,8 @@ void JSComponent::v8SetBrightness(const FunctionCallbackInfo<v8::Value> &args)
         console() << "warning: wrong args to v8SetBrightness!"<<endl;
     }
     
+    HandleScope scope(args.GetIsolate());
+
     jsColorVec.z = args[0]->NumberValue();
 //    console() << "HSV = "<<jsColorVec<<endl;
     jsColor.set(ColorModel::CM_HSV, jsColorVec);
@@ -505,6 +507,8 @@ void JSComponent::v8SetBW(const FunctionCallbackInfo<v8::Value> &args)
         console() << "warning: wrong args to v8SetHue!"<<endl;
     }
     
+    HandleScope scope(args.GetIsolate());
+
     jsColorVec.y = 1-args[0]->NumberValue();
     jsColor.set(ColorModel::CM_HSV, jsColorVec);
     gl::color(jsColor);
@@ -516,6 +520,8 @@ void JSComponent::v8SetHue(const FunctionCallbackInfo<v8::Value> &args)
         console() << "warning: wrong args to v8SetHue!"<<endl;
     }
     
+    HandleScope scope(args.GetIsolate());
+
     jsColorVec.x = args[0]->NumberValue();
     jsColor.set(ColorModel::CM_HSV, jsColorVec);
     gl::color(jsColor);
@@ -528,7 +534,7 @@ void JSComponent::v8Map(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
     
-    HandleScope scope(args.GetIsolate());
+//    HandleScope scope(args.GetIsolate());
     
     // do clamp
     float n = args[0]->NumberValue();
@@ -558,6 +564,8 @@ void JSComponent::v8Noise(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
     
+//    HandleScope scope(args.GetIsolate());
+    
     if (args.Length() == 1)
     {
         args.GetReturnValue().Set(perlin.noise(args[0]->NumberValue()));
@@ -575,6 +583,33 @@ void JSComponent::v8Noise(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
 }
+
+void JSComponent::v8SetOffset(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() < 2) {
+        console() << "warning: v8Translate args: (x, y)"<<endl;
+        return;
+    }
+    
+    canvasRect = originRect+Vec2f(args[0]->NumberValue(), args[1]->NumberValue());
+    applyBorders();
+}
+
+void JSComponent::v8GetPosition(const FunctionCallbackInfo<v8::Value> &args)
+{
+    
+    Handle<Object> obj = Object::New(Isolate::GetCurrent());
+    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "x"), Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().x));
+    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "y"), Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().y));
+    args.GetReturnValue().Set(obj);
+}
+
+
+/*****************************************************************************/
+/*****************************************************************************/
+/* V8 CALLBACKS                                                              */
+/*****************************************************************************/
+/*****************************************************************************/
 
 #define V8_STATIC_CALLBACK(X) \
     void JSComponent::aCB(const FunctionCallbackInfo<v8::Value> &args) \
@@ -648,3 +683,18 @@ void JSComponent::v8NoiseCB(const FunctionCallbackInfo<v8::Value> &args)
     JSComponent *comp = (JSComponent*)wrap->Value();
     return comp->v8Noise(args);
 }
+
+void JSComponent::v8SetOffsetCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8SetOffset(args);
+}
+
+void JSComponent::v8GetPositionCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8GetPosition(args);
+}
+

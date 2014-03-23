@@ -68,7 +68,6 @@ private:
     void addInput(osc::Message msg);
     void addOutput(osc::Message msg);
     void handleOutputMessage(osc::Message msg);
-    void applyBorders();
     void resizeComponent();
     
     string programHost;

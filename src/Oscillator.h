@@ -58,7 +58,6 @@ public:
 private:
     void updateVal(float newVal);
     std::string getValueString();
-    void applyBorders();
     
     bool immediateChange;
     

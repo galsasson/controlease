@@ -12,6 +12,7 @@
 #include <iostream>
 #include "cinder/app/App.h"
 #include "Node.h"
+#include "ResourceManager.h"
 //#include "CanvasComponent.h"
 
 using namespace ci;
@@ -38,6 +39,7 @@ public:
 private:
     Vec2f pos;
     int index;
+    bool bFillEllipse;
     
     // the component
     CanvasComponent *component;

@@ -352,28 +352,6 @@ void Program::handleOutputMessage(osc::Message msg)
     outputNodes[index]->updateVal(val);
 }
 
-void Program::applyBorders()
-{
-    float x1 = canvasRect.getUpperLeft().x;
-    float x2 = canvasRect.getUpperRight().x;
-    float y1 = canvasRect.getUpperLeft().y;
-    float y2 = canvasRect.getLowerLeft().y;
-    
-    if (x1 < 0) {
-        canvasRect += Vec2f(-x1, 0);
-    }
-    else if (x2 > CANVAS_WIDTH) {
-        canvasRect -= Vec2f(x2-CANVAS_WIDTH, 0);
-    }
-    
-    if (y1 < 0) {
-        canvasRect += Vec2f(0, -y1);
-    }
-    else if (y2 > CANVAS_HEIGHT) {
-        canvasRect -= Vec2f(0, y2-CANVAS_HEIGHT);
-    }
-}
-
 void Program::resizeComponent()
 {
     int nodeNum = max(inputNodes.size(), outputNodes.size());

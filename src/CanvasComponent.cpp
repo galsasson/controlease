@@ -122,6 +122,29 @@ Rectf CanvasComponent::getBounds()
     return canvasRect;
 }
 
+void CanvasComponent::applyBorders()
+{
+    float x1 = canvasRect.getUpperLeft().x;
+    float x2 = canvasRect.getUpperRight().x;
+    float y1 = canvasRect.getUpperLeft().y;
+    float y2 = canvasRect.getLowerRight().y;
+    
+    if (x1 < 0) {
+        canvasRect += Vec2f(-x1, 0);
+    }
+    else if (x2 > CANVAS_WIDTH) {
+        canvasRect -= Vec2f(x2-CANVAS_WIDTH, 0);
+    }
+    
+    if (y1 < 0) {
+        canvasRect += Vec2f(0, -y1);
+    }
+    else if (y2 > CANVAS_HEIGHT) {
+        canvasRect -= Vec2f(0, y2-CANVAS_HEIGHT);
+    }
+    
+}
+
 Vec2f CanvasComponent::getCanvasPos()
 {
     return canvasRect.getUpperLeft();

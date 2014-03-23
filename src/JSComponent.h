@@ -62,9 +62,9 @@ public:
     void setValue(int i, float v);
     
 private:
-    void applyBorders();
     void resizeComponent();
     
+    Rectf originRect;
     Rectf localRect;
     Rectf titleRect;
     Rectf jsRect;
@@ -111,6 +111,11 @@ private:
     static void v8SetHueCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8NoiseCB(const FunctionCallbackInfo<v8::Value>& args);
     
+    // moving around
+    static void v8SetOffsetCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8GetPositionCB(const FunctionCallbackInfo<v8::Value>& args);
+    
+    // getting free inputs
     
     void v8Init(const FunctionCallbackInfo<v8::Value>& args); // (name, inputs, outputs)
     void v8SetGuiSize(const FunctionCallbackInfo<v8::Value>& args); // (width, height)
@@ -121,6 +126,12 @@ private:
     void v8SetBW(const FunctionCallbackInfo<v8::Value>& args);   // (0-1)
     void v8SetHue(const FunctionCallbackInfo<v8::Value>& args); // (0-1)
     void v8Noise(const FunctionCallbackInfo<v8::Value>& args);
+    // moving around
+    void v8SetOffset(const FunctionCallbackInfo<v8::Value>& args);
+    void v8GetPosition(const FunctionCallbackInfo<v8::Value>& args);
+    
+    // getting free inputs
+
     
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);
