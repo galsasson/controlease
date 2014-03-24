@@ -32,7 +32,7 @@ using namespace std;
 class Split : public CanvasComponent
 {
 public:
-    Split(Vec2f p);
+    Split(Canvas *c, Vec2f p);
     ~Split();
     
     void initInterface(Vec2f size);

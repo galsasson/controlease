@@ -13,14 +13,18 @@
 #include "cinder/app/App.h"
 #include "Controlease.h"
 
+static int nodeID=0;
+
 class Node
 {
 public:
+    Node() { id = nodeID++; }
     ~Node() {};
     
     Node *prev;
     Node *next;
     
+    int id;
     float lastVal;
     std::string name;
     
@@ -29,7 +33,6 @@ public:
     virtual void disconnect(Node *node) = 0;
     virtual bool isConnected() = 0;
     virtual cinder::Vec2f getCanvasPos() {return cinder::Vec2f();};
-
 };
 
 #endif

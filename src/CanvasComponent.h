@@ -17,11 +17,14 @@
 #include "OutputNode.h"
 #include <vector>
 
+class Canvas;
+
 using namespace std;
 
 class CanvasComponent : public MouseListener
 {
 public:
+    CanvasComponent(Canvas *c);
     virtual ~CanvasComponent();
     virtual void update() {};
     virtual void draw() {};
@@ -34,10 +37,13 @@ public:
     virtual void setValue(int i, float v) {};
     virtual bool isDragPoint(cease::MouseEvent event) {return false;};
     virtual bool isHotspot(cease::MouseEvent event) {return false;};
+    
     virtual ConnectionResult* getConnectionStart( cease::MouseEvent event);
     virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event);
     virtual vector<Node*> getInputNodes();
     virtual vector<Node*> getOutputNodes();
+    virtual Node* getNodeWithID(int id);
+    
     virtual KeyboardListener* getCurrentKeyboardListener() {return NULL;};
     virtual Node* getNodeBelow(cease::MouseEvent event);
     virtual bool contains(Vec2f canvasPoint);
@@ -46,6 +52,7 @@ protected:
     virtual Vec2f toLocal(Vec2f p);
     virtual Vec2f toCanvas(Vec2f p);
     
+    Canvas *canvas;
     Rectf canvasRect;
     
     vector<InputNode*> inputNodes;

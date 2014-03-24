@@ -36,7 +36,7 @@ using namespace v8;
 class Exp : public CanvasComponent
 {
 public:
-    Exp(Vec2f p, Vec2f s);
+    Exp(Canvas *c, Vec2f p, Vec2f s);
     ~Exp();
     
     void initInterface(Vec2f size);

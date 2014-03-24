@@ -33,7 +33,7 @@ using namespace std;
 class Oscillator : public CanvasComponent
 {
 public:
-    Oscillator(Vec2f p, Vec2f s);
+    Oscillator(Canvas *c, Vec2f p, Vec2f s);
     ~Oscillator();
     
     void initInterface(Vec2f size);

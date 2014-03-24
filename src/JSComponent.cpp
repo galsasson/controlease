@@ -7,8 +7,9 @@
 //
 
 #include "JSComponent.h"
+#include "Canvas.h"
 
-JSComponent::JSComponent(Vec2f p, fs::path script)
+JSComponent::JSComponent(Canvas *c, Vec2f p, fs::path script) : CanvasComponent(c)
 {
     compName = script.filename().replace_extension("").string();
     Vec2f size(10, 0);
@@ -319,12 +320,17 @@ void JSComponent::compileAndRun(std::string code)
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceEllipse"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawEllipseCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceRect"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawRectCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceLine"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawLineCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceDrawString"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawStringCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBrightness"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBrightnessCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBW"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBWCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceHue"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetHueCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceNoise"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8NoiseCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetOffset"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetOffsetCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceGetPosition"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8GetPositionCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceGetCanvasInputs"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8GetCanvasInputsCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceConnectOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8ConnectOutputCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceDisconnectOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DisconnectOutputCB, External::New(Isolate::GetCurrent(), this)));
+    
     
     
     // add interceptors to inputs and outputs
@@ -459,6 +465,7 @@ void JSComponent::v8DrawEllipse(const FunctionCallbackInfo<v8::Value> &args)
 
     HandleScope scope(args.GetIsolate());
     
+    gl::color(jsColor);
     gl::drawStrokedEllipse(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), args[2]->NumberValue(), args[3]->NumberValue());
 }
 
@@ -470,6 +477,7 @@ void JSComponent::v8DrawLine(const FunctionCallbackInfo<v8::Value> &args)
     
     HandleScope scope(args.GetIsolate());
 
+    gl::color(jsColor);
     gl::drawLine(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), Vec2f(args[2]->NumberValue(), args[3]->NumberValue()));
 }
 
@@ -484,8 +492,29 @@ void JSComponent::v8DrawRect(const FunctionCallbackInfo<v8::Value> &args)
     float x2 = args[0]->NumberValue() + args[2]->NumberValue();
     float y2 = args[1]->NumberValue() + args[3]->NumberValue();
     
+    gl::color(jsColor);
     gl::drawStrokedRect(Rectf(Vec2f(args[0]->NumberValue(), args[1]->NumberValue()), Vec2f(x2, y2)));
 }
+
+void JSComponent::v8DrawString(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 3) {
+        console() << "error: call ceDrawString as follows: (str, x, y)"<<endl;
+        return;
+    }
+    
+    HandleScope scope(args.GetIsolate());
+    
+    v8::String::Utf8Value str(args[0]->ToString());
+    float x = args[1]->NumberValue();
+    float y = args[2]->NumberValue();
+
+    gl::color(jsColor);
+    ResourceManager::getInstance().getTextureFont()->drawString((*str), Vec2f(x, y));
+    
+    args.GetReturnValue().Set(0);
+}
+
 
 void JSComponent::v8SetBrightness(const FunctionCallbackInfo<v8::Value> &args)
 {
@@ -599,9 +628,91 @@ void JSComponent::v8GetPosition(const FunctionCallbackInfo<v8::Value> &args)
 {
     
     Handle<Object> obj = Object::New(Isolate::GetCurrent());
-    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "x"), Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().x));
-    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "y"), Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().y));
+    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "x"), v8::Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().x));
+    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "y"), v8::Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().y));
     args.GetReturnValue().Set(obj);
+}
+
+void JSComponent::v8GetCanvasInputs(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 1) {
+        console() << "please call ceGetInputs as follows: ceGetInputs(max_distance)"<<endl;
+        args.GetReturnValue().Set(0);
+        return;
+    }
+    
+    float maxDistance = args[0]->NumberValue();
+    vector<InputNode*> inodes = canvas->getInputNodesAtArea(canvasRect.getCenter(), maxDistance);
+    
+    HandleScope scope(args.GetIsolate());
+
+    Handle<Array> array = Array::New(Isolate::GetCurrent());
+    for (int i=0; i<inodes.size(); i++)
+    {
+        Handle<Object> inputObject = Object::New(Isolate::GetCurrent());
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "id"), v8::Number::New(Isolate::GetCurrent(), inodes[i]->id));
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "name"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->name.data()));
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "distance"), v8::Number::New(Isolate::GetCurrent(), (canvasRect.getCenter() - inodes[i]->getCanvasPos()).length()));
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "connected"), v8::Boolean::New(Isolate::GetCurrent(), inodes[i]->isConnected()));
+        array->Set(i, inputObject);
+    }
+    
+    args.GetReturnValue().Set(array);
+}
+
+void JSComponent::v8ConnectOutput(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 2) {
+        console() << "please call ceConnectToInput as follows: ceConnectToInput(output_index, input_id)"<<endl;
+        args.GetReturnValue().Set(false);
+        return;
+    }
+    
+    HandleScope scope(args.GetIsolate());
+    
+    int outputIndex = args[0]->NumberValue();
+    int inputId = args[1]->NumberValue();
+    
+    if (outputIndex >= outputNodes.size()) {
+        console() << "warning: no such output node index: "<<outputIndex<<endl;
+        args.GetReturnValue().Set(false);
+        return;
+    }
+    
+    if (outputNodes[outputIndex]->isConnected()) {
+        args.GetReturnValue().Set(false);
+        return;
+    }
+    
+    canvas->makeConnection(outputNodes[outputIndex], inputId);
+    args.GetReturnValue().Set(true);
+}
+
+void JSComponent::v8DisconnectOutput(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 1) {
+        console() << "please call ceDisconnectOutput as follows: ceConnectToInput(output_index)"<<endl;
+        args.GetReturnValue().Set(false);
+        return;
+    }
+    
+    HandleScope scope(args.GetIsolate());
+    
+    int outputIndex = args[0]->NumberValue();
+    
+    if (outputIndex >= outputNodes.size()) {
+        console() << "warning: no such output node index: "<<outputIndex<<endl;
+        args.GetReturnValue().Set(false);
+        return;
+    }
+    
+    if (!outputNodes[outputIndex]->isConnected()) {
+        args.GetReturnValue().Set(false);
+        return;
+    }
+    
+    canvas->disconnectNode(outputNodes[outputIndex]);
+    args.GetReturnValue().Set(true);
 }
 
 
@@ -656,6 +767,13 @@ void JSComponent::v8DrawRectCB(const FunctionCallbackInfo<v8::Value> &args)
     return comp->v8DrawRect(args);
 }
 
+void JSComponent::v8DrawStringCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8DrawString(args);
+}
+
 void JSComponent::v8SetBrightnessCB(const FunctionCallbackInfo<v8::Value> &args)
 {
     Local<External> wrap = Local<External>::Cast(args.Data());
@@ -696,5 +814,26 @@ void JSComponent::v8GetPositionCB(const FunctionCallbackInfo<v8::Value> &args)
     Local<External> wrap = Local<External>::Cast(args.Data());
     JSComponent *comp = (JSComponent*)wrap->Value();
     return comp->v8GetPosition(args);
+}
+
+void JSComponent::v8GetCanvasInputsCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8GetCanvasInputs(args);
+}
+
+void JSComponent::v8ConnectOutputCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8ConnectOutput(args);
+}
+
+void JSComponent::v8DisconnectOutputCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8DisconnectOutput(args);
 }
 

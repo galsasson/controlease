@@ -68,8 +68,12 @@ public:
     void appKeyUp( KeyEvent event );
     
     void setSize(Vec2f newSize);
-
-
+    
+    vector<InputNode*> getInputNodesAtArea(Vec2f center, float rad);
+    void makeConnection(OutputNode *onode, int inputID);
+    void makeConnection(OutputNode *onode, InputNode *inode);
+    void disconnectNode(Node *node);
+    
     Vec2f pos;
     Vec2f size;
     Vec2f virtualSize;

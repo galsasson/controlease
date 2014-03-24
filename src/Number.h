@@ -32,7 +32,7 @@ using namespace std;
 class Number : public CanvasComponent
 {
 public:
-    Number(Vec2f p, Vec2f s);
+    Number(Canvas *c, Vec2f p, Vec2f s);
     ~Number();
     
     void initInterface(Vec2f size);

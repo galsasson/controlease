@@ -8,7 +8,7 @@
 
 #include "Number.h"
 
-Number::Number(Vec2f p, Vec2f s)
+Number::Number(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c)
 {
     canvasRect = Rectf(p, p+s);
     initInterface(s);
@@ -173,6 +173,11 @@ float Number::getValue(int i)
 
 void Number::setValue(int i, float v)
 {
+    // this is a hack: don't update disconnect 0 in Number components
+    if (!inputNodes[i]->isConnected()) {
+        return;
+    }
+    
     if (immediateChange) {
         updateVal(v);
     }

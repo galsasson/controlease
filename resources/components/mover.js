@@ -10,15 +10,18 @@ var currentValue;
 
 var setup = function()
 {
-    ceInit("Mover", 2, 1);
-    ceSetGuiSize(30, 30);
+    ceInit("Mover", 2, 2);
+    ceSetGuiSize(30, 10);
     
     currentValue = 0;
 }
 
 var update = function()
 {
-    ceSetOffset(inn[0], inn[1]);
+    var pos = {'x':inn[0], 'y':inn[1]};
+    ceSetOffset(pos.x, pos.y);
+    out[0] = pos.x;
+    out[1] = pos.y;
 }
 
 var draw = function()

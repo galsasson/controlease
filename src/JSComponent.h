@@ -38,7 +38,7 @@ using namespace v8;
 class JSComponent : public CanvasComponent
 {
 public:
-    JSComponent(Vec2f p, fs::path script);
+    JSComponent(Canvas *c, Vec2f p, fs::path script);
     ~JSComponent();
     
     void initNodes(int nIns, int nOuts);
@@ -105,7 +105,7 @@ private:
     static void v8DrawEllipseCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8DrawLineCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8DrawRectCB(const FunctionCallbackInfo<v8::Value>& args);
-    // draw string
+    static void v8DrawStringCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8SetBrightnessCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8SetBWCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8SetHueCB(const FunctionCallbackInfo<v8::Value>& args);
@@ -114,14 +114,20 @@ private:
     // moving around
     static void v8SetOffsetCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8GetPositionCB(const FunctionCallbackInfo<v8::Value>& args);
-    
     // getting free inputs
+    static void v8GetCanvasInputsCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8ConnectOutputCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8DisconnectOutputCB(const FunctionCallbackInfo<v8::Value>& args);
+
+    
     
     void v8Init(const FunctionCallbackInfo<v8::Value>& args); // (name, inputs, outputs)
     void v8SetGuiSize(const FunctionCallbackInfo<v8::Value>& args); // (width, height)
     void v8DrawEllipse(const FunctionCallbackInfo<v8::Value>& args); // (cx, cy, w, h)
     void v8DrawLine(const FunctionCallbackInfo<v8::Value>& args); // (sx, sy, tx, ty)
     void v8DrawRect(const FunctionCallbackInfo<v8::Value>& args); // (ulx, uly, width, height)
+    void v8DrawString(const FunctionCallbackInfo<v8::Value>& args); // (str, x, y)
+    
     void v8SetBrightness(const FunctionCallbackInfo<v8::Value>& args); // (0-1)
     void v8SetBW(const FunctionCallbackInfo<v8::Value>& args);   // (0-1)
     void v8SetHue(const FunctionCallbackInfo<v8::Value>& args); // (0-1)
@@ -129,9 +135,10 @@ private:
     // moving around
     void v8SetOffset(const FunctionCallbackInfo<v8::Value>& args);
     void v8GetPosition(const FunctionCallbackInfo<v8::Value>& args);
-    
     // getting free inputs
-
+    void v8GetCanvasInputs(const FunctionCallbackInfo<v8::Value>& args);
+    void v8ConnectOutput(const FunctionCallbackInfo<v8::Value>& args);
+    void v8DisconnectOutput(const FunctionCallbackInfo<v8::Value>& args);
     
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);

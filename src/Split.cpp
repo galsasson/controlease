@@ -8,7 +8,7 @@
 
 #include "Split.h"
 
-Split::Split(Vec2f p)
+Split::Split(Canvas *c, Vec2f p) : CanvasComponent(c)
 {
     Vec2f s(40, 50);
     canvasRect = Rectf(p, p+s);

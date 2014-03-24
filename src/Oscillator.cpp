@@ -10,7 +10,7 @@
 
 #define TWO_PI_DIV_1000 M_PI/500
 
-Oscillator::Oscillator(Vec2f p, Vec2f s)
+Oscillator::Oscillator(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c)
 {
     canvasRect = Rectf(p, p+s);
     initInterface(s);

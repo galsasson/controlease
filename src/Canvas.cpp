@@ -129,23 +129,23 @@ void Canvas::addComponent(ComponentButton* button)
     
     switch (button->type) {
         case COMPONENT_TYPE_PROGRAM:
-            addComponent(new Program(topLeft + Vec2f(30, 30)));
+            addComponent(new Program(this, topLeft + Vec2f(30, 30)));
             break;
         case COMPONENT_TYPE_NUMBER:
-            addComponent(new ::Number(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            addComponent(new ::Number(this, topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
         case COMPONENT_TYPE_SPLIT:
-            addComponent(new Split(topLeft + Vec2f(30, 30)));
+            addComponent(new Split(this, topLeft + Vec2f(30, 30)));
             break;
         case COMPONENT_TYPE_OSCILLATOR:
-            addComponent(new Oscillator(topLeft + Vec2f(30, 30), Vec2f(100, 40)));
+            addComponent(new Oscillator(this, topLeft + Vec2f(30, 30), Vec2f(100, 40)));
             break;
         case COMPONENT_TYPE_EXP:
-            addComponent(new Exp(topLeft + Vec2f(30, 30), Vec2f(250, 50)));
+            addComponent(new Exp(this, topLeft + Vec2f(30, 30), Vec2f(250, 50)));
             break;
         case COMPONENT_TYPE_JS:
             console() << "creating new component: "<<button->source<<endl;
-            addComponent(new JSComponent(topLeft + Vec2f(30, 30), button->source));
+            addComponent(new JSComponent(this, topLeft + Vec2f(30, 30), button->source));
             break;
 
         default:
@@ -378,6 +378,68 @@ void Canvas::setSize(Vec2f newSize)
     size = newSize;
 }
 
+
+vector<InputNode*> Canvas::getInputNodesAtArea(Vec2f center, float rad)
+{
+    vector<InputNode*> nodes;
+    
+    for (int i=0; i<components.size(); i++)
+    {
+        vector<Node*> compNodes = components[i]->getInputNodes();
+        for (int n=0; n<compNodes.size(); n++)
+        {
+            Node* node = compNodes[n];
+            if ((node->getCanvasPos() - center).length() < rad)
+            {
+                nodes.push_back((InputNode*)node);
+            }
+        }
+    }
+    
+    return nodes;
+}
+
+void Canvas::makeConnection(OutputNode *onode, int inputID)
+{
+    if (onode->isConnected()) {
+        return;
+    }
+    
+    Node* inode = NULL;
+    for (int i=0; i<components.size(); i++)
+    {
+        inode = components[i]->getNodeWithID(inputID);
+        if (inode != NULL) {
+            break;
+        }
+    }
+    
+    if (inode == NULL) {
+        return;
+    }
+    
+    makeConnection(onode, (InputNode*)inode);
+}
+
+void Canvas::makeConnection(OutputNode *onode, InputNode *inode)
+{
+    if (onode->isConnected() || inode->isConnected()) {
+        return;
+    }
+    
+    Wire *wire = new Wire();
+    wire->addConnectable(new ConnectionResult(TYPE_OUTPUT, onode));
+    wire->addConnectable(new ConnectionResult(TYPE_INPUT, inode));
+    wires.push_back(wire);
+}
+
+void Canvas::disconnectNode(Node *node)
+{
+    Wire *w = popWireWithNode(node);
+    if (w) {
+        delete w;
+    }
+}
 
 void Canvas::checkBounds()
 {

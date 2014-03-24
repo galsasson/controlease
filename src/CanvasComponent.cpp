@@ -8,6 +8,11 @@
 
 #include "CanvasComponent.h"
 
+CanvasComponent::CanvasComponent(Canvas *c)
+{
+    canvas = c;
+}
+
 CanvasComponent::~CanvasComponent() {
     for (int i=0; i<inputNodes.size(); i++) {
         delete inputNodes[i];
@@ -39,6 +44,7 @@ Node* CanvasComponent::getNodeBelow(cease::MouseEvent event)
     return NULL;
 }
 
+// TODO: memory leak!!!
 ConnectionResult* CanvasComponent::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = toLocal(event.getPos());
@@ -110,6 +116,25 @@ vector<Node*> CanvasComponent::getOutputNodes()
     }
     
     return outputs;
+}
+
+Node* CanvasComponent::getNodeWithID(int id)
+{
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        if (id == inputNodes[i]->id) {
+            return inputNodes[i];
+        }
+    }
+    
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        if (id == outputNodes[i]->id) {
+            return outputNodes[i];
+        }
+    }
+    
+    return NULL;
 }
 
 void CanvasComponent::translate(Vec2f offset)

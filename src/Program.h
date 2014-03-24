@@ -36,7 +36,7 @@ using namespace std;
 class Program : public CanvasComponent
 {
 public:
-    Program(Vec2f _pos);
+    Program(Canvas *c, Vec2f _pos);
     ~Program();
     
     void setupConnection(string host, int oport);
