@@ -19,6 +19,7 @@
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
 		2A49CAE518DDE83400348E6A /* NodeInfoBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */; };
 		2A49CAE718DDEF2900348E6A /* CanvasComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */; };
+		2A49CAED18DFCD7600348E6A /* OscController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAEB18DFCD7600348E6A /* OscController.cpp */; };
 		2A697E0E18C81C7800ACA9D2 /* JSComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */; };
 		2A697E1618C9475400ACA9D2 /* components in Resources */ = {isa = PBXBuildFile; fileRef = 2A697E1518C9475400ACA9D2 /* components */; };
 		2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71545418C1849B00DA1C39 /* TextInput.cpp */; };
@@ -72,6 +73,8 @@
 		2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeInfoBox.cpp; path = ../src/NodeInfoBox.cpp; sourceTree = "<group>"; };
 		2A49CAE418DDE83400348E6A /* NodeInfoBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeInfoBox.h; path = ../src/NodeInfoBox.h; sourceTree = "<group>"; };
 		2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CanvasComponent.cpp; path = ../src/CanvasComponent.cpp; sourceTree = "<group>"; };
+		2A49CAEB18DFCD7600348E6A /* OscController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = OscController.cpp; path = ../src/OscController.cpp; sourceTree = "<group>"; };
+		2A49CAEC18DFCD7600348E6A /* OscController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = OscController.h; path = ../src/OscController.h; sourceTree = "<group>"; };
 		2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = JSComponent.cpp; path = ../src/JSComponent.cpp; sourceTree = "<group>"; };
 		2A697E0D18C81C7800ACA9D2 /* JSComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JSComponent.h; path = ../src/JSComponent.h; sourceTree = "<group>"; };
 		2A697E1518C9475400ACA9D2 /* components */ = {isa = PBXFileReference; lastKnownFileType = folder; name = components; path = ../resources/components; sourceTree = "<group>"; };
@@ -302,6 +305,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A49CAEB18DFCD7600348E6A /* OscController.cpp */,
+				2A49CAEC18DFCD7600348E6A /* OscController.h */,
 				2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */,
 				2A697E0D18C81C7800ACA9D2 /* JSComponent.h */,
 				2A71547D18C456EA00DA1C39 /* Oscillator.cpp */,
@@ -452,6 +457,7 @@
 				33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */,
 				C0E223501FF742C793325391 /* OscSender.cpp in Sources */,
 				2AAB76C418CF73EB007833C4 /* ComponentBox.cpp in Sources */,
+				2A49CAED18DFCD7600348E6A /* OscController.cpp in Sources */,
 				2A798DC218B859AE00421573 /* Number.cpp in Sources */,
 				2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */,
 				53B663210C164E40B7B58C20 /* IpEndpointName.cpp in Sources */,

@@ -70,9 +70,10 @@ void ComponentBox::createButtons()
     buttons.push_back(new ComponentButton(COMPONENT_TYPE_SPLIT, Vec2f(10, startY+50), Vec2f(rect.getWidth()-20, 20)));
     buttons.push_back(new ComponentButton(COMPONENT_TYPE_OSCILLATOR, Vec2f(10, startY+75), Vec2f(rect.getWidth()-20, 20)));
     buttons.push_back(new ComponentButton(COMPONENT_TYPE_EXP, Vec2f(10, startY+100), Vec2f(rect.getWidth()-20, 20)));
+    buttons.push_back(new ComponentButton(COMPONENT_TYPE_OSCCONTROLLER, Vec2f(10, startY+125), Vec2f(rect.getWidth()-20, 20)));
 //    buttons.push_back(new ComponentButton(COMPONENT_TYPE_JS, Vec2f(10, startY+250), Vec2f(rect.getWidth()-20, 20)));
     
-    createJSButtons(startY+125);
+    createJSButtons(startY+150);
 }
 
 void ComponentBox::createJSButtons(float y)

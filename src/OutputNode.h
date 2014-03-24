@@ -35,9 +35,11 @@ public:
     
     float getLastVal() { return lastVal; }
     
+    bool bDisplayName;
     Vec2f getCanvasPos();
 
     Vec2f pos;
+    Vec2f namePos;
 
 private:
     int index;

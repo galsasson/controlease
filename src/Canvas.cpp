@@ -147,6 +147,9 @@ void Canvas::addComponent(ComponentButton* button)
             console() << "creating new component: "<<button->source<<endl;
             addComponent(new JSComponent(this, topLeft + Vec2f(30, 30), button->source));
             break;
+        case COMPONENT_TYPE_OSCCONTROLLER:
+            addComponent(new OscController(this, topLeft + Vec2f(30, 30)));
+            break;
 
         default:
             break;

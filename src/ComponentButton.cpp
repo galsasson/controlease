@@ -70,10 +70,14 @@ string ComponentButton::getComponentName()
         case COMPONENT_TYPE_EXP:
             return "Expression";
         case COMPONENT_TYPE_JS:
+        {
             fs::path fileNoExt(source);
             fileNoExt = fileNoExt.replace_extension("").filename();
             console() << "getName = "<<fileNoExt.string()<<endl;
             return fileNoExt.string();
+        }
+        case COMPONENT_TYPE_OSCCONTROLLER:
+            return "OscController";
     }
     
     return "Unknown";

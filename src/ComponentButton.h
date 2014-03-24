@@ -23,6 +23,7 @@ typedef enum _ComponentType {
     COMPONENT_TYPE_OSCILLATOR,
     COMPONENT_TYPE_EXP,
     COMPONENT_TYPE_JS,
+    COMPONENT_TYPE_OSCCONTROLLER,
 } ComponentType;
 
 class ComponentButton

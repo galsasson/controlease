@@ -10,8 +10,10 @@
 #define Controlease_Node_h
 
 #include "cinder/gl/gl.h"
+#include "cinder/Rect.h"
 #include "cinder/app/App.h"
 #include "Controlease.h"
+#include "ResourceManager.h"
 
 static int nodeID=0;
 

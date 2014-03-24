@@ -21,18 +21,22 @@
 #include "MouseListener.h"
 #include "KeyboardListener.h"
 #include "ResourceManager.h"
-#include "Program.h"
-#include "Number.h"
-#include "Split.h"
-#include "Oscillator.h"
-#include "Exp.h"
-#include "JSComponent.h"
 #include "ConnectionResult.h"
 #include "CanvasComponent.h"
 #include "Node.h"
 #include "Wire.h"
 #include "ComponentButton.h"
 #include "NodeInfoBox.h"
+
+
+// components
+#include "Program.h"
+#include "Number.h"
+#include "Split.h"
+#include "Oscillator.h"
+#include "Exp.h"
+#include "JSComponent.h"
+#include "OscController.h"
 
 using namespace ci;
 using namespace ci::app;
