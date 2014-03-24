@@ -12,13 +12,13 @@ void printMessage(osc::Message message);
 
 OscController::OscController(Canvas *c, Vec2f _pos) : CanvasComponent(c)
 {
-    titleRect = Rectf(5, 0, 200, 20);
-    localRect = Rectf(0, 0, 200, 40);
+    titleRect = Rectf(5, 0, 100, 20);
+    localRect = Rectf(0, 0, 100, 40);
     canvasRect = Rectf(_pos, _pos+localRect.getSize());
     nextInputPos = Vec2f(6, 28);
     nextOutputPos = Vec2f(localRect.x2 - 6, 28);
     
-    textInputRect = Rectf(7, 22, 200, 36);
+    textInputRect = Rectf(7, 22, 100, 36);
     addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
     addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
 
@@ -109,7 +109,7 @@ void OscController::draw()
         for (int i=0; i<outputNodes.size(); i++)
         {
             outputNodes[i]->draw();
-            ResourceManager::getInstance().getTextureFont()->drawString(outputNodes[i]->name, outputNodes[i]->pos - outputNodes[i]->nameSize);
+            ResourceManager::getInstance().getTextureFont()->drawString(outputNodes[i]->name, outputNodes[i]->pos - Vec2f(outputNodes[i]->nameSize.x+5, -3));
         }
     }
     else {
@@ -181,7 +181,7 @@ void OscController::mouseDrag(cease::MouseEvent event)
 bool OscController::isHotspot(cease::MouseEvent event)
 {
     Vec2f local = toLocal(event.getPos());
-    return titleRect.contains(local) || textInputRect.contains(local);
+    return titleRect.contains(local) || (!connected && textInputRect.contains(local));
 }
 
 bool OscController::isDragPoint(cease::MouseEvent event)

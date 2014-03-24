@@ -52,6 +52,7 @@ void OutputNode::draw()
 
 bool OutputNode::contains(Vec2f p)
 {
+    console() << "checking if "<<p<<" is close to "<<pos<<endl;
     return (p-pos).length() <= 5;
 }
 

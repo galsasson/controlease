@@ -185,7 +185,7 @@ void Program::mouseDrag(cease::MouseEvent event)
 bool Program::isHotspot(cease::MouseEvent event)
 {
     Vec2f local = toLocal(event.getPos());
-    return titleRect.contains(local) || textInputRect.contains(local);
+    return titleRect.contains(local) || (!connected && textInputRect.contains(local));
 }
 
 bool Program::isDragPoint(cease::MouseEvent event)
@@ -330,6 +330,7 @@ void Program::addOutput(osc::Message msg)
     if (poutput->setup(msg, nextOutputPos))
     {
         outputs.push_back(poutput);
+        console() << "creating output node at "<<nextOutputPos<<endl;
         OutputNode *node = new OutputNode(poutput->getIndex(), this, nextOutputPos);
         node->updateVal(poutput->getValue());
         outputNodes.push_back(node);
@@ -355,7 +356,7 @@ void Program::handleOutputMessage(osc::Message msg)
 void Program::resizeComponent()
 {
     int nodeNum = max(inputNodes.size(), outputNodes.size());
-    canvasRect.y2 = canvasRect.y1 + 20 + nodeNum*15;
-    localRect.y2 = 20 + nodeNum*15;
+    canvasRect.y2 = canvasRect.y1 + 28 + nodeNum*15;
+    localRect.y2 = 28 + nodeNum*15;
 }
 
