@@ -18,7 +18,7 @@ InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
     next = NULL;
     prev = NULL;
     lastVal = 0;
-    name = "Input";
+    setName("Input");
     
     bFillEllipse = true;
 }

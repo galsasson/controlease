@@ -20,7 +20,7 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     next = NULL;
     prev = NULL;
     lastVal = 0;
-    name = "Output";
+    setName("Output");
     bDisplayName = false;
 }
 
@@ -46,9 +46,8 @@ void OutputNode::draw()
     gl::color(0, 0, 0);
     gl::drawStrokedCircle(pos, 3);
     
-    if (bDisplayName) {
-//        Resour
-    }
+//    if (bDisplayName) {
+//    }
 }
 
 bool OutputNode::contains(Vec2f p)

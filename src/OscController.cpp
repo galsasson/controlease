@@ -25,7 +25,7 @@ OscController::OscController(Canvas *c, Vec2f _pos) : CanvasComponent(c)
     listenPort = 8000;
     name = "OscController";
 
-    isEditing = false;
+    isEditing = true;
     connected = false;
 }
 
@@ -41,8 +41,10 @@ OscController::~OscController()
         delete outputs[i];
     }
     
-    connected = false;
-    handleMsg.join();
+    if (connected) {
+        connected = false;
+        handleMsg.join();
+    }
     
     delete addressInput;
 }
@@ -77,7 +79,7 @@ void OscController::addressInputSet(void)
 
 void OscController::update()
 {
-    if (!connected) {
+    if (!connected && isEditing) {
         addressInput->update();
         return;
     }
@@ -107,7 +109,7 @@ void OscController::draw()
         for (int i=0; i<outputNodes.size(); i++)
         {
             outputNodes[i]->draw();
-            ResourceManager::getInstance().getTextureFont()->drawString(outputNodes[i]->name, Vec2f(15, 30+i*15));
+            ResourceManager::getInstance().getTextureFont()->drawString(outputNodes[i]->name, outputNodes[i]->pos - outputNodes[i]->nameSize);
         }
     }
     else {
@@ -316,7 +318,7 @@ void OscController::addInput(osc::Message msg)
 void OscController::addOutput(std::string name, float val)
 {
     OutputNode *node = new OutputNode(outputNodes.size(), this, nextOutputPos);
-    node->name = name;
+    node->setName(name);
     node->updateVal(val);
     outputNodes.push_back(node);
     nextOutputPos.y += 15;

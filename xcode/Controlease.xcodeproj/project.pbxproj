@@ -17,6 +17,7 @@
 		2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A20D07A18BF081E005C206F /* ProgramOutput.cpp */; };
 		2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083018B5714B0060A535 /* ResourceManager.cpp */; };
 		2A2E083518B58E270060A535 /* Canvas.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A2E083318B58E270060A535 /* Canvas.cpp */; };
+		2A3443AF18E0839A0080DC6D /* Node.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A3443AE18E0839A0080DC6D /* Node.cpp */; };
 		2A49CAE518DDE83400348E6A /* NodeInfoBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */; };
 		2A49CAE718DDEF2900348E6A /* CanvasComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */; };
 		2A49CAED18DFCD7600348E6A /* OscController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A49CAEB18DFCD7600348E6A /* OscController.cpp */; };
@@ -70,6 +71,7 @@
 		2A2E083118B5714B0060A535 /* ResourceManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ResourceManager.h; path = ../src/ResourceManager.h; sourceTree = "<group>"; };
 		2A2E083318B58E270060A535 /* Canvas.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Canvas.cpp; path = ../src/Canvas.cpp; sourceTree = "<group>"; };
 		2A2E083418B58E270060A535 /* Canvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Canvas.h; path = ../src/Canvas.h; sourceTree = "<group>"; };
+		2A3443AE18E0839A0080DC6D /* Node.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Node.cpp; path = ../src/Node.cpp; sourceTree = "<group>"; };
 		2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NodeInfoBox.cpp; path = ../src/NodeInfoBox.cpp; sourceTree = "<group>"; };
 		2A49CAE418DDE83400348E6A /* NodeInfoBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NodeInfoBox.h; path = ../src/NodeInfoBox.h; sourceTree = "<group>"; };
 		2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = CanvasComponent.cpp; path = ../src/CanvasComponent.cpp; sourceTree = "<group>"; };
@@ -198,6 +200,7 @@
 				2A798DD218B997DF00421573 /* InputNode.h */,
 				2A798DD418B998DC00421573 /* OutputNode.cpp */,
 				2A798DD518B998DC00421573 /* OutputNode.h */,
+				2A3443AE18E0839A0080DC6D /* Node.cpp */,
 				2A798DBC18B84FC000421573 /* Node.h */,
 				2A798DD718B9A33B00421573 /* ConnectionResult.h */,
 				2AF1CC5518C137A6000A49BB /* KeyboardListener.h */,
@@ -461,6 +464,7 @@
 				2A798DC218B859AE00421573 /* Number.cpp in Sources */,
 				2A2E083218B5714B0060A535 /* ResourceManager.cpp in Sources */,
 				53B663210C164E40B7B58C20 /* IpEndpointName.cpp in Sources */,
+				2A3443AF18E0839A0080DC6D /* Node.cpp in Sources */,
 				2A20D07C18BF081E005C206F /* ProgramOutput.cpp in Sources */,
 				2A2E083518B58E270060A535 /* Canvas.cpp in Sources */,
 				2A49CAE518DDE83400348E6A /* NodeInfoBox.cpp in Sources */,

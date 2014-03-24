@@ -15,12 +15,10 @@
 #include "Controlease.h"
 #include "ResourceManager.h"
 
-static int nodeID=0;
-
 class Node
 {
 public:
-    Node() { id = nodeID++; }
+    Node();
     ~Node() {};
     
     Node *prev;
@@ -29,12 +27,14 @@ public:
     int id;
     float lastVal;
     std::string name;
+    Vec2f nameSize;
     
     virtual void updateVal(float val) = 0;
     virtual void connect(Node *node) = 0;
     virtual void disconnect(Node *node) = 0;
     virtual bool isConnected() = 0;
     virtual cinder::Vec2f getCanvasPos() {return cinder::Vec2f();};
+    virtual void setName(std::string name);
 };
 
 #endif
