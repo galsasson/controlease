@@ -33,21 +33,31 @@ public:
     virtual Rectf getBounds();
     virtual void applyBorders();
     virtual Vec2f getCanvasPos();
-    virtual float getValue(int i) {return 0;};
-    virtual void setValue(int i, float v) {};
     virtual bool isDragPoint(cease::MouseEvent event) {return false;};
     virtual bool isHotspot(cease::MouseEvent event) {return false;};
-    
+
     virtual ConnectionResult* getConnectionStart( cease::MouseEvent event);
     virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event);
     virtual vector<Node*> getInputNodes();
     virtual vector<Node*> getOutputNodes();
     virtual Node* getNodeWithID(int id);
     
+    // callbacks from nodes
+    virtual float getValue(int i) {return 0;};
+    virtual void setValue(int i, float v) {};
+    virtual void outputConnected(int i) {};
+    virtual void outputDisconnected(int i) {};
+    virtual void inputConnected(int i) {};
+    virtual void inputDisconnected(int i) {};
+
     virtual KeyboardListener* getCurrentKeyboardListener() {return NULL;};
     virtual Node* getNodeBelow(cease::MouseEvent event);
     virtual bool contains(Vec2f canvasPoint);
     
+    virtual void setName(std::string n);
+
+    std::string name;
+    cinder::Vec2f nameSize;
 protected:
     virtual Vec2f toLocal(Vec2f p);
     virtual Vec2f toCanvas(Vec2f p);

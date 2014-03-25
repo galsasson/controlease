@@ -180,6 +180,12 @@ bool CanvasComponent::contains(Vec2f canvasPoint)
     return canvasRect.contains(canvasPoint);
 }
 
+void CanvasComponent::setName(std::string n)
+{
+    name = n;
+    nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
+}
+
 Vec2f CanvasComponent::toLocal(Vec2f p)
 {
     return p-canvasRect.getUpperLeft();

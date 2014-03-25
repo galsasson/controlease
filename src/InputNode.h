@@ -27,9 +27,8 @@ public:
     ~InputNode();
     
     void draw();
-    bool contains(Vec2f p);
     
-    void updateVal(float val);
+    void updateVal(float val, bool force = false);
     void connect(Node *node);
     void disconnect(Node *node);
     bool isConnected();
@@ -37,7 +36,6 @@ public:
     Vec2f getCanvasPos();
     
 private:
-    Vec2f pos;
     int index;
     bool bFillEllipse;
     

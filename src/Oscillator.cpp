@@ -31,6 +31,7 @@ void Oscillator::initInterface(Vec2f size)
     rect = Rectf(Vec2f(0, 0), size);
     titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
     inputNodes.push_back(new InputNode(0, this, Vec2f(6, size.y*3/4)));
+    inputNodes[0]->setName("Frequency");
     outputNodes.push_back(new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4)));
 }
 

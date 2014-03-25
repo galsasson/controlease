@@ -352,20 +352,6 @@ void Exp::v8Map(const FunctionCallbackInfo<v8::Value> &args)
     
     HandleScope scope(args.GetIsolate());
     
-    // do clamp
-    float n = args[0]->NumberValue();
-    float nMin = args[1]->NumberValue();
-    float nMax = args[2]->NumberValue();
-    
-    if (n<=nMin) {
-        args.GetReturnValue().Set(args[3]->NumberValue());
-        return;
-    }
-    else if (n>=nMax) {
-        args.GetReturnValue().Set(args[4]->NumberValue());
-        return;
-    }
-    
     args.GetReturnValue().Set(lmap(args[0]->NumberValue(),
                                    args[1]->NumberValue(),
                                    args[2]->NumberValue(),

@@ -50,6 +50,8 @@ public:
     
     float getValue(int i);
     void setValue(int i, float v);
+    void outputConnected(int i);
+    void outputDisconnected(int i);
     
 private:
     void updateVal(float newVal);

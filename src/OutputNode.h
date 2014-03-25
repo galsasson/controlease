@@ -26,20 +26,17 @@ public:
     ~OutputNode();
     
     void draw();
-    bool contains(Vec2f p);
     
-    void updateVal(float val);
+    void updateVal(float val, bool force = false);
     void connect(Node *node);
     void disconnect(Node *node);
     bool isConnected();
+    std::string getEndpointName();
     
     float getLastVal() { return lastVal; }
     
     bool bDisplayName;
     Vec2f getCanvasPos();
-
-    Vec2f pos;
-    Vec2f namePos;
 
 private:
     int index;

@@ -50,16 +50,12 @@ void OutputNode::draw()
 //    }
 }
 
-bool OutputNode::contains(Vec2f p)
-{
-    console() << "checking if "<<p<<" is close to "<<pos<<endl;
-    return (p-pos).length() <= 5;
-}
-
-void OutputNode::updateVal(float val)
+void OutputNode::updateVal(float val, bool force)
 {
     if (lastVal == val) {
-        return;
+        if (!force) {
+            return;
+        }
     }
     
     bFillEllipse = false;
@@ -72,20 +68,35 @@ void OutputNode::updateVal(float val)
 void OutputNode::connect(Node *node)
 {
     next = node;
+    
+    // update the new input node with the component value
     lastVal = component->getValue(index);
-    updateVal(lastVal);
+    updateVal(lastVal, true);
+    
+    // update the component about the connection
+    component->outputConnected(index);
 }
 
 void OutputNode::disconnect(Node *node)
 {
     if (next == node) {
         next = NULL;
+        component->outputDisconnected(index);
     }
 }
 
 bool OutputNode::isConnected()
 {
     return (next != NULL);
+}
+
+std::string OutputNode::getEndpointName()
+{
+    if (next == NULL) {
+        return std::string("Input");
+    }
+    
+    return std::string(next->name);
 }
 
 Vec2f OutputNode::getCanvasPos()

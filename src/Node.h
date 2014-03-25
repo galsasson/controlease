@@ -26,14 +26,17 @@ public:
     
     int id;
     float lastVal;
+    cinder::Vec2f pos;
     std::string name;
     Vec2f nameSize;
     
-    virtual void updateVal(float val) = 0;
+    virtual void updateVal(float val, bool force = false) = 0;
     virtual void connect(Node *node) = 0;
     virtual void disconnect(Node *node) = 0;
     virtual bool isConnected() = 0;
     virtual cinder::Vec2f getCanvasPos() {return cinder::Vec2f();};
+    
+    virtual bool contains(cinder::Vec2f p);
     virtual void setName(std::string name);
 };
 

@@ -23,12 +23,20 @@ void initControls()
   c.addInput("Brush Size", 10);
   c.addInput("Width", 1);
   c.addInput("Height", 1);
+  c.addInput("MouseX", 0);
+  c.addInput("MouseY", 0);
+  
+  c.addInput("ClearScreen", 0);
 }
 
 void draw()
 {
+  if (c.get("ClearScreen") > 0) {
+    background(0);
+  }
+  
   pushMatrix();
-  translate(mouseX, mouseY);
+  translate(c.get("MouseX"), c.get("MouseY"));
   
   fill(c.get("Hue"), c.get("Saturation"), c.get("Brightness"), c.get("Alpha"));
   noStroke();

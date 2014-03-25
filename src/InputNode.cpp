@@ -45,12 +45,7 @@ void InputNode::draw()
     gl::drawStrokedCircle(pos, 3);
 }
 
-bool InputNode::contains(Vec2f p)
-{
-    return (p-pos).length() <= 5;
-}
-
-void InputNode::updateVal(float val)
+void InputNode::updateVal(float val, bool force)
 {
     bFillEllipse = false;
     lastVal = val;
@@ -60,16 +55,19 @@ void InputNode::updateVal(float val)
 void InputNode::connect(Node *node)
 {
     prev = node;
+    
+    component->inputConnected(index);
 }
 
 void InputNode::disconnect(Node *node)
 {
     if (prev == node) {
         prev = NULL;
+        lastVal = 0;
+        component->setValue(index, 0);
+        component->inputDisconnected(index);
     }
     
-    lastVal = 0;
-    component->setValue(index, 0);
 }
 
 bool InputNode::isConnected()

@@ -35,6 +35,8 @@ void Number::initInterface(Vec2f size)
     dragStartX = dragX = 0;
     isValDrag = false;
     isCompDrag = false;
+    
+    setName("Number");
 }
 
 void Number::update()
@@ -64,7 +66,7 @@ void Number::draw()
     
     // draw title
     gl::color(0, 0, 0);
-    ResourceManager::getInstance().getTextureFont()->drawString("Number", titleRect);
+    ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
     gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
     
     // draw nodes
@@ -184,6 +186,16 @@ void Number::setValue(int i, float v)
     else {
         nextVal = v;
     }
+}
+
+void Number::outputConnected(int i)
+{
+    setName(outputNodes[i]->getEndpointName());
+}
+
+void Number::outputDisconnected(int i)
+{
+    setName("Number");
 }
 
 void Number::updateVal(float newVal)

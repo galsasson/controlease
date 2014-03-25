@@ -15,6 +15,12 @@ Node::Node()
     id = nodeID++;
 }
 
+bool Node::contains(Vec2f p)
+{
+    return (p-pos).length() <= 5;
+}
+
+
 void Node::setName(std::string n)
 {
     name = n;

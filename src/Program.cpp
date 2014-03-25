@@ -314,7 +314,9 @@ void Program::addInput(osc::Message msg)
 {
     ProgramInput *input = new ProgramInput();
     if (input->setup(oscSender, msg)) {
-        inputNodes.push_back(new InputNode(inputNodes.size(), this, nextInputPos));
+        InputNode *node = new InputNode(inputNodes.size(), this, nextInputPos);
+        node->setName(input->getName());
+        inputNodes.push_back(node);
         nextInputPos.y += 15;
         inputs.push_back(input);
         resizeComponent();
@@ -330,9 +332,9 @@ void Program::addOutput(osc::Message msg)
     if (poutput->setup(msg, nextOutputPos))
     {
         outputs.push_back(poutput);
-        console() << "creating output node at "<<nextOutputPos<<endl;
         OutputNode *node = new OutputNode(poutput->getIndex(), this, nextOutputPos);
         node->updateVal(poutput->getValue());
+        node->setName(poutput->getName());
         outputNodes.push_back(node);
         nextOutputPos.y += 15;
         resizeComponent();
