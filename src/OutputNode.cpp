@@ -15,7 +15,7 @@ OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
     component = comp;
     pos = p;
     
-    bFillEllipse = true;
+    bDrawActive = false;
     
     next = NULL;
     prev = NULL;
@@ -31,16 +31,19 @@ OutputNode::~OutputNode()
 
 void OutputNode::draw()
 {
+    float rad = 3;
+    if (bDrawActive) {
+        rad = 4;
+    }
     gl::color(ResourceManager::getInstance().getColor(4));
-    gl::drawSolidCircle(pos, 3);
+    gl::drawSolidCircle(pos, rad);
 
-    if (bFillEllipse) {
+    if (!bDrawActive) {
         gl::color(0, 0, 0, 0.5);
         gl::drawSolidCircle(pos, 3);
-//        bFillEllipse = false;
     }
     else {
-        bFillEllipse = true;
+        bDrawActive = false;
     }
     
     gl::color(0, 0, 0);
@@ -58,7 +61,7 @@ void OutputNode::updateVal(float val, bool force)
         }
     }
     
-    bFillEllipse = false;
+    bDrawActive = true;
     lastVal = val;
     if (next != NULL) {
         next->updateVal(val);

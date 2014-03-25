@@ -20,7 +20,7 @@ InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
     lastVal = 0;
     setName("Input");
     
-    bFillEllipse = true;
+    bDrawActive = false;
 }
 
 InputNode::~InputNode()
@@ -30,15 +30,19 @@ InputNode::~InputNode()
 
 void InputNode::draw()
 {
+    float rad = 3;
+    if (bDrawActive) {
+        rad = 4;
+    }
     gl::color(ResourceManager::getInstance().getColor(2));
-    gl::drawSolidCircle(pos, 3);
+    gl::drawSolidCircle(pos, rad);
     
-    if (bFillEllipse) {
+    if (!bDrawActive) {
         gl::color(0, 0, 0, 0.5);
         gl::drawSolidCircle(pos, 3);
     }
     else {
-        bFillEllipse = true;
+        bDrawActive = false;
     }
     
     gl::color(0, 0, 0);
@@ -47,7 +51,7 @@ void InputNode::draw()
 
 void InputNode::updateVal(float val, bool force)
 {
-    bFillEllipse = false;
+    bDrawActive = true;
     lastVal = val;
     component->setValue(index, val);
 }

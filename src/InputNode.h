@@ -37,7 +37,7 @@ public:
     
 private:
     int index;
-    bool bFillEllipse;
+    bool bDrawActive;
     
     // the component
     CanvasComponent *component;
