@@ -29,6 +29,7 @@ var setup = function()
         values[i] = 0;
     }
     tlPos = 0;
+    lastFrameClicked = -1;
 }
 
 var update = function()
@@ -78,6 +79,10 @@ var mousedrag = function(_x, _y)
     var f = Math.floor(_x)-5;
     if (f<0 || f>=frames) {
         return;
+    }
+    
+    if (lastFrameClicked == -1) {
+        lastFrameClicked = Math.floor(_x)-5;
     }
     
     var inc = f>lastFrameClicked?1:-1;

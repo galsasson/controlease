@@ -307,7 +307,6 @@ void Program::handleAlive(osc::Message msg)
     name = msg.getArgAsString(0);
     Vec2f nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
     nameRect = Rectf(Vec2f(2, 2), Vec2f(2, 2) + nameSize);
-//    halfNameSize = nameSize/2;
 }
 
 void Program::addInput(osc::Message msg)
@@ -344,7 +343,7 @@ void Program::addOutput(osc::Message msg)
     }
 }
 
-void Program::handleOutputMessage(osc::Message msg)
+void Program::handleOutputMessage(osc::Message& msg)
 {
     if (msg.getNumArgs() != 2) {
         return;

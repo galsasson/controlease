@@ -1,0 +1,5 @@
+ofxGui
+ofxOsc
+ofxVectorGraphics
+ofxXmlSettings
+ofxControlease

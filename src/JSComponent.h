@@ -119,6 +119,8 @@ private:
     static void v8ConnectOutputCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8DisconnectOutputCB(const FunctionCallbackInfo<v8::Value>& args);
 
+    static void v8LogCB(const FunctionCallbackInfo<v8::Value>& args);
+
     
     
     void v8Init(const FunctionCallbackInfo<v8::Value>& args); // (name, inputs, outputs)
@@ -139,6 +141,8 @@ private:
     void v8GetCanvasInputs(const FunctionCallbackInfo<v8::Value>& args);
     void v8ConnectOutput(const FunctionCallbackInfo<v8::Value>& args);
     void v8DisconnectOutput(const FunctionCallbackInfo<v8::Value>& args);
+    
+    void v8Log(const FunctionCallbackInfo<v8::Value>& args);
     
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);

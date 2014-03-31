@@ -67,7 +67,7 @@ private:
     void handleAlive(osc::Message msg);
     void addInput(osc::Message msg);
     void addOutput(osc::Message msg);
-    void handleOutputMessage(osc::Message msg);
+    void handleOutputMessage(osc::Message& msg);
     void resizeComponent();
     
     string programHost;

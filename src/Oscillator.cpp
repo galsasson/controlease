@@ -56,7 +56,7 @@ void Oscillator::update()
         time += M_PI*2;
     }
     
-    updateVal(sin(time));
+    updateVal(sin(time)/2 + 0.5);
     
     lastUpdate = millis;
 }

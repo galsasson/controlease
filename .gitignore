@@ -1,3 +1,7 @@
+external apps build dir
+external_apps/of/Crystalfilm/bin/CrystalfilmDebug.app
+external_apps/of/Crystalfilm2/bin/Crystalfilm2Debug.app
+external_apps/of/drawingApp/bin/drawingAppDebug.app
 
 # libs directory (currently v8)
 libs

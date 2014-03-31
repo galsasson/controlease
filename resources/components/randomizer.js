@@ -58,6 +58,9 @@ var lookForInputNode = function()
             closestNode = nodes[i];
         }
     }
+    if (!closestNode) {
+        return;
+    }
     
     ceDisconnectOutput(0);
     targetNode = undefined;

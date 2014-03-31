@@ -330,6 +330,7 @@ void JSComponent::compileAndRun(std::string code)
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceGetCanvasInputs"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8GetCanvasInputsCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceConnectOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8ConnectOutputCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceDisconnectOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DisconnectOutputCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceLog"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8LogCB, External::New(Isolate::GetCurrent(), this)));
     
     
     
@@ -715,6 +716,18 @@ void JSComponent::v8DisconnectOutput(const FunctionCallbackInfo<v8::Value> &args
     args.GetReturnValue().Set(true);
 }
 
+void JSComponent::v8Log(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() != 1) {
+        console() << "please call ceLog as follows: ceLog(string)"<<endl;
+        return;
+    }
+    
+    HandleScope scope(args.GetIsolate());
+    v8::String::Utf8Value str(args[0]->ToString());
+    console() << compName << ": " << (*str) << endl;
+}
+
 
 /*****************************************************************************/
 /*****************************************************************************/
@@ -835,5 +848,12 @@ void JSComponent::v8DisconnectOutputCB(const FunctionCallbackInfo<v8::Value> &ar
     Local<External> wrap = Local<External>::Cast(args.Data());
     JSComponent *comp = (JSComponent*)wrap->Value();
     return comp->v8DisconnectOutput(args);
+}
+
+void JSComponent::v8LogCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8Log(args);
 }
 
