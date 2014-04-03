@@ -19,6 +19,7 @@ class ControleaseApp : public AppNative {
     
 	void setup();
 	void update();
+    void threadUpdate();
 	void draw();
     
 	void mouseDown( MouseEvent event );
@@ -41,13 +42,16 @@ private:
     MouseEvent bakeNewEvent(MouseEvent event, Vec2f origin);
     MouseEvent bakeCanvasMouseEvent(MouseEvent event);
     
+    std::thread updateThread;
+    
+
 };
 
 void ControleaseApp::prepareSettings(cinder::app::AppBasic::Settings *settings)
 {
     settings->enableHighDensityDisplay();
     settings->setWindowSize(800, 600);
-    settings->setFrameRate(60);
+    settings->setFrameRate(30);
     
     settings->enablePowerManagement(true);
 }
@@ -63,12 +67,26 @@ void ControleaseApp::setup()
     // rendering settings
     glEnable(GL_LINE_SMOOTH);
     gl::enableAlphaBlending();
+    
+//    updateThread = std::thread(&ControleaseApp::threadUpdate, this);
+
 }
 
 void ControleaseApp::update()
 {
     compbox->update();
     canvas->update();
+}
+
+void ControleaseApp::threadUpdate()
+{
+    while (1)
+    {
+        compbox->update();
+        canvas->update();
+        usleep(10000);
+//        console() << "update..."<<endl;
+    }
 }
 
 void ControleaseApp::draw()

@@ -35,8 +35,8 @@ var setup = function()
 var update = function()
 {
     tlPos = inn[0];
-    if (tlPos >= frames) {
-        tlPos = frames-1;
+    if (tlPos > frames-2) {
+        tlPos = frames-2;
     }
     else if (tlPos < 0) {
         tlPos = 0;
