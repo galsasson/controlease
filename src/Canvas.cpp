@@ -163,11 +163,6 @@ bool Canvas::contains(Vec2f p)
     return Area(pos, pos+size).contains(p);
 }
 
-ConnectionResult* Canvas::getConnection(cease::MouseEvent event)
-{
-    return NULL;
-}
-
 void Canvas::keyDown(cinder::app::KeyEvent event)
 {
     console() << "keyDown: "<<event.getCode()<<endl;
@@ -230,8 +225,7 @@ void Canvas::appMouseDown(MouseEvent event)
     }
     
     // check for connection node click
-    ConnectionResult *con = focusComponent->getConnectionStart(cevent);
-    handleConnectionStart(con);
+    handleConnectionStart(focusComponent->getConnectionStart(cevent));
 }
 
 void Canvas::appMouseUp(MouseEvent event)
@@ -243,9 +237,11 @@ void Canvas::appMouseUp(MouseEvent event)
     // we are dragging a wire
     if (currentWire != NULL) {
         if (comp == NULL) {
-            return handleConnectionEnd(NULL);
+            // mouse is NOT above a component, return no connection
+            return handleConnectionEnd(ConnectionResult());
         }
 
+        // mouse IS above a component
         return handleConnectionEnd(comp->getConnectionEnd(cevent));
     }
     
@@ -397,8 +393,8 @@ void Canvas::makeConnection(OutputNode *onode, InputNode *inode)
     }
     
     Wire *wire = new Wire();
-    wire->addConnectable(new ConnectionResult(TYPE_OUTPUT, onode));
-    wire->addConnectable(new ConnectionResult(TYPE_INPUT, inode));
+    wire->addConnectable(ConnectionResult(TYPE_OUTPUT, onode));
+    wire->addConnectable(ConnectionResult(TYPE_INPUT, inode));
     wires.push_back(wire);
 }
 
@@ -431,43 +427,37 @@ Vec2f Canvas::getLocalCoords(Vec2f worldCoords)
     return (worldCoords - pos + topLeft) / scale;
 }
 
-void Canvas::handleConnectionStart(ConnectionResult *con)
+void Canvas::handleConnectionStart(ConnectionResult con)
 {
-    if (con == NULL) {
-        return;
+    switch (con.type)
+    {
+        case TYPE_NONE:
+            return;
+        case TYPE_DISCONNECT_INPUT:
+            // find the wire that was clicked
+            currentWire = popWireWithNode(con.node);
+            if (currentWire != NULL) {
+                currentWire->disconnectInput();
+            }
+            break;
+        case TYPE_DISCONNECT_OUTPUT:
+            currentWire = popWireWithNode(con.node);
+            if (currentWire != NULL) {
+                currentWire->disconnectOutput();
+            }
+            break;
+        case TYPE_OUTPUT:
+            currentWire = new Wire();
+            currentWire->addConnectable(con);
+            break;
+        default:
+            return;
     }
-    
-    // check if we grabbed an already connected wire
-    if (con->type == TYPE_DISCONNECT_INPUT) {
-        // find the wire that was clicked
-        currentWire = popWireWithNode(con->node);
-        if (currentWire != NULL) {
-            currentWire->disconnectInput();
-        }
-        return;
-    }
-    
-    if (con->type == TYPE_DISCONNECT_OUTPUT) {
-        currentWire = popWireWithNode(con->node);
-        if (currentWire != NULL) {
-            currentWire->disconnectOutput();
-        }
-        return;
-    }
-    
-    if (con->type == TYPE_OUTPUT) {
-        currentWire = new Wire();
-        currentWire->addConnectable(con);
-    }
-    
-    // delete the connection result
-    delete con;
 }
 
-void Canvas::handleConnectionEnd(ConnectionResult *con)
+void Canvas::handleConnectionEnd(ConnectionResult con)
 {
-    if (con == NULL) {
-        // no connection
+    if (con.type == TYPE_NONE) {
         delete currentWire;
         currentWire = NULL;
         return;
@@ -477,12 +467,12 @@ void Canvas::handleConnectionEnd(ConnectionResult *con)
         wires.push_back(currentWire);
     }
     else {
+        // no connection was made, delete current wire
         delete currentWire;
     }
-    currentWire = NULL;
     
-    // delete the connection result
-    delete con;
+    // reset current wire to NULL (added to 'wires' or deleted at this point)
+    currentWire = NULL;
 }
 
 Wire* Canvas::popWireWithNode(Node *node)
@@ -523,7 +513,7 @@ void Canvas::deleteComponent(CanvasComponent *comp)
         }
     }
 
-    // if component is also the mouse handler, set it to this
+    // if component is also the focus or drag component, set to NULL
     if (comp == focusComponent) {
         focusComponent = NULL;
     }

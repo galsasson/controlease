@@ -87,8 +87,8 @@ private:
     //void setMouseHandler(cease::MouseEvent event);
     void checkBounds();
     Vec2f getLocalCoords(Vec2f worldCoords);
-    void handleConnectionStart(ConnectionResult *con);
-    void handleConnectionEnd(ConnectionResult *con);
+    void handleConnectionStart(ConnectionResult con);
+    void handleConnectionEnd(ConnectionResult con);
     Wire* popWireWithNode(Node *node);
     void deleteComponent(CanvasComponent *comp);
     CanvasComponent* getComponentUnder(Vec2f p);

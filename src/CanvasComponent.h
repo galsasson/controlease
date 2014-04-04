@@ -46,8 +46,8 @@ public:
     virtual bool isDragPoint(cease::MouseEvent event) {return false;};
     virtual bool isHotspot(cease::MouseEvent event) {return false;};
 
-    virtual ConnectionResult* getConnectionStart( cease::MouseEvent event);
-    virtual ConnectionResult* getConnectionEnd( cease::MouseEvent event);
+    virtual ConnectionResult getConnectionStart( cease::MouseEvent event);
+    virtual ConnectionResult getConnectionEnd( cease::MouseEvent event);
     virtual vector<Node*> getInputNodes();
     virtual vector<Node*> getOutputNodes();
     virtual Node* getNodeWithID(int id);

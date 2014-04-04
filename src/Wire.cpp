@@ -50,22 +50,22 @@ void Wire::setEnd(Vec2f p)
     currentEnd = p;
 }
 
-bool Wire::addConnectable(ConnectionResult *con)
+bool Wire::addConnectable(ConnectionResult con)
 {
-    if (con->type == TYPE_INPUT) {
+    if (con.type == TYPE_INPUT) {
         if (inode != NULL) {
             return false;
         }
         
-        inode = (InputNode*)con->node;
+        inode = (InputNode*)con.node;
         currentEnd = inode->getCanvasPos();
     }
-    else if (con->type == TYPE_OUTPUT) {
+    else if (con.type == TYPE_OUTPUT) {
         if (onode != NULL) {
             return false;
         }
         
-        onode = (OutputNode*)con->node;
+        onode = (OutputNode*)con.node;
         currentEnd = onode->getCanvasPos();
     }
     

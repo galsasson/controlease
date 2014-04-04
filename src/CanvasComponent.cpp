@@ -45,8 +45,7 @@ Node* CanvasComponent::getNodeBelow(cease::MouseEvent event)
     return NULL;
 }
 
-// TODO: memory leak!!!
-ConnectionResult* CanvasComponent::getConnectionStart(cease::MouseEvent event)
+ConnectionResult CanvasComponent::getConnectionStart(cease::MouseEvent event)
 {
     Vec2f local = toLocal(event.getPos());
     
@@ -54,7 +53,7 @@ ConnectionResult* CanvasComponent::getConnectionStart(cease::MouseEvent event)
     {
         if (inputNodes[i]->contains(local)) {
             if (inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
+                return ConnectionResult(TYPE_DISCONNECT_INPUT, inputNodes[i]);
             }
         }
     }
@@ -62,18 +61,18 @@ ConnectionResult* CanvasComponent::getConnectionStart(cease::MouseEvent event)
     {
         if (outputNodes[i]->contains(local)) {
             if (outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNodes[i]);
+                return ConnectionResult(TYPE_DISCONNECT_OUTPUT, outputNodes[i]);
             }
             else {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
+                return ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
             }
         }
     }
     
-    return NULL;
+    return ConnectionResult();
 }
 
-ConnectionResult* CanvasComponent::getConnectionEnd(cease::MouseEvent event)
+ConnectionResult CanvasComponent::getConnectionEnd(cease::MouseEvent event)
 {
     Vec2f local = toLocal(event.getPos());
     
@@ -81,7 +80,7 @@ ConnectionResult* CanvasComponent::getConnectionEnd(cease::MouseEvent event)
     {
         if (inputNodes[i]->contains(local)) {
             if (!inputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_INPUT, inputNodes[i]);
+                return ConnectionResult(TYPE_INPUT, inputNodes[i]);
             }
         }
     }
@@ -89,12 +88,12 @@ ConnectionResult* CanvasComponent::getConnectionEnd(cease::MouseEvent event)
     {
         if (outputNodes[i]->contains(local)) {
             if (!outputNodes[i]->isConnected()) {
-                return new ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
+                return ConnectionResult(TYPE_OUTPUT, outputNodes[i]);
             }
         }
     }
     
-    return NULL;
+    return ConnectionResult();
 }
 
 vector<Node*> CanvasComponent::getInputNodes()

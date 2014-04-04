@@ -34,7 +34,7 @@ public:
     void addPoint(Vec2f p);
     void setEnd(Vec2f p);
     
-    bool addConnectable(ConnectionResult* con);
+    bool addConnectable(ConnectionResult con);
     bool haveNode(Node *node);
     
     void disconnectInput();

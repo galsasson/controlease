@@ -16,6 +16,7 @@ class ConnectionResult
 {
 public:
     
+    ConnectionResult() { type = TYPE_NONE; node = NULL; }
     ConnectionResult(ConnectionType t, Node *n) {type = t; node = n; }
     
     ConnectionType type;
