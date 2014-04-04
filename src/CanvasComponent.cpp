@@ -8,9 +8,10 @@
 
 #include "CanvasComponent.h"
 
-CanvasComponent::CanvasComponent(Canvas *c)
+CanvasComponent::CanvasComponent(Canvas *c, ComponentType t)
 {
     canvas = c;
+    type = t;
 }
 
 CanvasComponent::~CanvasComponent() {
@@ -194,4 +195,36 @@ Vec2f CanvasComponent::toLocal(Vec2f p)
 Vec2f CanvasComponent::toCanvas(Vec2f p)
 {
     return canvasRect.getUpperLeft() + p;
+}
+
+string CanvasComponent::getComponentTypeString(ComponentType t)
+{
+    switch (t)
+    {
+        case COMPONENT_TYPE_PROGRAM:
+            return "Program";
+        case COMPONENT_TYPE_NUMBER:
+            return "Number";
+        case COMPONENT_TYPE_SPLIT:
+            return "Split";
+        case COMPONENT_TYPE_OSCILLATOR:
+            return "Oscillator";
+        case COMPONENT_TYPE_EXP:
+            return "Expression";
+        case COMPONENT_TYPE_JS:
+        {
+            return "Javascript";
+        }
+        case COMPONENT_TYPE_OSCCONTROLLER:
+            return "OscController";
+    }
+    
+    return "Unknown";
+}
+
+string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
+{
+    fs::path fileNoExt(scriptFile);
+    fileNoExt = fileNoExt.replace_extension("").filename();
+    return fileNoExt.string();
 }

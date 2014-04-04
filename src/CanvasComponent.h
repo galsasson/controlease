@@ -21,10 +21,20 @@ class Canvas;
 
 using namespace std;
 
+typedef enum _ComponentType {
+    COMPONENT_TYPE_PROGRAM,
+    COMPONENT_TYPE_NUMBER,
+    COMPONENT_TYPE_SPLIT,
+    COMPONENT_TYPE_OSCILLATOR,
+    COMPONENT_TYPE_EXP,
+    COMPONENT_TYPE_JS,
+    COMPONENT_TYPE_OSCCONTROLLER,
+} ComponentType;
+
 class CanvasComponent : public MouseListener
 {
 public:
-    CanvasComponent(Canvas *c);
+    CanvasComponent(Canvas *c, ComponentType type);
     virtual ~CanvasComponent();
     virtual void update() {};
     virtual void draw() {};
@@ -55,7 +65,10 @@ public:
     virtual bool contains(Vec2f canvasPoint);
     
     virtual void setName(std::string n);
+    static std::string getComponentTypeString(ComponentType t);
+    static std::string getJSComponentTypeString(std::string scriptFile);
 
+    ComponentType type;
     std::string name;
     cinder::Vec2f nameSize;
 protected:

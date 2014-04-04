@@ -8,7 +8,7 @@
 
 #include "Program.h"
 
-Program::Program(Canvas *c, Vec2f _pos) : CanvasComponent(c)
+Program::Program(Canvas *c, Vec2f _pos) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_PROGRAM)
 {
     titleRect = Rectf(5, 0, 200, 20);
     localRect = Rectf(0, 0, 200, 40);

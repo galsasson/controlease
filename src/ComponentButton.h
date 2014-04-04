@@ -12,19 +12,10 @@
 #include <iostream>
 
 #include "ResourceManager.h"
+#include "CanvasComponent.h"
 
 using namespace ci;
 using namespace std;
-
-typedef enum _ComponentType {
-    COMPONENT_TYPE_PROGRAM,
-    COMPONENT_TYPE_NUMBER,
-    COMPONENT_TYPE_SPLIT,
-    COMPONENT_TYPE_OSCILLATOR,
-    COMPONENT_TYPE_EXP,
-    COMPONENT_TYPE_JS,
-    COMPONENT_TYPE_OSCCONTROLLER,
-} ComponentType;
 
 class ComponentButton
 {
@@ -36,8 +27,6 @@ public:
     void draw();
     bool contains(Vec2f p);
     
-    std::string getComponentName();
-
     ComponentType type;
     fs::path source;
 

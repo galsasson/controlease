@@ -36,6 +36,7 @@
 		2A7F105418B562EA006CA100 /* ProgramInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F105218B562EA006CA100 /* ProgramInput.cpp */; };
 		2AAB76C418CF73EB007833C4 /* ComponentBox.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB76C118CF73EB007833C4 /* ComponentBox.cpp */; };
 		2AAB76C718CF75D6007833C4 /* ComponentButton.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2AAB76C518CF75D6007833C4 /* ComponentButton.cpp */; };
+		2ABE5C9118EF23C1002DCD65 /* ComponentFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2ABE5C8F18EF23C1002DCD65 /* ComponentFactory.cpp */; };
 		33B0ACB6805D4996BC0BC770 /* OscMessage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 7284549FB1D8423F9431F311 /* OscMessage.cpp */; };
 		49E3AAF2509B44159D9C6485 /* OscTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CB7CAEC47235404597E0C9AC /* OscTypes.cpp */; };
 		4ACA8B9C679E44F3BF60EF4A /* NetworkingUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 26DDD80C5F90432EBDEF38A8 /* NetworkingUtils.cpp */; };
@@ -110,6 +111,8 @@
 		2AAB76C218CF73EB007833C4 /* ComponentBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentBox.h; path = ../src/ComponentBox.h; sourceTree = "<group>"; };
 		2AAB76C518CF75D6007833C4 /* ComponentButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentButton.cpp; path = ../src/ComponentButton.cpp; sourceTree = "<group>"; };
 		2AAB76C618CF75D6007833C4 /* ComponentButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentButton.h; path = ../src/ComponentButton.h; sourceTree = "<group>"; };
+		2ABE5C8F18EF23C1002DCD65 /* ComponentFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ComponentFactory.cpp; path = ../src/ComponentFactory.cpp; sourceTree = "<group>"; };
+		2ABE5C9018EF23C1002DCD65 /* ComponentFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ComponentFactory.h; path = ../src/ComponentFactory.h; sourceTree = "<group>"; };
 		2AD2E23518B7E4E20084A524 /* MouseListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MouseListener.h; path = ../src/MouseListener.h; sourceTree = "<group>"; };
 		2AF1CC5518C137A6000A49BB /* KeyboardListener.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KeyboardListener.h; path = ../src/KeyboardListener.h; sourceTree = "<group>"; };
 		2B5BCFB7C1E749DD97E05BC3 /* MessageMappingOscPacketListener.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MessageMappingOscPacketListener.h; path = ../blocks/OSC/src/osc/MessageMappingOscPacketListener.h; sourceTree = "<group>"; };
@@ -177,6 +180,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2ABE5C8F18EF23C1002DCD65 /* ComponentFactory.cpp */,
+				2ABE5C9018EF23C1002DCD65 /* ComponentFactory.h */,
 				2AAB76C518CF75D6007833C4 /* ComponentButton.cpp */,
 				2AAB76C618CF75D6007833C4 /* ComponentButton.h */,
 				2AAB76C118CF73EB007833C4 /* ComponentBox.cpp */,
@@ -453,6 +458,7 @@
 				2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */,
 				69535C0D44F7467BBD2DE711 /* OscBundle.cpp in Sources */,
 				2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */,
+				2ABE5C9118EF23C1002DCD65 /* ComponentFactory.cpp in Sources */,
 				FE1FFDB9EDE54692A9CAF6E3 /* OscListener.cpp in Sources */,
 				2AAB76C718CF75D6007833C4 /* ComponentButton.cpp in Sources */,
 				2A798DC918B97C8600421573 /* Wire.cpp in Sources */,

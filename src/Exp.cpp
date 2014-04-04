@@ -8,7 +8,7 @@
 
 #include "Exp.h"
 
-Exp::Exp(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c)
+Exp::Exp(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_EXP)
 {
     canvasRect = Rectf(p, p+s);
     initInterface(s);

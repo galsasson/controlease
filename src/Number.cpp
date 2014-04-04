@@ -8,7 +8,7 @@
 
 #include "Number.h"
 
-Number::Number(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c)
+Number::Number(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_NUMBER)
 {
     canvasRect = Rectf(p, p+s);
     initInterface(s);

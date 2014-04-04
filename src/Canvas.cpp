@@ -118,42 +118,11 @@ void Canvas::draw()
 
 void Canvas::addComponent(CanvasComponent *comp)
 {
-    components.push_back(comp);
-}
-
-void Canvas::addComponent(ComponentButton* button)
-{
-    if (button == NULL) {
+    if (comp == NULL) {
         return;
     }
     
-    switch (button->type) {
-        case COMPONENT_TYPE_PROGRAM:
-            addComponent(new Program(this, topLeft + Vec2f(30, 30)));
-            break;
-        case COMPONENT_TYPE_NUMBER:
-            addComponent(new ::Number(this, topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
-        case COMPONENT_TYPE_SPLIT:
-            addComponent(new Split(this, topLeft + Vec2f(30, 30)));
-            break;
-        case COMPONENT_TYPE_OSCILLATOR:
-            addComponent(new Oscillator(this, topLeft + Vec2f(30, 30), Vec2f(100, 40)));
-            break;
-        case COMPONENT_TYPE_EXP:
-            addComponent(new Exp(this, topLeft + Vec2f(30, 30), Vec2f(250, 50)));
-            break;
-        case COMPONENT_TYPE_JS:
-            console() << "creating new component: "<<button->source<<endl;
-            addComponent(new JSComponent(this, topLeft + Vec2f(30, 30), button->source));
-            break;
-        case COMPONENT_TYPE_OSCCONTROLLER:
-            addComponent(new OscController(this, topLeft + Vec2f(30, 30)));
-            break;
-
-        default:
-            break;
-    }
+    components.push_back(comp);
 }
 
 void Canvas::mouseDown(cease::MouseEvent event)

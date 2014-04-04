@@ -10,7 +10,7 @@
 
 void printMessage(osc::Message message);
 
-OscController::OscController(Canvas *c, Vec2f _pos) : CanvasComponent(c)
+OscController::OscController(Canvas *c, Vec2f _pos) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_OSCCONTROLLER)
 {
     titleRect = Rectf(5, 0, 100, 20);
     localRect = Rectf(0, 0, 100, 40);

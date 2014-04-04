@@ -6,6 +6,7 @@
 #include "Canvas.h"
 #include "ComponentBox.h"
 #include "Program.h"
+#include "ComponentFactory.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -108,7 +109,7 @@ void ControleaseApp::mouseDown( MouseEvent event )
     else if (compbox->contains(event.getPos())) {
         ComponentButton *button = compbox->mouseDown(event);
         if (button != NULL) {
-            canvas->addComponent(button);
+            canvas->addComponent(ComponentFactory::newComponent(button, canvas, canvas->topLeft));
         }
     }
 }

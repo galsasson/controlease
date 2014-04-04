@@ -50,7 +50,6 @@ public:
     void update();
     void draw();    
     void addComponent(CanvasComponent *comp);
-    void addComponent(ComponentButton *button);
 
 	void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);

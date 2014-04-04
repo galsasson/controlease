@@ -9,7 +9,7 @@
 #include "JSComponent.h"
 #include "Canvas.h"
 
-JSComponent::JSComponent(Canvas *c, Vec2f p, fs::path script) : CanvasComponent(c)
+JSComponent::JSComponent(Canvas *c, Vec2f p, fs::path script) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_JS)
 {
     compName = script.filename().replace_extension("").string();
     Vec2f size(10, 0);
