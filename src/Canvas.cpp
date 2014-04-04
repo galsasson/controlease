@@ -23,7 +23,6 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     
     fbo = gl::Fbo(virtualSize.x, virtualSize.y);
     
-    isMouseDown = false;
     currentWire = NULL;
     focusComponent = NULL;
     dragComponent = NULL;
@@ -127,13 +126,11 @@ void Canvas::addComponent(CanvasComponent *comp)
 
 void Canvas::mouseDown(cease::MouseEvent event)
 {
-    isMouseDown = true;
     prevMouse = event.getPos();
 }
 
 void Canvas::mouseUp(cease::MouseEvent event)
 {
-    isMouseDown = false;
 }
 
 void Canvas::mouseWheel(cease::MouseEvent event)
@@ -194,7 +191,7 @@ void Canvas::keyUp(cinder::app::KeyEvent event)
     }
 }
 
-CanvasComponent* Canvas::getMouseComponent(Vec2f p)
+CanvasComponent* Canvas::getComponentUnder(Vec2f p)
 {
     for (int i=0; i<components.size(); i++)
     {
@@ -217,7 +214,7 @@ void Canvas::appMouseDown(MouseEvent event)
         return mouseDown(cevent);
     }
     
-    focusComponent = getMouseComponent(cevent.getPos());
+    focusComponent = getComponentUnder(cevent.getPos());
     if (focusComponent == NULL) {
         return;
     }
@@ -240,7 +237,7 @@ void Canvas::appMouseDown(MouseEvent event)
 void Canvas::appMouseUp(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
-    CanvasComponent *comp = getMouseComponent(cevent.getPos());
+    CanvasComponent *comp = getComponentUnder(cevent.getPos());
     dragComponent = NULL;
     
     // we are dragging a wire

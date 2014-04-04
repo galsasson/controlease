@@ -23,6 +23,7 @@ JSComponent::JSComponent(Canvas *c, Vec2f p, fs::path script) : CanvasComponent(
     jsScript = script;
     jsColor = Color(0, 0, 0);
     jsColorVec = Vec3f(0, 0, 0);
+    isDragging = false;
     
     initComponent();
 }

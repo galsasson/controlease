@@ -91,7 +91,7 @@ private:
     void handleConnectionEnd(ConnectionResult *con);
     Wire* popWireWithNode(Node *node);
     void deleteComponent(CanvasComponent *comp);
-    CanvasComponent* getMouseComponent(Vec2f p);
+    CanvasComponent* getComponentUnder(Vec2f p);
     
     vector<CanvasComponent*> components;
     
@@ -103,7 +103,6 @@ private:
     CanvasComponent *dragComponent;
 
     Vec2f prevMouse;
-    bool isMouseDown;
     
     // connecting graph
     vector<Wire*> wires;
