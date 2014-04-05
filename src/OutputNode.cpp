@@ -9,18 +9,9 @@
 #include "OutputNode.h"
 #include "CanvasComponent.h"
 
-OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p)
+OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p) : Node(i, comp, p)
 {
-    index = i;
-    component = comp;
-    pos = p;
-    
-    bDrawActive = false;
-    
-    next = NULL;
-    prev = NULL;
-    lastVal = 0;
-    setName("Output");
+    setName("Output");    
     bDisplayName = false;
 }
 

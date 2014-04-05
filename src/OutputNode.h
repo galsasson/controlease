@@ -34,16 +34,9 @@ public:
     std::string getEndpointName();
     
     float getLastVal() { return lastVal; }
+    Vec2f getCanvasPos();
     
     bool bDisplayName;
-    Vec2f getCanvasPos();
-
-private:
-    int index;
-    bool bDrawActive;
-    
-    // the component
-    CanvasComponent *component;
 };
 
 #endif /* defined(__Controlease__OutputNode__) */

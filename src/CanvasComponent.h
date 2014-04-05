@@ -9,16 +9,22 @@
 #ifndef __Controlease__CanvasComponent__
 #define __Controlease__CanvasComponent__
 
+#include <vector>
+
+#include "cinder/app/App.h"
+#include "cinder/Xml.h"
+
 #include "KeyboardListener.h"
 #include "MouseListener.h"
 #include "ConnectionResult.h"
-#include "Node.h"
+//#include "Node.h"
 #include "InputNode.h"
 #include "OutputNode.h"
-#include <vector>
 
 class Canvas;
+class Node;
 
+using namespace ci;
 using namespace std;
 
 typedef enum _ComponentType {
@@ -68,15 +74,17 @@ public:
     static std::string getComponentTypeString(ComponentType t);
     static std::string getJSComponentTypeString(std::string scriptFile);
 
-    ComponentType type;
-    std::string name;
-    cinder::Vec2f nameSize;
+    XmlTree getXml();
+    
 protected:
     virtual Vec2f toLocal(Vec2f p);
     virtual Vec2f toCanvas(Vec2f p);
     
     Canvas *canvas;
     Rectf canvasRect;
+    ComponentType type;
+    std::string name;
+    cinder::Vec2f nameSize;
     
     vector<InputNode*> inputNodes;
     vector<OutputNode*> outputNodes;

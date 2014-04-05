@@ -186,16 +186,6 @@ void CanvasComponent::setName(std::string n)
     nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
 }
 
-Vec2f CanvasComponent::toLocal(Vec2f p)
-{
-    return p-canvasRect.getUpperLeft();
-}
-
-Vec2f CanvasComponent::toCanvas(Vec2f p)
-{
-    return canvasRect.getUpperLeft() + p;
-}
-
 string CanvasComponent::getComponentTypeString(ComponentType t)
 {
     switch (t)
@@ -226,4 +216,40 @@ string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
     fs::path fileNoExt(scriptFile);
     fileNoExt = fileNoExt.replace_extension("").filename();
     return fileNoExt.string();
+}
+
+XmlTree CanvasComponent::getXml()
+{
+    XmlTree cComp("CanvasComponent", "");
+    cComp.setAttribute("type", ci::toString(type));
+    cComp.setAttribute("name", name);
+    cComp.setAttribute("nameSize", nameSize);
+    cComp.setAttribute("canvasRectUL", canvasRect.getUpperLeft());
+    cComp.setAttribute("canvasRectLR", canvasRect.getLowerRight());
+    
+    XmlTree inodes("InputNodes", "");
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        inodes.push_back(inputNodes[i]->getXml());
+    }
+    cComp.push_back(inodes);
+    
+    XmlTree onodes("OutputNodes", "");
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        cComp.push_back(outputNodes[i]->getXml());
+    }
+    cComp.push_back(onodes);
+    
+    return cComp;
+}
+
+Vec2f CanvasComponent::toLocal(Vec2f p)
+{
+    return p-canvasRect.getUpperLeft();
+}
+
+Vec2f CanvasComponent::toCanvas(Vec2f p)
+{
+    return canvasRect.getUpperLeft() + p;
 }

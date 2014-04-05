@@ -34,13 +34,6 @@ public:
     bool isConnected();
     
     Vec2f getCanvasPos();
-    
-private:
-    int index;
-    bool bDrawActive;
-    
-    // the component
-    CanvasComponent *component;
 };
 
 

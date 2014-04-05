@@ -9,18 +9,9 @@
 #include "InputNode.h"
 #include "CanvasComponent.h"
 
-InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p)
+InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p) : Node(i, comp, p)
 {
-    index = i;
-    component = comp;
-    pos = p;
-    
-    next = NULL;
-    prev = NULL;
-    lastVal = 0;
-    setName("Input");
-    
-    bDrawActive = false;
+    setName("Input");    
 }
 
 InputNode::~InputNode()
@@ -83,3 +74,5 @@ Vec2f InputNode::getCanvasPos()
 {
     return component->getCanvasPos() + pos;
 }
+
+
