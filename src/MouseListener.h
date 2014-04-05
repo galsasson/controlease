@@ -37,12 +37,12 @@ class MouseListener
 {
 public:
     virtual ~MouseListener() {}
-	virtual void mouseDown( cease::MouseEvent event ) = 0;
-	virtual void mouseUp( cease::MouseEvent event) = 0;
-	virtual void mouseWheel( cease::MouseEvent event ) = 0;
-	virtual void mouseMove( cease::MouseEvent event ) = 0;
-	virtual void mouseDrag( cease::MouseEvent event ) = 0;
-    virtual bool contains(Vec2f p) = 0;
+	virtual void mouseDown( cease::MouseEvent event ) {};
+	virtual void mouseUp( cease::MouseEvent event) {};
+	virtual void mouseWheel( cease::MouseEvent event ) {};
+	virtual void mouseMove( cease::MouseEvent event ) {};
+	virtual void mouseDrag( cease::MouseEvent event ) {};
+    virtual bool contains(Vec2f p) { return false; };
 };
 
 #endif

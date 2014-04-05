@@ -3,9 +3,9 @@
 
 #include "v8.h"
 
-#include "Canvas.h"
+#include "MenuBar.h"
 #include "ComponentBox.h"
-#include "Program.h"
+#include "Canvas.h"
 #include "ComponentFactory.h"
 
 using namespace ci;
@@ -34,9 +34,11 @@ class ControleaseApp : public AppNative {
 	void resize();
     
 private:
-    Vec2f getCanvasSize();
+    Vec2f getMenubarSize();
     Vec2f getCompboxSize();
+    Vec2f getCanvasSize();
     
+    MenuBar *menuBar;
     Canvas *canvas;
     ComponentBox *compbox;
     
@@ -61,6 +63,7 @@ void ControleaseApp::setup()
 {
     ResourceManager::getInstance().initResources();
     
+    menuBar = new MenuBar(Vec2f(0, 0), getMenubarSize());
     canvas = new Canvas();
     canvas->setup(Vec2f(150, 50), getCanvasSize());
     compbox = new ComponentBox(Vec2f(0, 50), getCompboxSize());
@@ -95,6 +98,7 @@ void ControleaseApp::draw()
 	// clear out the window with black
 	gl::clear( Color( 0.7, 0.7, 0.7 ) );
     
+    menuBar->draw();
     compbox->draw();
     canvas->draw();
     
@@ -146,19 +150,26 @@ void ControleaseApp::keyUp( KeyEvent event )
 
 void ControleaseApp::resize()
 {
+    menuBar->setSize(getMenubarSize());
     compbox->setSize(getCompboxSize());
     canvas->setSize(getCanvasSize());
 }
 
-Vec2f ControleaseApp::getCanvasSize()
+Vec2f ControleaseApp::getMenubarSize()
 {
-    return Vec2f(getWindowWidth()-150, getWindowHeight()-50);
+    return Vec2f(getWindowWidth(), 50);
 }
 
 Vec2f ControleaseApp::getCompboxSize()
 {
-    return Vec2f(150, getWindowHeight()-50);
+    return Vec2f(150, getWindowHeight()-getMenubarSize().y);
 }
+
+Vec2f ControleaseApp::getCanvasSize()
+{
+    return Vec2f(getWindowWidth()-getCompboxSize().x, getWindowHeight()-getMenubarSize().y);
+}
+
 
 MouseEvent ControleaseApp::bakeNewEvent(MouseEvent event, Vec2f origin)
 {

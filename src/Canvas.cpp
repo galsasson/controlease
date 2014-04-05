@@ -21,7 +21,9 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     topLeft = Vec2f(CANVAS_WIDTH/2, CANVAS_HEIGHT/2);
     scale = Vec2f(1, 1);
     
-    fbo = gl::Fbo(virtualSize.x, virtualSize.y);
+    gl::Fbo::Format msaaFormat;
+    msaaFormat.setSamples(8);
+    fbo = gl::Fbo(virtualSize.x, virtualSize.y, msaaFormat);
     gridFbo = gl::Fbo(virtualSize.x, virtualSize.y);
     drawGridFbo();
     

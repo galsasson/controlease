@@ -53,7 +53,7 @@ void NodeInfoBox::draw()
     glLineStipple(1, 0xf0f0);
     gl::enable(GL_LINE_STIPPLE);
     
-    gl::color(0, 0, 0);
+    gl::color(0.5, 0.5, 0.5);
     gl::drawLine(canvasRect.getUpperLeft(), node->getCanvasPos());
     
     glPopAttrib();
