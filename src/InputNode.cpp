@@ -21,23 +21,18 @@ InputNode::~InputNode()
 
 void InputNode::draw()
 {
-    float rad = 3;
-    if (bDrawActive) {
-        rad = 4;
-    }
     gl::color(ResourceManager::getInstance().getColor(2));
-    gl::drawSolidCircle(pos, rad);
     
-    if (!bDrawActive) {
-        gl::color(0, 0, 0, 0.5);
-        gl::drawSolidCircle(pos, 3);
-    }
-    else {
+    if (bDrawActive) {
+        gl::drawSolidCircle(pos, 5);
         bDrawActive = false;
     }
-    
-    gl::color(0, 0, 0);
-    gl::drawStrokedCircle(pos, 3);
+    else {
+        gl::color(0, 0, 0, 0.5);
+        gl::drawSolidCircle(pos, 3);
+        gl::color(0, 0, 0);
+        gl::drawStrokedCircle(pos, 3);
+    }
 }
 
 void InputNode::updateVal(float val, bool force)

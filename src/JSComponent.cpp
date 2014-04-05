@@ -106,25 +106,6 @@ void JSComponent::draw()
     gl::drawStrokedRect(originRect);
 }
 
-void JSComponent::drawOutline()
-{
-    gl::pushMatrices();
-    gl::translate(canvasRect.getUpperLeft());
-
-    gl::translate(Vec2f(-4, -4));
-
-    glPushAttrib(GL_ENABLE_BIT);
-    glLineStipple(1, 0xff00);
-    gl::enable(GL_LINE_STIPPLE);
-    
-    gl::color(0, 0, 0);
-    gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
-    
-    glPopAttrib();
-        
-    gl::popMatrices();
-}
-
 void JSComponent::translate(Vec2f offset)
 {
     console() << "warning: don't use JScomponent::translate"<<endl;

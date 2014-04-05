@@ -44,7 +44,7 @@ public:
     virtual ~CanvasComponent();
     virtual void update() {};
     virtual void draw() {};
-    virtual void drawOutline() {};
+    virtual void drawOutline();
     virtual void translate(Vec2f offset);
     virtual Rectf getBounds();
     virtual void applyBorders();

@@ -84,7 +84,7 @@ public:
     Vec2f scale;
 
 private:
-    //void setMouseHandler(cease::MouseEvent event);
+    void drawGridFbo();
     void checkBounds();
     Vec2f getLocalCoords(Vec2f worldCoords);
     void handleConnectionStart(ConnectionResult con);
@@ -97,6 +97,7 @@ private:
     
     // hold the canvas
     gl::Fbo fbo;
+    gl::Fbo gridFbo;
     
     // interaction
     CanvasComponent *focusComponent;

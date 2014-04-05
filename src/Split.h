@@ -38,7 +38,6 @@ public:
     void initInterface(Vec2f size);
     void update();
     void draw();
-    void drawOutline();
 
     void translate(Vec2f offset);
     Rectf getBounds();

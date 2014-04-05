@@ -38,7 +38,6 @@ public:
     void initInterface(Vec2f size);
     void update();
     void draw();
-    void drawOutline();
 
     void mouseDown( cease::MouseEvent event );
 	void mouseUp( cease::MouseEvent event);

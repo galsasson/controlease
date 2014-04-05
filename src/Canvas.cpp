@@ -22,6 +22,8 @@ void Canvas::setup(Vec2f _pos, Vec2f _size)
     scale = Vec2f(1, 1);
     
     fbo = gl::Fbo(virtualSize.x, virtualSize.y);
+    gridFbo = gl::Fbo(virtualSize.x, virtualSize.y);
+    drawGridFbo();
     
     currentWire = NULL;
     focusComponent = NULL;
@@ -55,19 +57,10 @@ void Canvas::draw()
     gl::pushMatrices();
     gl::scale((Vec2f)getWindowSize() / (Vec2f)fbo.getSize() * scale);
 
-    gl::clear(Color(0.8, 0.8, 0.8));
-    gl::color(0.6, 0.6, 0.6);
-    gl::lineWidth(1);
+    // draw grid fbo
+    gl::color(1, 1, 1);
+    gl::draw(gridFbo.getTexture());
 
-    for (float x=0; x<=virtualSize.x; x+=40)
-    {
-        gl::drawLine(Vec2f(x, 0), Vec2f(x, virtualSize.y));
-    }
-    for (float y=0; y<=virtualSize.y; y+=40)
-    {
-        gl::drawLine(Vec2f(0, y), Vec2f(virtualSize.x, y));
-    }
-    
     // the components on the canvas
     gl::color(0, 0, 0);
     for (int i=0; i<components.size(); i++)
@@ -404,6 +397,29 @@ void Canvas::disconnectNode(Node *node)
     if (w) {
         delete w;
     }
+}
+
+void Canvas::drawGridFbo()
+{
+    gridFbo.bindFramebuffer();
+    Area prevViewport = gl::getViewport();
+    gl::setViewport(gridFbo.getBounds());
+
+    gl::clear(Color(0.0, 0.0, 0.0));
+    gl::color(0.2, 0.2, 0.2);
+    gl::lineWidth(1);
+    
+    for (float x=0; x<=virtualSize.x; x+=40)
+    {
+        gl::drawLine(Vec2f(x, 0), Vec2f(x, virtualSize.y));
+    }
+    for (float y=0; y<=virtualSize.y; y+=40)
+    {
+        gl::drawLine(Vec2f(0, y), Vec2f(virtualSize.x, y));
+    }
+
+    gl::setViewport(prevViewport);
+    gridFbo.unbindFramebuffer();
 }
 
 void Canvas::checkBounds()

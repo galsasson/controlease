@@ -25,7 +25,6 @@
 		2A697E1618C9475400ACA9D2 /* components in Resources */ = {isa = PBXBuildFile; fileRef = 2A697E1518C9475400ACA9D2 /* components */; };
 		2A71545618C1849B00DA1C39 /* TextInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71545418C1849B00DA1C39 /* TextInput.cpp */; };
 		2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547718C28B3500DA1C39 /* Exp.cpp */; };
-		2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */; };
 		2A71547F18C456EA00DA1C39 /* Oscillator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A71547D18C456EA00DA1C39 /* Oscillator.cpp */; };
 		2A798DC218B859AE00421573 /* Number.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC018B859AE00421573 /* Number.cpp */; };
 		2A798DC918B97C8600421573 /* Wire.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2A798DC718B97C8600421573 /* Wire.cpp */; };
@@ -85,8 +84,6 @@
 		2A71545518C1849B00DA1C39 /* TextInput.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TextInput.h; path = ../src/TextInput.h; sourceTree = "<group>"; };
 		2A71547718C28B3500DA1C39 /* Exp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Exp.cpp; path = ../src/Exp.cpp; sourceTree = "<group>"; };
 		2A71547818C28B3500DA1C39 /* Exp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Exp.h; path = ../src/Exp.h; sourceTree = "<group>"; };
-		2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = V8Engine.cpp; path = ../src/V8Engine.cpp; sourceTree = "<group>"; };
-		2A71547B18C2BA0900DA1C39 /* V8Engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = V8Engine.h; path = ../src/V8Engine.h; sourceTree = "<group>"; };
 		2A71547D18C456EA00DA1C39 /* Oscillator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Oscillator.cpp; path = ../src/Oscillator.cpp; sourceTree = "<group>"; };
 		2A71547E18C456EA00DA1C39 /* Oscillator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Oscillator.h; path = ../src/Oscillator.h; sourceTree = "<group>"; };
 		2A798DBC18B84FC000421573 /* Node.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Node.h; path = ../src/Node.h; sourceTree = "<group>"; };
@@ -186,12 +183,12 @@
 				2AAB76C618CF75D6007833C4 /* ComponentButton.h */,
 				2AAB76C118CF73EB007833C4 /* ComponentBox.cpp */,
 				2AAB76C218CF73EB007833C4 /* ComponentBox.h */,
+				2A798DC318B85D6100421573 /* Controlease.h */,
 				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
 				2AF1CC5118C1365C000A49BB /* GUI elements */,
 				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
 				2A20D07B18BF081E005C206F /* ProgramOutput.h */,
 				2A798DE018BAFAD200421573 /* Components */,
-				2A798DC318B85D6100421573 /* Controlease.h */,
 				2A7F105218B562EA006CA100 /* ProgramInput.cpp */,
 				2A7F105318B562EA006CA100 /* ProgramInput.h */,
 				2A2E083018B5714B0060A535 /* ResourceManager.cpp */,
@@ -209,8 +206,6 @@
 				2A798DBC18B84FC000421573 /* Node.h */,
 				2A798DD718B9A33B00421573 /* ConnectionResult.h */,
 				2AF1CC5518C137A6000A49BB /* KeyboardListener.h */,
-				2A71547A18C2BA0900DA1C39 /* V8Engine.cpp */,
-				2A71547B18C2BA0900DA1C39 /* V8Engine.h */,
 				2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */,
 				2A49CAE418DDE83400348E6A /* NodeInfoBox.h */,
 				2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */,
@@ -455,7 +450,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC092B884D0940DEACDA3C98 /* ControleaseApp.cpp in Sources */,
-				2A71547C18C2BA0900DA1C39 /* V8Engine.cpp in Sources */,
 				69535C0D44F7467BBD2DE711 /* OscBundle.cpp in Sources */,
 				2A71547918C28B3500DA1C39 /* Exp.cpp in Sources */,
 				2ABE5C9118EF23C1002DCD65 /* ComponentFactory.cpp in Sources */,

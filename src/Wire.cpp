@@ -32,7 +32,7 @@ void Wire::update()
 
 void Wire::draw()
 {
-    gl::color(0, 0, 0);
+    gl::color(1, 1, 1);
 
     if (inode && onode) {
         gl::drawLine(inode->getCanvasPos(), onode->getCanvasPos());

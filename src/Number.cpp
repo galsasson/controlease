@@ -73,24 +73,8 @@ void Number::draw()
     inputNodes[0]->draw();
     outputNodes[0]->draw();
     
-    ResourceManager::getInstance().getTextureFont()->drawString(valStr, valRect);
-    gl::popMatrices();
-}
-
-void Number::drawOutline()
-{
-    gl::pushMatrices();
-    gl::translate(canvasRect.getUpperLeft() - Vec2f(4, 4));
-
-    glPushAttrib(GL_ENABLE_BIT);
-    glLineStipple(1, 0xff00);
-    gl::enable(GL_LINE_STIPPLE);
-    
     gl::color(0, 0, 0);
-    gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
-    
-    glPopAttrib();
-    
+    ResourceManager::getInstance().getTextureFont()->drawString(valStr, valRect);
     gl::popMatrices();
 }
 
