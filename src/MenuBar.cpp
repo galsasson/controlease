@@ -42,6 +42,29 @@ void MenuBar::draw()
     gl::popMatrices();
 }
 
+void MenuBar::mouseDown(const cinder::app::MouseEvent& event)
+{
+    for (int i=0; i<buttons.size(); i++)
+    {
+        if (buttons[i]->contains(event.getPos())) {
+            buttons[i]->click();
+        }
+    }
+}
+
+bool MenuBar::contains(const Vec2f& p)
+{
+    return parentRect.contains(p);
+}
+
+void MenuBar::onButtonClicked(boost::function<void(Button*)> func)
+{
+    for (int i=0; i<buttons.size(); i++)
+    {
+        buttons[i]->getSignal()->connect(func);
+    }
+}
+
 void MenuBar::setSize(Vec2f size)
 {
     parentRect.x2 = parentRect.x1 + size.x;
@@ -52,7 +75,7 @@ void MenuBar::setSize(Vec2f size)
 void MenuBar::initButtons()
 {
     Vec2f bPos(5, 10);
-    Vec2f bSize(50, 30);
+    Vec2f bSize(50, 20);
     buttons.push_back(new Button("New", bPos, bSize));
     bPos.x += bSize.x+5;
     buttons.push_back(new Button("Open", bPos, bSize));

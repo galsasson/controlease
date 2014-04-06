@@ -25,8 +25,8 @@ namespace cease {
         MouseEvent() { pos = Vec2f(0, 0); wheelInc = 0; keyModifiers = 0; }
         MouseEvent(Vec2f p, float w) { pos = p; wheelInc = w; keyModifiers = 0; }
         MouseEvent(Vec2f p, float w, uint32_t modifiers) { pos = p; wheelInc = w; keyModifiers = modifiers; }
-        Vec2f getPos() { return pos; }
-        float getWheelIncrement() { return wheelInc; }
+        Vec2f getPos() const { return pos; }
+        float getWheelIncrement() const { return wheelInc; }
         Vec2f pos;
         float wheelInc;
         uint32_t keyModifiers;
@@ -37,12 +37,12 @@ class MouseListener
 {
 public:
     virtual ~MouseListener() {}
-	virtual void mouseDown( cease::MouseEvent event ) {};
-	virtual void mouseUp( cease::MouseEvent event) {};
-	virtual void mouseWheel( cease::MouseEvent event ) {};
-	virtual void mouseMove( cease::MouseEvent event ) {};
-	virtual void mouseDrag( cease::MouseEvent event ) {};
-    virtual bool contains(Vec2f p) { return false; };
+	virtual void mouseDown(const cease::MouseEvent& event) {};
+	virtual void mouseUp(const cease::MouseEvent& event) {};
+	virtual void mouseWheel(const cease::MouseEvent& event) {};
+	virtual void mouseMove(const cease::MouseEvent& event) {};
+	virtual void mouseDrag(const cease::MouseEvent& event) {};
+    virtual bool contains(const Vec2f& p) { return false; };
 };
 
 #endif

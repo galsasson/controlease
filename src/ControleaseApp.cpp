@@ -32,22 +32,20 @@ class ControleaseApp : public AppNative {
 	void keyUp( KeyEvent event );
 
 	void resize();
-    
+
+    void menuButtonClicked(Button* button);
+
 private:
+
+    MenuBar *menuBar;
+    Canvas *canvas;
+    ComponentBox *compbox;
+
     Vec2f getMenubarSize();
     Vec2f getCompboxSize();
     Vec2f getCanvasSize();
     
-    MenuBar *menuBar;
-    Canvas *canvas;
-    ComponentBox *compbox;
-    
-    MouseEvent bakeNewEvent(MouseEvent event, Vec2f origin);
-    MouseEvent bakeCanvasMouseEvent(MouseEvent event);
-    
     std::thread updateThread;
-    
-
 };
 
 void ControleaseApp::prepareSettings(cinder::app::AppBasic::Settings *settings)
@@ -64,9 +62,11 @@ void ControleaseApp::setup()
     ResourceManager::getInstance().initResources();
     
     menuBar = new MenuBar(Vec2f(0, 0), getMenubarSize());
+    menuBar->onButtonClicked(boost::bind(&ControleaseApp::menuButtonClicked, this, _1));
+    
     canvas = new Canvas();
-    canvas->setup(Vec2f(150, 50), getCanvasSize());
-    compbox = new ComponentBox(Vec2f(0, 50), getCompboxSize());
+    canvas->setup(Vec2f(getCompboxSize().x, getMenubarSize().y), getCanvasSize());
+    compbox = new ComponentBox(Vec2f(0, getMenubarSize().y), getCompboxSize());
     
     // rendering settings
     glEnable(GL_LINE_SMOOTH);
@@ -116,6 +116,9 @@ void ControleaseApp::mouseDown( MouseEvent event )
             canvas->addComponent(ComponentFactory::newComponent(button, canvas, canvas->topLeft));
         }
     }
+    else if (menuBar->contains(event.getPos())) {
+        menuBar->mouseDown(event);
+    }
 }
 
 void ControleaseApp::mouseUp(MouseEvent event)
@@ -155,9 +158,14 @@ void ControleaseApp::resize()
     canvas->setSize(getCanvasSize());
 }
 
+void ControleaseApp::menuButtonClicked(Button* button)
+{
+    console() << button->text << " was clicked"<<endl;
+}
+
 Vec2f ControleaseApp::getMenubarSize()
 {
-    return Vec2f(getWindowWidth(), 50);
+    return Vec2f(getWindowWidth(), 40);
 }
 
 Vec2f ControleaseApp::getCompboxSize()
@@ -169,21 +177,5 @@ Vec2f ControleaseApp::getCanvasSize()
 {
     return Vec2f(getWindowWidth()-getCompboxSize().x, getWindowHeight()-getMenubarSize().y);
 }
-
-
-MouseEvent ControleaseApp::bakeNewEvent(MouseEvent event, Vec2f origin)
-{
-    Vec2i p = event.getPos() - origin;
-    return MouseEvent(event.getWindow(), 0, p.x, p.y, event.getNativeModifiers(), event.getWheelIncrement(), event.getNativeModifiers() );
-}
-
-MouseEvent ControleaseApp::bakeCanvasMouseEvent(cinder::app::MouseEvent event)
-{
-    Vec2f p = canvas->topLeft + (Vec2f)event.getPos() / canvas->scale - canvas->pos;
-    return MouseEvent(event.getWindow(), 0, p.x, p.y, event.getNativeModifiers(), event.getWheelIncrement(), event.getNativeModifiers() );
-}
-
-
-
 
 CINDER_APP_NATIVE( ControleaseApp, RendererGl )

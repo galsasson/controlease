@@ -117,7 +117,7 @@ Rectf JSComponent::getBounds()
     return canvasRect;
 }
 
-void JSComponent::mouseDown(cease::MouseEvent event)
+void JSComponent::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
 
@@ -132,7 +132,7 @@ void JSComponent::mouseDown(cease::MouseEvent event)
     }
 }
 
-void JSComponent::mouseDrag(cease::MouseEvent event)
+void JSComponent::mouseDrag(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     if (isDragging)
@@ -148,7 +148,7 @@ void JSComponent::mouseDrag(cease::MouseEvent event)
     }
 }
 
-void JSComponent::mouseUp( cease::MouseEvent event)
+void JSComponent::mouseUp(const cease::MouseEvent& event)
 {
     isDragging = false;
     
@@ -159,17 +159,14 @@ void JSComponent::mouseUp( cease::MouseEvent event)
     }
 }
 
-void JSComponent::mouseWheel( cease::MouseEvent event ) {}
-void JSComponent::mouseMove( cease::MouseEvent event ) {}
-
-bool JSComponent::isDragPoint(cease::MouseEvent event)
+bool JSComponent::isDragPoint(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local) || jsRect.contains(local);
 }
 
-bool JSComponent::isHotspot(cease::MouseEvent event)
+bool JSComponent::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     

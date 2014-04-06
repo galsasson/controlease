@@ -76,6 +76,9 @@ public:
     void makeConnection(OutputNode *onode, int inputID);
     void makeConnection(OutputNode *onode, InputNode *inode);
     void disconnectNode(Node *node);
+
+    // remove all components and start with a new canvas
+    void reset();
     
     Vec2f pos;
     Vec2f size;

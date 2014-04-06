@@ -85,7 +85,7 @@ Rectf Split::getBounds()
     return canvasRect;
 }
 
-void Split::mouseDown(cease::MouseEvent event)
+void Split::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     if (plusRect.contains(local)) {
@@ -99,28 +99,21 @@ void Split::mouseDown(cease::MouseEvent event)
     compDragAnchor = event.getPos();
 }
 
-void Split::mouseDrag(cease::MouseEvent event)
+void Split::mouseDrag(const cease::MouseEvent& event)
 {
     canvasRect += event.getPos() - compDragAnchor;
     compDragAnchor = event.getPos();
     applyBorders();
 }
 
-void Split::mouseUp( cease::MouseEvent event)
-{
-}
-
-void Split::mouseWheel( cease::MouseEvent event ) {}
-void Split::mouseMove( cease::MouseEvent event ) {}
-
-bool Split::isDragPoint(cease::MouseEvent event)
+bool Split::isDragPoint(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local);
 }
 
-bool Split::isHotspot(cease::MouseEvent event)
+bool Split::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     

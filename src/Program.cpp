@@ -146,7 +146,7 @@ void Program::drawOutline()
     gl::popMatrices();
 }
 
-void Program::mouseDown(cease::MouseEvent event)
+void Program::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     isEditing = false;
@@ -161,20 +161,7 @@ void Program::mouseDown(cease::MouseEvent event)
     prevMouse = event.getPos();
 }
 
-void Program::mouseUp(cease::MouseEvent event)
-{
-}
-
-void Program::mouseWheel(cease::MouseEvent event)
-{
-}
-
-void Program::mouseMove(cease::MouseEvent event)
-{
-    
-}
-
-void Program::mouseDrag(cease::MouseEvent event)
+void Program::mouseDrag(const cease::MouseEvent& event)
 {
     canvasRect += event.getPos() - prevMouse;
     prevMouse = event.getPos();
@@ -182,13 +169,13 @@ void Program::mouseDrag(cease::MouseEvent event)
     applyBorders();
 }
 
-bool Program::isHotspot(cease::MouseEvent event)
+bool Program::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     return titleRect.contains(local) || (!connected && textInputRect.contains(local));
 }
 
-bool Program::isDragPoint(cease::MouseEvent event)
+bool Program::isDragPoint(const cease::MouseEvent& event)
 {
     return titleRect.contains(toLocal(event.getPos()));
 }

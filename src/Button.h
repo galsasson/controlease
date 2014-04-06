@@ -20,9 +20,14 @@ using namespace std;
 class Button
 {
 public:
+    typedef boost::signals2::signal<void(Button*)> ButtonSignal;
+    
     Button(std::string _text, Vec2f _pos, Vec2f _size);
-    void draw();    
+    void draw();
     bool contains(Vec2f p);
+    
+    void click();
+    ButtonSignal* getSignal() { return &signal; }
 
     std::string text;
 
@@ -30,6 +35,8 @@ private:
     Rectf parentRect;
     Rectf localRect;
     Rectf textRect;
+        
+    ButtonSignal signal;
 };
 
 #endif /* defined(__Controlease__Button__) */

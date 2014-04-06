@@ -131,7 +131,7 @@ Rectf Exp::getBounds()
     return canvasRect;
 }
 
-void Exp::mouseDown(cease::MouseEvent event)
+void Exp::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     isEditing = false;
@@ -159,28 +159,21 @@ void Exp::mouseDown(cease::MouseEvent event)
     compDragAnchor = event.getPos();
 }
 
-void Exp::mouseDrag(cease::MouseEvent event)
+void Exp::mouseDrag(const cease::MouseEvent& event)
 {
     canvasRect += event.getPos() - compDragAnchor;
     compDragAnchor = event.getPos();
     applyBorders();
 }
 
-void Exp::mouseUp( cease::MouseEvent event)
-{
-}
-
-void Exp::mouseWheel( cease::MouseEvent event ) {}
-void Exp::mouseMove( cease::MouseEvent event ) {}
-
-bool Exp::isDragPoint(cease::MouseEvent event)
+bool Exp::isDragPoint(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local);
 }
 
-bool Exp::isHotspot(cease::MouseEvent event)
+bool Exp::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     

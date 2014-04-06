@@ -40,7 +40,7 @@ void CanvasComponent::drawOutline()
     gl::popMatrices();
 }
 
-Node* CanvasComponent::getNodeBelow(cease::MouseEvent event)
+Node* CanvasComponent::getNodeBelow(const cease::MouseEvent& event)
 {
     for (int i=0; i<inputNodes.size(); i++)
     {
@@ -61,7 +61,7 @@ Node* CanvasComponent::getNodeBelow(cease::MouseEvent event)
     return NULL;
 }
 
-ConnectionResult CanvasComponent::getConnectionStart(cease::MouseEvent event)
+ConnectionResult CanvasComponent::getConnectionStart(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
@@ -88,7 +88,7 @@ ConnectionResult CanvasComponent::getConnectionStart(cease::MouseEvent event)
     return ConnectionResult();
 }
 
-ConnectionResult CanvasComponent::getConnectionEnd(cease::MouseEvent event)
+ConnectionResult CanvasComponent::getConnectionEnd(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
@@ -153,7 +153,7 @@ Node* CanvasComponent::getNodeWithID(int id)
     return NULL;
 }
 
-void CanvasComponent::translate(Vec2f offset)
+void CanvasComponent::translate(const Vec2f& offset)
 {
     canvasRect += offset;
 }
@@ -191,7 +191,7 @@ Vec2f CanvasComponent::getCanvasPos()
     return canvasRect.getUpperLeft();
 }
 
-bool CanvasComponent::contains(Vec2f canvasPoint)
+bool CanvasComponent::contains(const Vec2f& canvasPoint)
 {
     return canvasRect.contains(canvasPoint);
 }
@@ -260,12 +260,12 @@ XmlTree CanvasComponent::getXml()
     return cComp;
 }
 
-Vec2f CanvasComponent::toLocal(Vec2f p)
+Vec2f CanvasComponent::toLocal(const Vec2f& p)
 {
     return p-canvasRect.getUpperLeft();
 }
 
-Vec2f CanvasComponent::toCanvas(Vec2f p)
+Vec2f CanvasComponent::toCanvas(const Vec2f& p)
 {
     return canvasRect.getUpperLeft() + p;
 }

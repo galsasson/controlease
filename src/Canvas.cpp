@@ -401,6 +401,14 @@ void Canvas::disconnectNode(Node *node)
     }
 }
 
+void Canvas::reset()
+{
+    for (int i=0; i<components.size(); i++)
+    {
+        deleteComponent(components[i]);
+    }
+}
+
 void Canvas::drawGridFbo()
 {
     gridFbo.bindFramebuffer();

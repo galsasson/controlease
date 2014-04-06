@@ -47,13 +47,10 @@ public:
     void addressInputSet(void);
     void onReturn(void);
 
-	void mouseDown( cease::MouseEvent event );
-	void mouseUp( cease::MouseEvent event);
-	void mouseWheel( cease::MouseEvent event );
-	void mouseMove( cease::MouseEvent event );
-	void mouseDrag( cease::MouseEvent event );
-    bool isDragPoint(cease::MouseEvent event);
-    bool isHotspot(cease::MouseEvent event);
+    void mouseDown(const cease::MouseEvent& event);
+	void mouseDrag(const cease::MouseEvent& event);
+    bool isDragPoint(const cease::MouseEvent& event);
+    bool isHotspot(const cease::MouseEvent& event);
     KeyboardListener* getCurrentKeyboardListener();
     
     float getValue(int i);

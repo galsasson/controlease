@@ -142,7 +142,7 @@ void OscController::drawOutline()
     gl::popMatrices();
 }
 
-void OscController::mouseDown(cease::MouseEvent event)
+void OscController::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     isEditing = false;
@@ -157,20 +157,7 @@ void OscController::mouseDown(cease::MouseEvent event)
     prevMouse = event.getPos();
 }
 
-void OscController::mouseUp(cease::MouseEvent event)
-{
-}
-
-void OscController::mouseWheel(cease::MouseEvent event)
-{
-}
-
-void OscController::mouseMove(cease::MouseEvent event)
-{
-    
-}
-
-void OscController::mouseDrag(cease::MouseEvent event)
+void OscController::mouseDrag(const cease::MouseEvent& event)
 {
     canvasRect += event.getPos() - prevMouse;
     prevMouse = event.getPos();
@@ -178,13 +165,13 @@ void OscController::mouseDrag(cease::MouseEvent event)
     applyBorders();
 }
 
-bool OscController::isHotspot(cease::MouseEvent event)
+bool OscController::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     return titleRect.contains(local) || (!connected && textInputRect.contains(local));
 }
 
-bool OscController::isDragPoint(cease::MouseEvent event)
+bool OscController::isDragPoint(const cease::MouseEvent& event)
 {
     return titleRect.contains(toLocal(event.getPos()));
 }

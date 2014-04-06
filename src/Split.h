@@ -42,13 +42,10 @@ public:
     void translate(Vec2f offset);
     Rectf getBounds();
     
-    void mouseDown( cease::MouseEvent event );
-	void mouseUp( cease::MouseEvent event);
-	void mouseWheel( cease::MouseEvent event );
-	void mouseMove( cease::MouseEvent event );
-	void mouseDrag( cease::MouseEvent event );
-    bool isDragPoint( cease::MouseEvent event);
-    bool isHotspot( cease::MouseEvent event);
+    void mouseDown(const cease::MouseEvent& event);
+	void mouseDrag(const cease::MouseEvent& event);
+    bool isDragPoint(const cease::MouseEvent& event);
+    bool isHotspot(const cease::MouseEvent& event);
     
     float getValue(int i);
     void setValue(int i, float v);

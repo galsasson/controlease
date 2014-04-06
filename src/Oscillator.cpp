@@ -94,33 +94,26 @@ Rectf Oscillator::getBounds()
     return canvasRect;
 }
 
-void Oscillator::mouseDown(cease::MouseEvent event)
+void Oscillator::mouseDown(const cease::MouseEvent& event)
 {
     compDragAnchor = event.getPos();
 }
 
-void Oscillator::mouseDrag(cease::MouseEvent event)
+void Oscillator::mouseDrag(const cease::MouseEvent& event)
 {
     canvasRect += event.getPos() - compDragAnchor;
     compDragAnchor = event.getPos();
     applyBorders();
 }
 
-void Oscillator::mouseUp( cease::MouseEvent event)
-{
-}
-
-void Oscillator::mouseWheel( cease::MouseEvent event ) {}
-void Oscillator::mouseMove( cease::MouseEvent event ) {}
-
-bool Oscillator::isDragPoint(cease::MouseEvent event)
+bool Oscillator::isDragPoint(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local);
 }
 
-bool Oscillator::isHotspot(cease::MouseEvent event)
+bool Oscillator::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     

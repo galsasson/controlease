@@ -16,13 +16,18 @@
 using namespace ci;
 using namespace std;
 
-class MenuBar : MouseListener
+class MenuBar
 {
 public:
     MenuBar(Vec2f _pos, Vec2f _size);
     ~MenuBar();
     
     void draw();
+    
+    void mouseDown(const MouseEvent& event);
+    bool contains(const Vec2f& p);
+    
+    void onButtonClicked(boost::function<void(Button*)> func);
     
     void setSize(Vec2f size);
     

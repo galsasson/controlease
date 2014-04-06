@@ -37,3 +37,8 @@ bool Button::contains(Vec2f p)
 {
     return parentRect.contains(p);
 }
+
+void Button::click()
+{
+    signal(this);
+}

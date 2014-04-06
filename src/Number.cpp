@@ -78,7 +78,7 @@ void Number::draw()
     gl::popMatrices();
 }
 
-void Number::mouseDown(cease::MouseEvent event)
+void Number::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
@@ -94,7 +94,7 @@ void Number::mouseDown(cease::MouseEvent event)
     }
 }
 
-void Number::mouseDrag(cease::MouseEvent event)
+void Number::mouseDrag(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
@@ -122,7 +122,7 @@ void Number::mouseDrag(cease::MouseEvent event)
     }
 }
 
-void Number::mouseUp( cease::MouseEvent event)
+void Number::mouseUp(const cease::MouseEvent& event)
 {
     if (isValDrag) {
         isValDrag = false;
@@ -135,17 +135,14 @@ void Number::mouseUp( cease::MouseEvent event)
     }
 }
 
-void Number::mouseWheel( cease::MouseEvent event ) {}
-void Number::mouseMove( cease::MouseEvent event ) {}
-
-bool Number::isDragPoint(cease::MouseEvent event)
+bool Number::isDragPoint(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
     return valRect.contains(local) || titleRect.contains(local);
 }
 
-bool Number::isHotspot(cease::MouseEvent event)
+bool Number::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
