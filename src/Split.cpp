@@ -11,7 +11,7 @@
 Split::Split(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
     setType(ComponentType::COMPONENT_TYPE_SPLIT);
-    setSize(Vec2f(40, 50));
+    setSize(Vec2f(30, 50));
     setName("Split");
 
     immediateChange = false;

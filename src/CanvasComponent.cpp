@@ -11,7 +11,8 @@
 CanvasComponent::CanvasComponent(Canvas *c, Vec2f p)
 {
     canvas = c;
-    canvasRect = Rectf(p, Vec2f(0, 0));
+    originalSize = Vec2f(0, 0);
+    canvasRect = Rectf(p, originalSize);
     
     showInputPlus = false;
     showOutputPlus = false;
@@ -28,6 +29,8 @@ CanvasComponent::~CanvasComponent() {
 
 void CanvasComponent::setSize(Vec2f size)
 {
+    originalSize = size;
+    
     canvasRect.x2 = canvasRect.x1 + size.x;
     canvasRect.y2 = canvasRect.y1 + size.y;
     localRect = Rectf(Vec2f(0, 0), size);
@@ -225,7 +228,7 @@ void CanvasComponent::pack(float minX, float minY)
         neededHeight += 10;
     }
     
-    float neededWidth = max(nameSize.x, titleRect.getWidth());
+    float neededWidth = max(nameSize.x, originalSize.x);
     
     neededWidth = max(neededWidth, minX);
     neededHeight = max(neededHeight, minY);

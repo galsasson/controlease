@@ -11,7 +11,7 @@
 Exp::Exp(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
     setType(ComponentType::COMPONENT_TYPE_EXP);
-    setSize(Vec2f(250, 50));
+    setSize(Vec2f(150, 50));
     setName("Exp");
 
     isEditing = false;
@@ -33,9 +33,11 @@ void Exp::initNew()
     addNewInputNode();
     addNewOutputNode();
     
-    textEditRect = Rectf(22, 22, localRect.getWidth()-20, localRect.getHeight()-2);
-    codeInput = new TextInput(Vec2f(25, 25), Vec2f(localRect.getWidth()-40, 14), true);
+    textEditRect = Rectf(16, 22, localRect.getWidth()-20, localRect.getHeight()-2);
+    codeInput = new TextInput(Vec2f(16, 22), Vec2f(localRect.getWidth()-20, 14), true);
     codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
+    
+    resizeComponent();
 }
 
 void Exp::initFromXml(cinder::XmlTree xml)
@@ -60,8 +62,11 @@ void Exp::inputEnterPressed()
 
 void Exp::update()
 {
-    codeInput->update();
-    pack(codeInput->getTextSize().x, codeInput->getTextSize().y);
+    if (isEditing)
+    {
+        codeInput->update();
+        resizeComponent();
+    }
 
     // call 'update' function
     runCompiledScript();
@@ -131,13 +136,13 @@ void Exp::mouseDown(const cease::MouseEvent& event)
     if (outputPlusRect.contains(local)) {
         // add another output
         addNewOutputNode();
-        pack(codeInput->getTextSize().x, codeInput->getTextSize().y);
+        resizeComponent();
         return;
     }
     else if (inputPlusRect.contains(local)){
         // add another input
         addNewInputNode();
-        pack(codeInput->getTextSize().x, codeInput->getTextSize().y);
+        resizeComponent();
         return;
     }
     else if (textEditRect.contains(local)) {
@@ -179,6 +184,14 @@ KeyboardListener* Exp::getCurrentKeyboardListener()
     }
     
     return NULL;
+}
+
+void Exp::resizeComponent()
+{
+    pack(codeInput->getTextSize().x + 28, codeInput->getTextSize().y + 30);
+    textEditRect.x2 = textEditRect.x1 + max(codeInput->getTextSize().x, originalSize.x-25);
+    textEditRect.y2 = textEditRect.y1 + max(codeInput->getTextSize().y, localRect.getHeight() - titleRect.getHeight());
+    
 }
 
 float Exp::getValue(int i)

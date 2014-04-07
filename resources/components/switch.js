@@ -12,8 +12,8 @@ var inputs = 3;
 
 var setup = function()
 {
-    ceInit("Mux", inputs, 1);
-    ceSetGuiSize(50, 50);
+    ceInit("Switch", inputs, 1);
+    ceSetGuiSize(50, 25);
     
     selectedInput = 0;
     topLeft.x = -25;
@@ -27,8 +27,8 @@ var update = function()
 
 var draw = function()
 {
-    var y = -25 + selectedInput*9;
-    ceLine(-25, y, 25, -25);
+    var y = -11 + selectedInput*9;
+    ceLine(-25, y, 25, -11);
 }
 
 var mousedown = function(x, y)

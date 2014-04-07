@@ -41,7 +41,9 @@ public:
     
     void initNew();
     void initFromXml(XmlTree xml);
-    
+
+    void inputEnterPressed();
+
     void update();
     void draw();
     void drawOutline();
@@ -51,7 +53,8 @@ public:
     bool isDragPoint(const cease::MouseEvent& event);
     bool isHotspot(const cease::MouseEvent& event);
     KeyboardListener* getCurrentKeyboardListener();
-    void inputEnterPressed();
+    
+    void resizeComponent();
     
     float getValue(int i);
     void setValue(int i, float v);

@@ -37,15 +37,15 @@ public:
     void onReturn(boost::function<void(void)> func);
 
     int getNumLines();
-    string getValue() { return str; };
-    static std::string getLineUntil(std::string, int pos);
-    static int getLineStart(std::string text, int pos);
-    static int getLineIndex(std::string text, int pos);
+    std::string& getValue() { return str; };
+    static std::string getLineUntil(const std::string& text, int pos);
+    static int getLineStart(const std::string& text, int pos);
+    static int getLineIndex(const std::string& text, int pos);
     
     Vec2f getTextSize();
 
 private:
-    void setCursorLocation();
+    Vec2f getCursorLocation();
     void updateSize();
     
     Rectf canvasRect;
@@ -55,7 +55,6 @@ private:
     
     bool isMultiline;
     
-    int cursorLine;
     int cursorPos;
     Vec2f cursorLocation;
     float fontHeight;

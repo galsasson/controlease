@@ -51,6 +51,7 @@ void TextInput::drawInFocus()
 
     // draw blinking cursor
     if (blinkCounter > 10) {
+        gl::color(0, 0, 0);
         gl::drawLine(cursorLocation, cursorLocation + Vec2f(0, fontHeight));
     }
     
@@ -100,7 +101,7 @@ void TextInput::keyDown(cinder::app::KeyEvent event)
     Vec2f strSize = ResourceManager::getInstance().getTextureFont()->measureString(str);
     strRect = Rectf(0, 0, strSize.x, strSize.y);
 
-    setCursorLocation();
+    cursorLocation = getCursorLocation();
     updateSize();
 }
 
@@ -132,7 +133,7 @@ Vec2f TextInput::getTextSize()
     return localRect.getSize();
 }
 
-int TextInput::getLineStart(std::string text, int pos)
+int TextInput::getLineStart(const std::string& text, int pos)
 {
     if (pos==0) {
         return 0;
@@ -145,13 +146,13 @@ int TextInput::getLineStart(std::string text, int pos)
     return index+1;
 }
 
-std::string TextInput::getLineUntil(std::string text, int pos)
+std::string TextInput::getLineUntil(const std::string& text, int pos)
 {
     int start = getLineStart(text, pos);
     return text.substr(start, pos-start);
 }
 
-int TextInput::getLineIndex(std::string text, int pos)
+int TextInput::getLineIndex(const std::string& text, int pos)
 {
     int lines=0;
     for (int i=0; i<pos; i++)
@@ -163,16 +164,20 @@ int TextInput::getLineIndex(std::string text, int pos)
     return lines;
 }
 
-void TextInput::setCursorLocation()
+Vec2f TextInput::getCursorLocation()
 {
+    Vec2f loc(0, 0);
+    
     std::string line = getLineUntil(str, cursorPos);
     
-    cursorLocation.x = ResourceManager::getInstance().getTextureFont()->measureString(line).x;
-    cursorLocation.y = (float)getLineIndex(str, cursorPos)*fontHeight;
+    loc.x = ResourceManager::getInstance().getTextureFont()->measureString(line).x;
+    loc.y = (float)getLineIndex(str, cursorPos)*fontHeight;
     
-    if (cursorLocation.y < 0) {
-        cursorLocation.y = 0;
+    if (loc.y < 0) {
+        loc.y = 0;
     }
+    
+    return loc;
 }
 
 void TextInput::updateSize()

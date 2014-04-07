@@ -80,7 +80,7 @@ public:
 
     // set component size to match content
     // (number of inputs, outputs, plus sign, name)
-    virtual void pack(float minX, float minY);
+    virtual void pack(float minX = 0, float minY = 0);
     
     static std::string getComponentTypeString(ComponentType t);
     static std::string getJSComponentTypeString(std::string scriptFile);
@@ -92,6 +92,7 @@ protected:
     virtual Vec2f toCanvas(const Vec2f& p);
     
     Canvas *canvas;
+    Vec2f originalSize; // size as set in setSize
     Rectf canvasRect;   // component rect in canvas space
     Rectf localRect;    // component rect in local space
     Rectf titleRect;    // the title rect of the component
