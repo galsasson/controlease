@@ -37,10 +37,11 @@ void Number::initNew(Vec2f pos)
     updateVal(0);
 }
 
-void Number::initFromXml(cinder::XmlTree xml)
+void Number::initFromXml(const XmlTree& xml)
 {
     CanvasComponent::initFromXml(xml);
-
+    setName("Number");
+    
     nextVal = roundFloat(xml.getAttributeValue<float>("value"));
     updateVal(nextVal);
 }
@@ -112,7 +113,6 @@ void Number::mouseDrag(const cease::MouseEvent& event)
             float inc = (event.keyModifiers&MouseEvent::SHIFT_DOWN)?valInc*0.01:valInc;
             nextVal += (dragX - dragLastX) * inc;
             nextVal = roundFloat(nextVal);
-            cout<<"nextVal = " << nextVal << endl;
             dragLastX = dragX;
         }
     }
@@ -194,7 +194,6 @@ void Number::updateVal(float newVal)
 {
     // round to 4 decimal places
     val = newVal;
-    cout<<"val = " << val << endl;
     
     valStr = getValueString(val);
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);

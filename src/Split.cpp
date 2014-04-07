@@ -35,7 +35,7 @@ void Split::initNew(Vec2f pos)
     updateVal(0);
 }
 
-void Split::initFromXml(XmlTree xml)
+void Split::initFromXml(const XmlTree& xml)
 {
     
 }

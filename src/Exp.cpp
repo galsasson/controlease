@@ -41,7 +41,7 @@ void Exp::initNew(Vec2f pos)
     resizeComponent();
 }
 
-void Exp::initFromXml(cinder::XmlTree xml)
+void Exp::initFromXml(const XmlTree& xml)
 {
     
 }

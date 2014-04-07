@@ -39,7 +39,7 @@ void OscController::initNew(Vec2f pos)
     connected = false;
 }
 
-void OscController::initFromXml(cinder::XmlTree xml)
+void OscController::initFromXml(const XmlTree& xml)
 {
     
 }

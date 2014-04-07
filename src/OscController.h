@@ -41,7 +41,7 @@ public:
     ~OscController();
     
     void initNew(Vec2f pos);
-    void initFromXml(XmlTree xml);
+    void initFromXml(const XmlTree& xml);
     
     void addressInputSet(void);
     void setupConnection(int port);

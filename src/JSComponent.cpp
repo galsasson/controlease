@@ -40,7 +40,7 @@ void JSComponent::initNew(Vec2f pos, fs::path script)
     initComponent();
 }
 
-void JSComponent::initFromXml(cinder::XmlTree xml)
+void JSComponent::initFromXml(const XmlTree& xml)
 {
     
 }

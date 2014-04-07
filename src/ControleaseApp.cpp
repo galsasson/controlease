@@ -1,3 +1,6 @@
+#include "boost/filesystem.hpp"
+#include <iostream>
+
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 
@@ -40,6 +43,9 @@ private:
     MenuBar *menuBar;
     Canvas *canvas;
     ComponentBox *compbox;
+    
+    void saveCanvasToFile(fs::path file);
+    void loadCanvasFromFile(fs::path file);
 
     Vec2f getMenubarSize();
     Vec2f getCompboxSize();
@@ -160,7 +166,6 @@ void ControleaseApp::resize()
 
 void ControleaseApp::menuButtonClicked(Button* button)
 {
-    console() << button->text << " was clicked"<<endl;
     if (button->text == "New") {
         canvas->reset();
     }
@@ -171,21 +176,39 @@ void ControleaseApp::menuButtonClicked(Button* button)
             return;
         }
         
-        console() << "opening patch from: " << file.string() << endl;
+        loadCanvasFromFile(file);
     }
     else if (button->text == "Save") {
-        console() << "File:\n" << canvas->getXml() << endl;
-        
-        return;
-        
         fs::path file = getSaveFilePath();
         if (file.string().length() == 0) {
             // user cancelled
             return;
         }
         
-        console() << "saving file to: " << file.string() << endl;
+        saveCanvasToFile(file);
     }
+}
+
+void ControleaseApp::saveCanvasToFile(fs::path file)
+{
+    console() << "saving patch to: " << file.string() << endl;
+    
+    canvas->getXml().write(writeFile(file));
+}
+
+void ControleaseApp::loadCanvasFromFile(fs::path file)
+{
+    console() << "loading patch from: " << file.string() << endl;
+    
+    if (!exists(file)) {
+        console() << "error: cannot find '"<<file.string()<<"'"<<endl;
+        return;
+    }
+    
+    // get size of file
+    XmlTree xml(loadFile(file));
+    
+    canvas->initFromXml(xml.getChild("Canvas"));
 }
 
 Vec2f ControleaseApp::getMenubarSize()

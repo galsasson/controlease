@@ -35,7 +35,7 @@ public:
     virtual ~CanvasComponent();
     
     virtual void initNew(Vec2f p);
-    virtual void initFromXml(XmlTree xml);
+    virtual void initFromXml(const XmlTree& xml);
     
     void setType(ComponentType t) { type = t; }
     void setSize(Vec2f size);
@@ -94,6 +94,8 @@ protected:
     // component nodes
     InputNode* addNewInputNode();
     OutputNode* addNewOutputNode();
+    InputNode* addInputNodeFromXml(const XmlTree& xml);
+    OutputNode* addOutputNodeFromXml(const XmlTree& xml);
     Vec2f nextOutputPos;
     Vec2f nextInputPos;
     vector<InputNode*> inputNodes;

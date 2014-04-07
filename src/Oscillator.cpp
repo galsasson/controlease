@@ -35,7 +35,7 @@ void Oscillator::initNew(Vec2f pos)
     time = 0;
 }
 
-void Oscillator::initFromXml(cinder::XmlTree xml)
+void Oscillator::initFromXml(const XmlTree& xml)
 {
     
 }

@@ -42,7 +42,7 @@ public:
     ~JSComponent();
     
     void initNew(Vec2f pos, fs::path script);
-    void initFromXml(XmlTree xml);
+    void initFromXml(const XmlTree& xml);
     
     void initNodes(int nIns, int nOuts);
     void initGUI(Vec2f size);

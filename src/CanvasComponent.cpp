@@ -31,9 +31,32 @@ void CanvasComponent::initNew(Vec2f p)
     showOutputPlus = false;
 }
 
-void CanvasComponent::initFromXml(cinder::XmlTree xml)
+void CanvasComponent::initFromXml(const XmlTree& xml)
 {
+    Vec2f pos = Vec2f(xml.getAttributeValue<float>("position.x"), xml.getAttributeValue<float>("position.y"));
+    Vec2f size = Vec2f(xml.getAttributeValue<float>("size.x"), xml.getAttributeValue<float>("size.y"));
+    canvasRect = Rectf(pos, pos+size);
     
+    setSize(size);
+    
+    showInputPlus = xml.getAttributeValue<bool>("showInputPlus");
+    showOutputPlus = xml.getAttributeValue<bool>("showOutputPlus");
+    
+    // add inputs and outputs
+    XmlTree inputNodesTree = xml.getChild("InputNodes");
+    for(XmlTree::ConstIter iter = inputNodesTree.begin(); iter != inputNodesTree.end(); ++iter)
+    {
+        if (iter->getTag() == "Node") {
+            addInputNodeFromXml(iter->getChild(""));
+        }
+    }
+    XmlTree outputNodesTree = xml.getChild("OutputNodes");
+    for(XmlTree::ConstIter iter = outputNodesTree.begin(); iter != outputNodesTree.end(); ++iter)
+    {
+        if (iter->getTag() == "Node") {
+            addOutputNodeFromXml(iter->getChild(""));
+        }
+    }
 }
 
 
@@ -290,12 +313,14 @@ string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
 
 XmlTree CanvasComponent::getXml()
 {
-    console() << "CanvasComponent::getXml()"<<endl;
-    
     XmlTree cComp("CanvasComponent", "");
     cComp.setAttribute("type", ci::toString(type));
     cComp.setAttribute("position.x", canvasRect.x1);
     cComp.setAttribute("position.y", canvasRect.y1);
+    cComp.setAttribute("size.x", localRect.getWidth());
+    cComp.setAttribute("size.y", localRect.getHeight());
+    cComp.setAttribute("showInputPlus", showInputPlus);
+    cComp.setAttribute("showOutputPlus", showOutputPlus);
     
     XmlTree inodes("InputNodes", "");
     for (int i=0; i<inputNodes.size(); i++)
@@ -339,6 +364,28 @@ OutputNode* CanvasComponent::addNewOutputNode()
 {
     OutputNode* node = new OutputNode(this);
     node->initNew(outputNodes.size(), nextOutputPos);
+    outputNodes.push_back(node);
+    nextOutputPos.y += 9;
+    outputPlusRect += Vec2f(0, 9);
+    
+    return node;
+}
+
+InputNode* CanvasComponent::addInputNodeFromXml(const cinder::XmlTree &xml)
+{
+    InputNode* node = new InputNode(this);
+    node->initFromXml(xml);
+    inputNodes.push_back(node);
+    nextInputPos.y += 9;
+    inputPlusRect += Vec2f(0, 9);
+    
+    return node;
+}
+
+OutputNode* CanvasComponent::addOutputNodeFromXml(const cinder::XmlTree &xml)
+{
+    OutputNode* node = new OutputNode(this);
+    node->initFromXml(xml);
     outputNodes.push_back(node);
     nextOutputPos.y += 9;
     outputPlusRect += Vec2f(0, 9);

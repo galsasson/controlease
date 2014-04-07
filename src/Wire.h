@@ -40,6 +40,8 @@ public:
     void disconnectInput();
     void disconnectOutput();
     
+    XmlTree getXml();
+    
 private:
     Vec2f currentEnd;
     

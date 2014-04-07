@@ -30,7 +30,7 @@ void Node::initNew(int i, Vec2f p)
     lastVal = 0;
 }
 
-void Node::initFromXml(cinder::XmlTree xml)
+void Node::initFromXml(const cinder::XmlTree& xml)
 {
     id = xml.getAttributeValue<int>("globalID");
     index = xml.getAttributeValue<int>("index");

@@ -26,7 +26,7 @@ public:
     ~Node() {};
     
     void initNew(int i, Vec2f p);
-    void initFromXml(XmlTree xml);
+    void initFromXml(const XmlTree& xml);
     
     int id;
     Node *prev;

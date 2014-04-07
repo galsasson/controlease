@@ -25,18 +25,9 @@
 #include "CanvasComponent.h"
 #include "Node.h"
 #include "Wire.h"
-#include "ComponentButton.h"
+//#include "ComponentButton.h"
 #include "NodeInfoBox.h"
-
-
-// components
-#include "Program.h"
-#include "Number.h"
-#include "Split.h"
-#include "Oscillator.h"
-#include "Exp.h"
-#include "JSComponent.h"
-#include "OscController.h"
+#include "ComponentFactory.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -47,6 +38,7 @@ class Canvas : public MouseListener, public KeyboardListener
 public:
     Canvas();
     void setup(Vec2f _pos, Vec2f _size);
+    
     void update();
     void draw();    
     void addComponent(CanvasComponent *comp);
@@ -73,6 +65,7 @@ public:
     void setSize(Vec2f newSize);
     
     vector<InputNode*> getInputNodesAtArea(Vec2f center, float rad);
+    void makeConnection(int outputID, int inputID);
     void makeConnection(OutputNode *onode, int inputID);
     void makeConnection(OutputNode *onode, InputNode *inode);
     void disconnectNode(Node *node);
@@ -82,6 +75,7 @@ public:
     
     // save / load stuff
     XmlTree getXml();
+    void initFromXml(const XmlTree& xml);
     
     Vec2f pos;
     Vec2f size;
@@ -98,6 +92,7 @@ private:
     Wire* popWireWithNode(Node *node);
     void deleteComponent(CanvasComponent *comp);
     CanvasComponent* getComponentUnder(Vec2f p);
+    Node* getNodeWithID(int id);
     
     vector<CanvasComponent*> components;
     

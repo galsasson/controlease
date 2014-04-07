@@ -43,7 +43,7 @@ void Program::initNew(Vec2f pos)
     isEditing = false;    
 }
 
-void Program::initFromXml(cinder::XmlTree xml)
+void Program::initFromXml(const XmlTree& xml)
 {
     
 }

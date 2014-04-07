@@ -181,19 +181,6 @@ void Canvas::keyUp(cinder::app::KeyEvent event)
     }
 }
 
-CanvasComponent* Canvas::getComponentUnder(Vec2f p)
-{
-    for (int i=0; i<components.size(); i++)
-    {
-        if (components[i]->contains(p))
-        {
-            return components[i];
-        }
-    }
-    
-    return NULL;
-}
-
 void Canvas::appMouseDown(MouseEvent event)
 {
     cease::MouseEvent cevent(getLocalCoords(event.getPos()), event.getWheelIncrement(), event.getNativeModifiers());
@@ -359,21 +346,25 @@ vector<InputNode*> Canvas::getInputNodesAtArea(Vec2f center, float rad)
     return nodes;
 }
 
+void Canvas::makeConnection(int outputID, int inputID)
+{
+    // find output node
+    Node *onode = getNodeWithID(outputID);
+    Node *inode = getNodeWithID(inputID);
+
+    if (onode != NULL && inode != NULL)
+    {
+        makeConnection((OutputNode*)onode, (InputNode*)inode);
+    }
+}
+
 void Canvas::makeConnection(OutputNode *onode, int inputID)
 {
     if (onode->isConnected()) {
         return;
     }
     
-    Node* inode = NULL;
-    for (int i=0; i<components.size(); i++)
-    {
-        inode = components[i]->getNodeWithID(inputID);
-        if (inode != NULL) {
-            break;
-        }
-    }
-    
+    Node* inode = getNodeWithID(inputID);
     if (inode == NULL) {
         return;
     }
@@ -414,16 +405,61 @@ XmlTree Canvas::getXml()
     XmlTree canvasTree("Canvas", "");
     
     // add components xmls
+    XmlTree canvasComps("Components", "");
     for (int i=0; i<components.size(); i++)
     {
-        canvasTree.push_back(components[i]->getXml());
+        canvasComps.push_back(components[i]->getXml());
     }
+    canvasTree.push_back(canvasComps);
     
     // add wires xmls
-    
+    XmlTree wiresXml("Wires", "");
+    for (int i=0; i<wires.size(); i++)
+    {
+        wiresXml.push_back(wires[i]->getXml());
+    }
+    canvasTree.push_back(wiresXml);
     
     return canvasTree;
 }
+
+void Canvas::initFromXml(const XmlTree& xml)
+{
+    // first, clear the canvas
+    reset();
+    
+    // create components
+    XmlTree componentsNode = xml.getChild("Components");
+    for(XmlTree::ConstIter iter = componentsNode.begin(); iter != componentsNode.end(); ++iter)
+    {
+        if (iter->getTag() != "CanvasComponent")
+        {
+            console() << "error: unexpected tag: " << iter->getTag() << endl;
+            continue;
+        }
+
+        XmlTree compXml = iter->getChild("");
+        CanvasComponent *newComp = ComponentFactory::newComponent(this, compXml);
+        if (newComp != NULL) {
+            components.push_back(newComp);
+        }
+    }
+    
+    // connect wires
+    XmlTree wiresNode = xml.getChild("Wires");
+    for(XmlTree::ConstIter iter = wiresNode.begin(); iter != wiresNode.end(); ++iter)
+    {
+        if (iter->getTag() != "Wire") {
+            console() << "error: unexpected tag: " << iter->getTag() << endl;
+            continue;
+        }
+        
+        XmlTree wireXml = iter->getChild("");
+        makeConnection(wireXml.getAttributeValue<int>("outputID"), wireXml.getAttributeValue<int>("inputID"));
+    }
+}
+
+
 
 void Canvas::drawGridFbo()
 {
@@ -580,5 +616,31 @@ void Canvas::deleteComponent(CanvasComponent *comp)
             comp = NULL;
         }
     }
+}
+
+CanvasComponent* Canvas::getComponentUnder(Vec2f p)
+{
+    for (int i=0; i<components.size(); i++)
+    {
+        if (components[i]->contains(p))
+        {
+            return components[i];
+        }
+    }
+    
+    return NULL;
+}
+
+Node* Canvas::getNodeWithID(int id)
+{
+    for (int i=0; i<components.size(); i++)
+    {
+        Node* node = components[i]->getNodeWithID(id);
+        if (node != NULL) {
+            return node;
+        }
+    }
+    
+    return NULL;
 }
 

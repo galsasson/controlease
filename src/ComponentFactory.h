@@ -11,6 +11,8 @@
 
 #include <iostream>
 #include "cinder/app/App.h"
+
+#include "Controlease.h"
 #include "CanvasComponent.h"
 #include "ComponentButton.h"
 #include "Program.h"
@@ -29,6 +31,7 @@ class ComponentFactory
 {
 public:
     static CanvasComponent* newComponent(ComponentButton* button, Canvas* canvas, Vec2f p);
+    static CanvasComponent* newComponent(Canvas *canvas, const XmlTree& xml);
 };
 
 #endif /* defined(__Controlease__ComponentFactory__) */

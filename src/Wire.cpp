@@ -108,3 +108,16 @@ void Wire::disconnectOutput()
     onode = NULL;
 }
 
+XmlTree Wire::getXml()
+{
+    XmlTree xml("Wire", "");
+    
+    if (inode && onode)
+    {
+        xml.setAttribute("inputID", inode->id);
+        xml.setAttribute("outputID", onode->id);
+    }
+    
+    return xml;
+}
+
