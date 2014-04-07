@@ -33,10 +33,10 @@ using namespace std;
 class Oscillator : public CanvasComponent
 {
 public:
-    Oscillator(Canvas *c, Vec2f pos);
+    Oscillator(Canvas *c);
     ~Oscillator();
     
-    void initNew();
+    void initNew(Vec2f pos);
     void initFromXml(XmlTree xml);
     
     void update();

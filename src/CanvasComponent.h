@@ -14,6 +14,7 @@
 #include "cinder/app/App.h"
 #include "cinder/Xml.h"
 
+#include "Controlease.h"
 #include "KeyboardListener.h"
 #include "MouseListener.h"
 #include "ConnectionResult.h"
@@ -27,24 +28,14 @@ class Node;
 using namespace ci;
 using namespace std;
 
-typedef enum _ComponentType {
-    COMPONENT_TYPE_PROGRAM,
-    COMPONENT_TYPE_NUMBER,
-    COMPONENT_TYPE_SPLIT,
-    COMPONENT_TYPE_OSCILLATOR,
-    COMPONENT_TYPE_EXP,
-    COMPONENT_TYPE_JS,
-    COMPONENT_TYPE_OSCCONTROLLER,
-} ComponentType;
-
 class CanvasComponent : public MouseListener
 {
 public:
-    CanvasComponent(Canvas *c, Vec2f p);
+    CanvasComponent(Canvas *c);
     virtual ~CanvasComponent();
     
-    virtual void initNew() = 0;
-    virtual void initFromXml(XmlTree xml) = 0;
+    virtual void initNew(Vec2f p);
+    virtual void initFromXml(XmlTree xml);
     
     void setType(ComponentType t) { type = t; }
     void setSize(Vec2f size);
@@ -85,7 +76,7 @@ public:
     static std::string getComponentTypeString(ComponentType t);
     static std::string getJSComponentTypeString(std::string scriptFile);
 
-    XmlTree getXml();
+    virtual XmlTree getXml();
     
 protected:
     virtual Vec2f toLocal(const Vec2f& p);

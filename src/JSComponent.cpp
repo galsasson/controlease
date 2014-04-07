@@ -9,13 +9,9 @@
 #include "JSComponent.h"
 #include "Canvas.h"
 
-JSComponent::JSComponent(Canvas *c, Vec2f pos, fs::path script) : CanvasComponent(c, pos)
+JSComponent::JSComponent(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_JS);
-    setSize(Vec2f(10, 0));
-    setName(script.filename().replace_extension("").string());
-    jsScript = script;
-    
+    type = ComponentType::COMPONENT_TYPE_JS;
     isDragging = false;
 }
 
@@ -29,8 +25,13 @@ JSComponent::~JSComponent()
     pContext.Reset();
 }
 
-void JSComponent::initNew()
+void JSComponent::initNew(Vec2f pos, fs::path script)
 {
+    CanvasComponent::initNew(pos);
+    setSize(Vec2f(10, 0));
+    setName(script.filename().replace_extension("").string());
+    jsScript = script;
+
     originRect = canvasRect;
     jsRect = Rectf(10, 26, 0, 0);
     jsColor = Color(0, 0, 0);

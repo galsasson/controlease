@@ -9,7 +9,7 @@
 #include "OutputNode.h"
 #include "CanvasComponent.h"
 
-OutputNode::OutputNode(int i, CanvasComponent *comp, Vec2f p) : Node(i, comp, p)
+OutputNode::OutputNode(CanvasComponent *comp) : Node(comp)
 {
     setName("Output");    
     bDisplayName = false;

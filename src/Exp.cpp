@@ -8,12 +8,9 @@
 
 #include "Exp.h"
 
-Exp::Exp(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
+Exp::Exp(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_EXP);
-    setSize(Vec2f(150, 50));
-    setName("Exp");
-
+    type = ComponentType::COMPONENT_TYPE_EXP;
     isEditing = false;
     showOutputPlus = true;
     showInputPlus = true;
@@ -27,8 +24,12 @@ Exp::~Exp()
     pContext.Reset();
 }
 
-void Exp::initNew()
+void Exp::initNew(Vec2f pos)
 {
+    CanvasComponent::initNew(pos);
+    setSize(Vec2f(150, 50));
+    setName("Exp");
+    
     ivals.push_back(0);
     addNewInputNode();
     addNewOutputNode();

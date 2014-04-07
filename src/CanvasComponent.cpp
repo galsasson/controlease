@@ -8,14 +8,9 @@
 
 #include "CanvasComponent.h"
 
-CanvasComponent::CanvasComponent(Canvas *c, Vec2f p)
+CanvasComponent::CanvasComponent(Canvas *c)
 {
     canvas = c;
-    originalSize = Vec2f(0, 0);
-    canvasRect = Rectf(p, originalSize);
-    
-    showInputPlus = false;
-    showOutputPlus = false;
 }
 
 CanvasComponent::~CanvasComponent() {
@@ -26,6 +21,21 @@ CanvasComponent::~CanvasComponent() {
         delete outputNodes[i];
     }
 }
+
+void CanvasComponent::initNew(Vec2f p)
+{
+    originalSize = Vec2f(0, 0);
+    canvasRect = Rectf(p, p+originalSize);
+    
+    showInputPlus = false;
+    showOutputPlus = false;
+}
+
+void CanvasComponent::initFromXml(cinder::XmlTree xml)
+{
+    
+}
+
 
 void CanvasComponent::setSize(Vec2f size)
 {
@@ -280,12 +290,12 @@ string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
 
 XmlTree CanvasComponent::getXml()
 {
+    console() << "CanvasComponent::getXml()"<<endl;
+    
     XmlTree cComp("CanvasComponent", "");
     cComp.setAttribute("type", ci::toString(type));
-    cComp.setAttribute("name", name);
-    cComp.setAttribute("nameSize", nameSize);
-    cComp.setAttribute("canvasRectUL", canvasRect.getUpperLeft());
-    cComp.setAttribute("canvasRectLR", canvasRect.getLowerRight());
+    cComp.setAttribute("position.x", canvasRect.x1);
+    cComp.setAttribute("position.y", canvasRect.y1);
     
     XmlTree inodes("InputNodes", "");
     for (int i=0; i<inputNodes.size(); i++)
@@ -316,7 +326,8 @@ Vec2f CanvasComponent::toCanvas(const Vec2f& p)
 
 InputNode* CanvasComponent::addNewInputNode()
 {
-    InputNode* node = new InputNode(inputNodes.size(), this, nextInputPos);
+    InputNode* node = new InputNode(this);
+    node->initNew(inputNodes.size(), nextInputPos);
     inputNodes.push_back(node);
     nextInputPos.y += 9;
     inputPlusRect += Vec2f(0, 9);
@@ -326,7 +337,8 @@ InputNode* CanvasComponent::addNewInputNode()
 
 OutputNode* CanvasComponent::addNewOutputNode()
 {
-    OutputNode* node = new OutputNode(outputNodes.size(), this, nextOutputPos);
+    OutputNode* node = new OutputNode(this);
+    node->initNew(outputNodes.size(), nextOutputPos);
     outputNodes.push_back(node);
     nextOutputPos.y += 9;
     outputPlusRect += Vec2f(0, 9);

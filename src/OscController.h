@@ -37,10 +37,10 @@ using namespace std;
 class OscController : public CanvasComponent
 {
 public:
-    OscController(Canvas *c, Vec2f pos);
+    OscController(Canvas *c);
     ~OscController();
     
-    void initNew();
+    void initNew(Vec2f pos);
     void initFromXml(XmlTree xml);
     
     void addressInputSet(void);

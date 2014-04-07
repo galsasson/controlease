@@ -36,10 +36,10 @@ using namespace v8;
 class Exp : public CanvasComponent
 {
 public:
-    Exp(Canvas *c, Vec2f pos);
+    Exp(Canvas *c);
     ~Exp();
     
-    void initNew();
+    void initNew(Vec2f pos);
     void initFromXml(XmlTree xml);
 
     void inputEnterPressed();

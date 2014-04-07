@@ -22,7 +22,7 @@ class CanvasComponent;
 class OutputNode : public Node
 {
 public:
-    OutputNode(int i, CanvasComponent *comp, Vec2f p);
+    OutputNode(CanvasComponent *comp);
     ~OutputNode();
     
     void draw();

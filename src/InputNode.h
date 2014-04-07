@@ -23,7 +23,7 @@ class CanvasComponent;
 class InputNode : public Node
 {
 public:
-    InputNode(int i, CanvasComponent *val, Vec2f p);
+    InputNode(CanvasComponent *val);
     ~InputNode();
     
     void draw();

@@ -10,12 +10,9 @@
 
 #define TWO_PI_DIV_1000 M_PI/500
 
-Oscillator::Oscillator(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
+Oscillator::Oscillator(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_OSCILLATOR);
-    setSize(Vec2f(100, 40));
-    setName("Oscillator");
-
+    type = ComponentType::COMPONENT_TYPE_OSCILLATOR;
     immediateChange = false;
 }
 
@@ -23,8 +20,12 @@ Oscillator::~Oscillator()
 {
 }
 
-void Oscillator::initNew()
+void Oscillator::initNew(Vec2f pos)
 {
+    CanvasComponent::initNew(pos);
+    setSize(Vec2f(100, 40));
+    setName("Oscillator");
+    
     addNewInputNode();
     inputNodes[0]->setName("Frequency");
     addNewOutputNode();

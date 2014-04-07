@@ -32,10 +32,10 @@ using namespace std;
 class Number : public CanvasComponent
 {
 public:
-    Number(Canvas *c, Vec2f pos);
+    Number(Canvas *c);
     ~Number();
     
-    void initNew();
+    void initNew(Vec2f pos);
     void initFromXml(XmlTree xml);
     
     void update();
@@ -52,6 +52,8 @@ public:
     void outputConnected(int i);
     void outputDisconnected(int i);
     
+    XmlTree getXml();
+    
 private:
     void updateVal(float newVal);
     
@@ -67,7 +69,6 @@ private:
     float dragLastX;
     float dragX;
     bool isValDrag;
-    float startVal;
 
     float nextVal;
     float val;

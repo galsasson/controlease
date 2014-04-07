@@ -8,11 +8,9 @@
 
 #include "Program.h"
 
-Program::Program(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
+Program::Program(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_PROGRAM);
-    setSize(Vec2f(200, 40));
-    setName("Program");
+    type = ComponentType::COMPONENT_TYPE_PROGRAM;
 }
 
 Program::~Program()
@@ -30,8 +28,12 @@ Program::~Program()
     delete addressInput;
 }
 
-void Program::initNew()
+void Program::initNew(Vec2f pos)
 {
+    CanvasComponent::initNew(pos);
+    setSize(Vec2f(200, 40));
+    setName("Program");
+
     textInputRect = Rectf(7, 22, 200, 36);
     addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
     addressInput->onReturn(boost::bind(&Program::addressInputSet, this));

@@ -36,10 +36,10 @@ using namespace std;
 class Program : public CanvasComponent
 {
 public:
-    Program(Canvas *c, Vec2f _pos);
+    Program(Canvas *c);
     ~Program();
     
-    void initNew();
+    void initNew(Vec2f pos);
     void initFromXml(XmlTree xml);
     
     void setupConnection(string host, int oport);

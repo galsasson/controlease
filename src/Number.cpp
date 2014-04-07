@@ -8,11 +8,9 @@
 
 #include "Number.h"
 
-Number::Number(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
+Number::Number(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_NUMBER);
-    setSize(Vec2f(100, 40));
-    setName("Number");
+    type = ComponentType::COMPONENT_TYPE_NUMBER;
     
     immediateChange = false;
     valInc = 1;
@@ -25,19 +23,26 @@ Number::~Number()
 {
 }
 
-void Number::initNew()
+void Number::initNew(Vec2f pos)
 {
+    CanvasComponent::initNew(pos);
+    
+    setSize(Vec2f(100, 40));
+    setName("Number");
+    
     addNewInputNode();
     addNewOutputNode();
 
-    startVal = 0;
     nextVal = 0;
     updateVal(0);
 }
 
 void Number::initFromXml(cinder::XmlTree xml)
 {
-    
+    CanvasComponent::initFromXml(xml);
+
+    nextVal = roundFloat(xml.getAttributeValue<float>("value"));
+    updateVal(nextVal);
 }
 
 void Number::update()
@@ -106,6 +111,8 @@ void Number::mouseDrag(const cease::MouseEvent& event)
         else {
             float inc = (event.keyModifiers&MouseEvent::SHIFT_DOWN)?valInc*0.01:valInc;
             nextVal += (dragX - dragLastX) * inc;
+            nextVal = roundFloat(nextVal);
+            cout<<"nextVal = " << nextVal << endl;
             dragLastX = dragX;
         }
     }
@@ -174,10 +181,20 @@ void Number::outputDisconnected(int i)
     setName("Number");
 }
 
+XmlTree Number::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+    
+    xml.setAttribute("value", roundFloat(val));
+    
+    return xml;
+}
+
 void Number::updateVal(float newVal)
 {
     // round to 4 decimal places
-    val = floorf(newVal*10000 + 0.5) / 10000;
+    val = newVal;
+    cout<<"val = " << val << endl;
     
     valStr = getValueString(val);
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);

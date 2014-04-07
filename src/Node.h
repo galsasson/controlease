@@ -22,8 +22,11 @@ class CanvasComponent;
 class Node
 {
 public:
-    Node(int i, CanvasComponent *comp, Vec2f p);
+    Node(CanvasComponent *comp);
     ~Node() {};
+    
+    void initNew(int i, Vec2f p);
+    void initFromXml(XmlTree xml);
     
     int id;
     Node *prev;

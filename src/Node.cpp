@@ -10,19 +10,33 @@
 
 static int globalNodeID = 0;
 
-Node::Node(int i, CanvasComponent *comp, Vec2f p)
+Node::Node(CanvasComponent *comp)
 {
-    id = globalNodeID++;
-
-    index = i;
     component = comp;
-    pos = p;
     
     bDrawActive = false;
     
     next = NULL;
     prev = NULL;
+}
+
+void Node::initNew(int i, Vec2f p)
+{
+    id = globalNodeID++;
+
+    index = i;
+    pos = p;
+    
     lastVal = 0;
+}
+
+void Node::initFromXml(cinder::XmlTree xml)
+{
+    id = xml.getAttributeValue<int>("globalID");
+    index = xml.getAttributeValue<int>("index");
+    pos = Vec2f(xml.getAttributeValue<float>("pos.x"), xml.getAttributeValue<float>("pos.y"));
+    setName(xml.getAttributeValue<std::string>("name"));
+    lastVal = xml.getAttributeValue<float>("lastVal");
 }
 
 bool Node::contains(Vec2f p)
@@ -44,7 +58,8 @@ XmlTree Node::getXml()
     nodeXml.setAttribute("globalID", id);
     nodeXml.setAttribute("index", index);
     nodeXml.setAttribute("lastVal", lastVal);
-    nodeXml.setAttribute("pos", pos);
+    nodeXml.setAttribute("pos.x", pos.x);
+    nodeXml.setAttribute("pos.y", pos.y);
     nodeXml.setAttribute("name", name);
     
     return nodeXml;

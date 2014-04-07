@@ -10,11 +10,9 @@
 
 void printMessage(osc::Message message);
 
-OscController::OscController(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
+OscController::OscController(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_OSCCONTROLLER);
-    setSize(Vec2f(100, 40));
-    setName("OscController");
+    type = ComponentType::COMPONENT_TYPE_OSCCONTROLLER;
 }
 
 OscController::~OscController()
@@ -27,8 +25,11 @@ OscController::~OscController()
     delete addressInput;
 }
 
-void OscController::initNew()
+void OscController::initNew(Vec2f pos)
 {
+    CanvasComponent::initNew(pos);
+    setSize(Vec2f(100, 40));
+    setName("OscController");
     
     textInputRect = Rectf(7, 22, 100, 36);
     addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));

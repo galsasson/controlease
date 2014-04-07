@@ -38,10 +38,10 @@ using namespace v8;
 class JSComponent : public CanvasComponent
 {
 public:
-    JSComponent(Canvas *c, Vec2f pos, fs::path script);
+    JSComponent(Canvas *c);
     ~JSComponent();
     
-    void initNew();
+    void initNew(Vec2f pos, fs::path script);
     void initFromXml(XmlTree xml);
     
     void initNodes(int nIns, int nOuts);

@@ -9,9 +9,9 @@
 #include "InputNode.h"
 #include "CanvasComponent.h"
 
-InputNode::InputNode(int i, CanvasComponent *comp, Vec2f p) : Node(i, comp, p)
+InputNode::InputNode(CanvasComponent *comp) : Node(comp)
 {
-    setName("Input");    
+    setName("Input");
 }
 
 InputNode::~InputNode()

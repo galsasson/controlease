@@ -32,10 +32,10 @@ using namespace std;
 class Split : public CanvasComponent
 {
 public:
-    Split(Canvas *c, Vec2f pos);
+    Split(Canvas *c);
     ~Split();
     
-    void initNew();
+    void initNew(Vec2f pos);
     void initFromXml(XmlTree xml);
     
     void update();

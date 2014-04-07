@@ -183,8 +183,9 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				2ABE5C9918F107B8002DCD65 /* Nodes */,
 				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
+				2A798DC318B85D6100421573 /* Controlease.h */,
+				2ABE5C9918F107B8002DCD65 /* Nodes */,
 				2ABE5C9518EFB550002DCD65 /* Menu */,
 				2ABE5C8F18EF23C1002DCD65 /* ComponentFactory.cpp */,
 				2ABE5C9018EF23C1002DCD65 /* ComponentFactory.h */,
@@ -192,7 +193,6 @@
 				2AAB76C618CF75D6007833C4 /* ComponentButton.h */,
 				2AAB76C118CF73EB007833C4 /* ComponentBox.cpp */,
 				2AAB76C218CF73EB007833C4 /* ComponentBox.h */,
-				2A798DC318B85D6100421573 /* Controlease.h */,
 				2AF1CC5118C1365C000A49BB /* GUI elements */,
 				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
 				2A20D07B18BF081E005C206F /* ProgramOutput.h */,

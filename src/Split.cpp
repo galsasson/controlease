@@ -8,12 +8,9 @@
 
 #include "Split.h"
 
-Split::Split(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
+Split::Split(Canvas *c) : CanvasComponent(c)
 {
-    setType(ComponentType::COMPONENT_TYPE_SPLIT);
-    setSize(Vec2f(30, 50));
-    setName("Split");
-
+    type = ComponentType::COMPONENT_TYPE_SPLIT;
     immediateChange = false;
     showOutputPlus = true;
 }
@@ -22,8 +19,12 @@ Split::~Split()
 {
 }
 
-void Split::initNew()
+void Split::initNew(Vec2f pos)
 {
+    CanvasComponent::initNew(pos);
+    setSize(Vec2f(30, 50));
+    setName("Split");
+    
     // add one input and two outputs to begin with
     addNewInputNode();
     addNewOutputNode();

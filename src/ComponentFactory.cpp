@@ -18,30 +18,33 @@ CanvasComponent* ComponentFactory::newComponent(ComponentButton* button, Canvas*
     
     switch (button->type) {
         case COMPONENT_TYPE_PROGRAM:
-            comp = new Program(canvas, p + Vec2f(30, 30));
+            comp = new Program(canvas);
             break;
         case COMPONENT_TYPE_NUMBER:
-            comp = new ::Number(canvas, p + Vec2f(30, 30));
+            comp = new ::Number(canvas);
             break;
         case COMPONENT_TYPE_SPLIT:
-            comp = new Split(canvas, p + Vec2f(30, 30));
+            comp = new Split(canvas);
             break;
         case COMPONENT_TYPE_OSCILLATOR:
-            comp = new Oscillator(canvas, p + Vec2f(30, 30));
+            comp = new Oscillator(canvas);
             break;
         case COMPONENT_TYPE_EXP:
-            comp = new Exp(canvas, p + Vec2f(30, 30));
+            comp = new Exp(canvas);
             break;
         case COMPONENT_TYPE_JS:
-            comp = new JSComponent(canvas, p + Vec2f(30, 30), button->source);
-            break;
+        {
+            JSComponent *jsComp = new JSComponent(canvas);
+            jsComp->initNew(p + Vec2f(30, 30), button->source);
+            return jsComp;
+        }
         case COMPONENT_TYPE_OSCCONTROLLER:
-            comp = new OscController(canvas, p + Vec2f(30, 30));
+            comp = new OscController(canvas);
             break;
         default:
             return NULL;
     }
     
-    comp->initNew();
+    comp->initNew(p + Vec2f(30, 30));
     return comp;
 }
