@@ -16,7 +16,7 @@ Number::Number(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
     
     immediateChange = false;
     valInc = 1;
-    dragStartX = dragX = 0;
+    dragLastX = dragX = 0;
     isValDrag = false;
     isCompDrag = false;
 }
@@ -85,8 +85,7 @@ void Number::mouseDown(const cease::MouseEvent& event)
     
     if (valRect.contains(local)) {
         isValDrag = true;
-        dragStartX = local.x;
-        startVal = val;
+        dragLastX = local.x;
     }
     else {
         isCompDrag = true;
@@ -99,20 +98,15 @@ void Number::mouseDrag(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
-    console() << "mouse drag "<<event.getPos().x<<endl;
-    if (event.keyModifiers&MouseEvent::SHIFT_DOWN)
-    {
-        console() << "number mouse drag shift down"<<endl;
-    }
-    
     if (isValDrag) {
         dragX = local.x;
         if (immediateChange) {
-            updateVal(startVal + (dragX - dragStartX) * valInc);
+            updateVal(nextVal + (dragX - dragLastX) * valInc);
         }
         else {
-            float inc = (event.keyModifiers&MouseEvent::SHIFT_DOWN)?valInc*50:valInc;
-            nextVal = startVal + (dragX - dragStartX) * inc;
+            float inc = (event.keyModifiers&MouseEvent::SHIFT_DOWN)?valInc*0.01:valInc;
+            nextVal += (dragX - dragLastX) * inc;
+            dragLastX = dragX;
         }
     }
 
@@ -128,7 +122,7 @@ void Number::mouseUp(const cease::MouseEvent& event)
     if (isValDrag) {
         isValDrag = false;
         dragX = 0;
-        dragStartX = 0;
+        dragLastX = 0;
     }
     
     if (isCompDrag) {
@@ -182,7 +176,7 @@ void Number::outputDisconnected(int i)
 
 void Number::updateVal(float newVal)
 {
-    val = newVal;
+    val = floorf(newVal*10000) / 10000;
     valStr = getValueString(val);
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
     valRect = Rectf(localRect.getWidth()/2 - valStrSize.x/2, localRect.getHeight()/2+3, localRect.getWidth()/2 + valStrSize.x/2, localRect.getHeight()-2);

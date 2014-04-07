@@ -64,7 +64,7 @@ private:
     Vec2f compDragAnchor;
     
     // value dragging
-    float dragStartX;
+    float dragLastX;
     float dragX;
     bool isValDrag;
     float startVal;
