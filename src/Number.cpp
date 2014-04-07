@@ -176,7 +176,9 @@ void Number::outputDisconnected(int i)
 
 void Number::updateVal(float newVal)
 {
-    val = floorf(newVal*10000) / 10000;
+    // round to 4 decimal places
+    val = floorf(newVal*10000 + 0.5) / 10000;
+    
     valStr = getValueString(val);
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
     valRect = Rectf(localRect.getWidth()/2 - valStrSize.x/2, localRect.getHeight()/2+3, localRect.getWidth()/2 + valStrSize.x/2, localRect.getHeight()-2);
