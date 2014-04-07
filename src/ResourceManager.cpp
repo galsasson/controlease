@@ -15,6 +15,8 @@ void ResourceManager::initResources()
     mFont = Font(loadAsset("Blender-BOLD.ttf"), 14);
     mTextureFont = gl::TextureFont::create(mFont);
     
+    mPlusTexture = loadImage(getAssetPath("plus.png"));
+    
     colors.push_back(Color::hex(0x334d5c));
     colors.push_back(Color::hex(0x45b29d));
     colors.push_back(Color::hex(0xbbaa00));
@@ -25,6 +27,11 @@ void ResourceManager::initResources()
 gl::TextureFontRef ResourceManager::getTextureFont()
 {
     return mTextureFont;
+}
+
+gl::Texture& ResourceManager::getPlusTexture()
+{
+    return mPlusTexture;
 }
 
 Colorf ResourceManager::getColor(int index)

@@ -32,16 +32,15 @@ using namespace std;
 class Split : public CanvasComponent
 {
 public:
-    Split(Canvas *c, Vec2f p);
+    Split(Canvas *c, Vec2f pos);
     ~Split();
     
-    void initInterface(Vec2f size);
+    void initNew();
+    void initFromXml(XmlTree xml);
+    
     void update();
     void draw();
 
-    void translate(Vec2f offset);
-    Rectf getBounds();
-    
     void mouseDown(const cease::MouseEvent& event);
 	void mouseDrag(const cease::MouseEvent& event);
     bool isDragPoint(const cease::MouseEvent& event);
@@ -55,22 +54,11 @@ private:
     
     bool immediateChange;
     
-    Rectf rect;
-    Rectf titleRect;
-    Rectf plusRect;
-    Rectf dragRect;
-    
     // component dragging
     Vec2f compDragAnchor;
     
-    Vec2f nextOutputPos;
-    
     float nextVal;
     float val;
-    
-    
-    
-    
 };
 
 #endif /* defined(__Controlease__Split__) */

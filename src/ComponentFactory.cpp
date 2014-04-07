@@ -14,22 +14,34 @@ CanvasComponent* ComponentFactory::newComponent(ComponentButton* button, Canvas*
         return NULL;
     }
     
+    CanvasComponent* comp = NULL;
+    
     switch (button->type) {
         case COMPONENT_TYPE_PROGRAM:
-            return new Program(canvas, p + Vec2f(30, 30));
+            comp = new Program(canvas, p + Vec2f(30, 30));
+            break;
         case COMPONENT_TYPE_NUMBER:
-            return new ::Number(canvas, p + Vec2f(30, 30), Vec2f(100, 40));
+            comp = new ::Number(canvas, p + Vec2f(30, 30));
+            break;
         case COMPONENT_TYPE_SPLIT:
-            return new Split(canvas, p + Vec2f(30, 30));
+            comp = new Split(canvas, p + Vec2f(30, 30));
+            break;
         case COMPONENT_TYPE_OSCILLATOR:
-            return new Oscillator(canvas, p + Vec2f(30, 30), Vec2f(100, 40));
+            comp = new Oscillator(canvas, p + Vec2f(30, 30));
+            break;
         case COMPONENT_TYPE_EXP:
-            return new Exp(canvas, p + Vec2f(30, 30), Vec2f(250, 50));
+            comp = new Exp(canvas, p + Vec2f(30, 30));
+            break;
         case COMPONENT_TYPE_JS:
-            return new JSComponent(canvas, p + Vec2f(30, 30), button->source);
+            comp = new JSComponent(canvas, p + Vec2f(30, 30), button->source);
+            break;
         case COMPONENT_TYPE_OSCCONTROLLER:
-            return new OscController(canvas, p + Vec2f(30, 30));
+            comp = new OscController(canvas, p + Vec2f(30, 30));
+            break;
+        default:
+            return NULL;
     }
     
-    return NULL;
+    comp->initNew();
+    return comp;
 }

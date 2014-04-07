@@ -8,35 +8,36 @@
 
 #include "Number.h"
 
-Number::Number(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_NUMBER)
+Number::Number(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
-    canvasRect = Rectf(p, p+s);
-    initInterface(s);
-    
-    startVal = 0;
-    nextVal = 0;
-    updateVal(0);
-    valInc = 0.1;
+    setType(ComponentType::COMPONENT_TYPE_NUMBER);
+    setSize(Vec2f(100, 40));
+    setName("Number");
     
     immediateChange = false;
+    valInc = 1;
+    dragStartX = dragX = 0;
+    isValDrag = false;
+    isCompDrag = false;
 }
 
 Number::~Number()
 {
 }
 
-void Number::initInterface(Vec2f size)
+void Number::initNew()
 {
-    rect = Rectf(Vec2f(0, 0), size);
-    titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
-    inputNodes.push_back(new InputNode(0, this, Vec2f(6, size.y*3/4)));
-    outputNodes.push_back(new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4)));
+    addNewInputNode();
+    addNewOutputNode();
+
+    startVal = 0;
+    nextVal = 0;
+    updateVal(0);
+}
+
+void Number::initFromXml(cinder::XmlTree xml)
+{
     
-    dragStartX = dragX = 0;
-    isValDrag = false;
-    isCompDrag = false;
-    
-    setName("Number");
 }
 
 void Number::update()
@@ -55,9 +56,9 @@ void Number::draw()
     gl::translate(canvasRect.getUpperLeft());
     
     gl::color(1, 1, 1);
-    gl::drawSolidRoundedRect(rect, 2);
+    gl::drawSolidRoundedRect(localRect, 2);
     gl::color(0, 0, 0);
-    gl::drawStrokedRoundedRect(rect, 2);
+    gl::drawStrokedRoundedRect(localRect, 2);
     
     if (isValDrag) {
         gl::color(0.95, 0.95, 0.5);
@@ -67,7 +68,7 @@ void Number::draw()
     // draw title
     gl::color(0, 0, 0);
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
-    gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
+    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(localRect.getWidth(), titleRect.y2));
     
     // draw nodes
     inputNodes[0]->draw();
@@ -184,8 +185,7 @@ void Number::updateVal(float newVal)
     val = newVal;
     valStr = getValueString(val);
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
-    valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
-                    rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);
+    valRect = Rectf(localRect.getWidth()/2 - valStrSize.x/2, localRect.getHeight()/2+3, localRect.getWidth()/2 + valStrSize.x/2, localRect.getHeight()-2);
     
     outputNodes[0]->updateVal(val);
 }

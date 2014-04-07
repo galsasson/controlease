@@ -33,16 +33,15 @@ using namespace std;
 class Oscillator : public CanvasComponent
 {
 public:
-    Oscillator(Canvas *c, Vec2f p, Vec2f s);
+    Oscillator(Canvas *c, Vec2f pos);
     ~Oscillator();
     
-    void initInterface(Vec2f size);
+    void initNew();
+    void initFromXml(XmlTree xml);
+    
     void update();
     void draw();
 
-    void translate(Vec2f offset);
-    Rectf getBounds();
-    
     void mouseDown(const cease::MouseEvent& event);
 	void mouseDrag(const cease::MouseEvent& event);
     bool isDragPoint(const cease::MouseEvent& event);
@@ -57,9 +56,6 @@ private:
     
     bool immediateChange;
     
-    Rectf rect;
-    Rectf titleRect;
-    Rectf dragRect;
     Rectf valRect;
     
     // component dragging

@@ -80,6 +80,9 @@ public:
     // remove all components and start with a new canvas
     void reset();
     
+    // save / load stuff
+    XmlTree getXml();
+    
     Vec2f pos;
     Vec2f size;
     Vec2f virtualSize;

@@ -37,16 +37,19 @@ using namespace std;
 class OscController : public CanvasComponent
 {
 public:
-    OscController(Canvas *c, Vec2f _pos);
+    OscController(Canvas *c, Vec2f pos);
     ~OscController();
     
+    void initNew();
+    void initFromXml(XmlTree xml);
+    
+    void addressInputSet(void);
     void setupConnection(int port);
+    
     void update();
     void draw();
     void drawOutline();
 
-    void addressInputSet(void);
-    void onReturn(void);
 
     void mouseDown(const cease::MouseEvent& event);
 	void mouseDrag(const cease::MouseEvent& event);
@@ -66,7 +69,6 @@ private:
     void handleOneValue(osc::Message &msg);
     void handleTwoValues(osc::Message &msg);
     void handleAlive(osc::Message msg);
-    void addInput(osc::Message msg);
     void addOutput(std::string name, float val);
     void handleOutputMessage(osc::Message msg);
     void resizeComponent();
@@ -83,26 +85,11 @@ private:
 
     TextInput *addressInput;
     
-    vector<ProgramInput*> inputs;
-    vector<ProgramOutput*> outputs;
-    
     bool isEditing;
     Rectf textInputRect;
     
-    // graphical representation
-    void setSize(Vec2f s);
-    
-    Rectf localRect;
-    Rectf titleRect;
-    string name;
-    Rectf nameRect;
-    Vec2f nextInputPos;
-    Vec2f nextOutputPos;
-    
     // interaction
     Vec2f prevMouse;
-    
-    
 };
 
 #endif /* defined(__tunnelvars__OscController__) */

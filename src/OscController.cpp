@@ -10,37 +10,15 @@
 
 void printMessage(osc::Message message);
 
-OscController::OscController(Canvas *c, Vec2f _pos) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_OSCCONTROLLER)
+OscController::OscController(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
-    titleRect = Rectf(5, 0, 100, 20);
-    localRect = Rectf(0, 0, 100, 40);
-    canvasRect = Rectf(_pos, _pos+localRect.getSize());
-    nextInputPos = Vec2f(6, 28);
-    nextOutputPos = Vec2f(localRect.x2 - 6, 28);
-    
-    textInputRect = Rectf(7, 22, 100, 36);
-    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
-    addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
-
-    listenPort = 8000;
-    name = "OscController";
-
-    isEditing = true;
-    connected = false;
+    setType(ComponentType::COMPONENT_TYPE_OSCCONTROLLER);
+    setSize(Vec2f(100, 40));
+    setName("OscController");
 }
 
 OscController::~OscController()
 {
-    // delete all inputs
-    for (int i=0; i<inputs.size(); i++)
-    {
-        delete inputs[i];
-    }
-    for (int i=0; i<outputs.size(); i++)
-    {
-        delete outputs[i];
-    }
-    
     if (connected) {
         connected = false;
         handleMsg.join();
@@ -49,11 +27,20 @@ OscController::~OscController()
     delete addressInput;
 }
 
-void OscController::setupConnection(int port)
+void OscController::initNew()
 {
-    listenPort = port;
     
-    connect();
+    textInputRect = Rectf(7, 22, 100, 36);
+    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
+    addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
+    
+    isEditing = true;
+    connected = false;
+}
+
+void OscController::initFromXml(cinder::XmlTree xml)
+{
+    
 }
 
 void OscController::addressInputSet(void)
@@ -75,6 +62,13 @@ void OscController::addressInputSet(void)
     console() << "listening to: " << listenPort << ":" << outPort<<endl;
     
     setupConnection(listenPort);
+}
+
+void OscController::setupConnection(int port)
+{
+    listenPort = port;
+    
+    connect();
 }
 
 void OscController::update()
@@ -204,7 +198,6 @@ void OscController::connect()
     connected = true;
 //    int id = oscListener.registerMessageReceived(this, &OscController::handleMessage);
     handleMsg = std::thread(&OscController::handleMessages, this);
-
 }
 
 void OscController::handleMessages()
@@ -288,28 +281,13 @@ void OscController::handleTwoValues(osc::Message &msg)
     }
 }
 
-void OscController::addInput(osc::Message msg)
-{
-    ProgramInput *input = new ProgramInput();
-    if (input->setup(oscSender, msg)) {
-        inputNodes.push_back(new InputNode(inputNodes.size(), this, nextInputPos));
-        nextInputPos.y += 15;
-        inputs.push_back(input);
-        resizeComponent();
-    }
-    else {
-        delete input;
-    }
-}
-
 void OscController::addOutput(std::string name, float val)
 {
-    OutputNode *node = new OutputNode(outputNodes.size(), this, nextOutputPos);
+    OutputNode* node = addNewOutputNode();
     node->setName(name);
     node->updateVal(val);
-    outputNodes.push_back(node);
-    nextOutputPos.y += 15;
-    resizeComponent();
+
+    pack(0, 0);
 }
 
 void OscController::handleOutputMessage(osc::Message msg)

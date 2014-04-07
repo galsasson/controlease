@@ -8,23 +8,11 @@
 
 #include "Program.h"
 
-Program::Program(Canvas *c, Vec2f _pos) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_PROGRAM)
+Program::Program(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
-    titleRect = Rectf(5, 0, 200, 20);
-    localRect = Rectf(0, 0, 200, 40);
-    canvasRect = Rectf(_pos, _pos+localRect.getSize());
-    nextInputPos = Vec2f(6, 28);
-    nextOutputPos = Vec2f(localRect.x2 - 6, 28);
-    
-    textInputRect = Rectf(7, 22, 200, 36);
-    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
-    addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
-
-    listenPort = Rand::randInt(5000, 9000);
-    name = "Program";
-
-    connected = false;
-    isEditing = false;
+    setType(ComponentType::COMPONENT_TYPE_PROGRAM);
+    setSize(Vec2f(200, 40));
+    setName("Program");
 }
 
 Program::~Program()
@@ -40,6 +28,22 @@ Program::~Program()
     }
     
     delete addressInput;
+}
+
+void Program::initNew()
+{
+    textInputRect = Rectf(7, 22, 200, 36);
+    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
+    addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
+    
+    listenPort = Rand::randInt(5000, 9000);
+    connected = false;
+    isEditing = false;    
+}
+
+void Program::initFromXml(cinder::XmlTree xml)
+{
+    
 }
 
 void Program::setupConnection(string host, int oport)
@@ -98,7 +102,7 @@ void Program::draw()
         // draw all the input names
         for (int i=0; i<inputs.size(); i++)
         {
-            ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 30+i*15));
+            ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 31+i*9));
         }
         for (int i=0; i<outputs.size(); i++)
         {
@@ -291,21 +295,17 @@ void Program::handleAlive(osc::Message msg)
         return;
     }
     
-    name = msg.getArgAsString(0);
-    Vec2f nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
-    nameRect = Rectf(Vec2f(2, 2), Vec2f(2, 2) + nameSize);
+    setName(msg.getArgAsString(0));
 }
 
 void Program::addInput(osc::Message msg)
 {
     ProgramInput *input = new ProgramInput();
     if (input->setup(oscSender, msg)) {
-        InputNode *node = new InputNode(inputNodes.size(), this, nextInputPos);
-        node->setName(input->getName());
-        inputNodes.push_back(node);
-        nextInputPos.y += 15;
         inputs.push_back(input);
-        resizeComponent();
+        InputNode *node = addNewInputNode();
+        node->setName(input->getName());
+        pack(0, 0);
     }
     else {
         delete input;
@@ -318,12 +318,10 @@ void Program::addOutput(osc::Message msg)
     if (poutput->setup(msg, nextOutputPos))
     {
         outputs.push_back(poutput);
-        OutputNode *node = new OutputNode(poutput->getIndex(), this, nextOutputPos);
+        OutputNode *node = addNewOutputNode();
         node->updateVal(poutput->getValue());
         node->setName(poutput->getName());
-        outputNodes.push_back(node);
-        nextOutputPos.y += 15;
-        resizeComponent();
+        pack(0, 0);
     }
     else {
         delete poutput;
@@ -340,11 +338,3 @@ void Program::handleOutputMessage(osc::Message& msg)
     float val = msg.getArgAsFloat(1);
     outputNodes[index]->updateVal(val);
 }
-
-void Program::resizeComponent()
-{
-    int nodeNum = max(inputNodes.size(), outputNodes.size());
-    canvasRect.y2 = canvasRect.y1 + 28 + nodeNum*15;
-    localRect.y2 = 28 + nodeNum*15;
-}
-

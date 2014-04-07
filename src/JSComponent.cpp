@@ -9,23 +9,14 @@
 #include "JSComponent.h"
 #include "Canvas.h"
 
-JSComponent::JSComponent(Canvas *c, Vec2f p, fs::path script) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_JS)
+JSComponent::JSComponent(Canvas *c, Vec2f pos, fs::path script) : CanvasComponent(c, pos)
 {
-    compName = script.filename().replace_extension("").string();
-    Vec2f size(10, 0);
-    canvasRect = Rectf(p, size);
-    originRect = canvasRect;
-    localRect = Rectf(Vec2f(0, 0), Vec2f(10, 30));
-    titleRect = Rectf(4, 2, localRect.x2, 20);
-    nextInputPos = Vec2f(6, 26);
-    nextOutputPos = Vec2f(localRect.x2 - 6, 26);
-    jsRect = Rectf(10, 26, 0, 0);
+    setType(ComponentType::COMPONENT_TYPE_JS);
+    setSize(Vec2f(10, 0));
+    setName(script.filename().replace_extension("").string());
     jsScript = script;
-    jsColor = Color(0, 0, 0);
-    jsColorVec = Vec3f(0, 0, 0);
-    isDragging = false;
     
-    initComponent();
+    isDragging = false;
 }
 
 JSComponent::~JSComponent()
@@ -38,20 +29,33 @@ JSComponent::~JSComponent()
     pContext.Reset();
 }
 
+void JSComponent::initNew()
+{
+    originRect = canvasRect;
+    jsRect = Rectf(10, 26, 0, 0);
+    jsColor = Color(0, 0, 0);
+    jsColorVec = Vec3f(0, 0, 0);
+    
+    initComponent();
+}
+
+void JSComponent::initFromXml(cinder::XmlTree xml)
+{
+    
+}
+
 void JSComponent::initNodes(int nIns, int nOuts)
 {
     for (int i=0; i<nIns; i++)
     {
-        inputNodes.push_back(new InputNode(i, this, nextInputPos));
-        nextInputPos.y += 9;
+        addNewInputNode();
         ivals.push_back(0);
     }
     for (int i=0; i<nOuts; i++)
     {
-        outputNodes.push_back(new OutputNode(i, this, nextOutputPos));
-        nextOutputPos.y += 9;
+        addNewOutputNode();
     }
-    
+
     resizeComponent();
 }
 
@@ -104,17 +108,6 @@ void JSComponent::draw()
 
     gl::color(255, 0, 0);
     gl::drawStrokedRect(originRect);
-}
-
-void JSComponent::translate(Vec2f offset)
-{
-    console() << "warning: don't use JScomponent::translate"<<endl;
-//    canvasRect += offset;
-}
-
-Rectf JSComponent::getBounds()
-{
-    return canvasRect;
 }
 
 void JSComponent::mouseDown(const cease::MouseEvent& event)
@@ -196,27 +189,9 @@ void JSComponent::setValue(int i, float v)
 
 void JSComponent::resizeComponent()
 {
-    int maxNodes = max(inputNodes.size(), outputNodes.size());
-    float heightNeededForNodes = 26 + 9*maxNodes;
-    float heightNeededForComponent = jsRect.getHeight();
-    float neededHeight = jsRect.y1 + 6 + max(heightNeededForNodes, heightNeededForComponent);
-    
-    float neededWidth = jsRect.getWidth() + 19;
-    
-    canvasRect.y2 = canvasRect.y1 + neededHeight;
-    localRect.y2 = neededHeight;
-    canvasRect.x2 = canvasRect.x1 + neededWidth;
-    localRect.x2 = neededWidth;
-    titleRect.x2 = neededWidth;
+    pack(jsRect.getWidth()+19, jsRect.getHeight()+30);
     
     originRect = canvasRect;
-    
-    // push outputs to the right
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        outputNodes[i]->pos.x = localRect.x2 - 6;
-    }
-    
 }
 
 void JSComponent::initComponent()
@@ -543,7 +518,7 @@ void JSComponent::v8Map(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
     
-//    HandleScope scope(args.GetIsolate());
+    HandleScope scope(args.GetIsolate());
     
     // do clamp
     float n = args[0]->NumberValue();
@@ -573,7 +548,7 @@ void JSComponent::v8Noise(const FunctionCallbackInfo<v8::Value> &args)
         return;
     }
     
-//    HandleScope scope(args.GetIsolate());
+    HandleScope scope(args.GetIsolate());
     
     if (args.Length() == 1)
     {
@@ -715,7 +690,7 @@ void JSComponent::v8Log(const FunctionCallbackInfo<v8::Value> &args)
 /*****************************************************************************/
 
 #define V8_STATIC_CALLBACK(X) \
-    void JSComponent::aCB(const FunctionCallbackInfo<v8::Value> &args) \
+    void JSComponent::(X)CB(const FunctionCallbackInfo<v8::Value> &args) \
     { \
         Local<External> wrap = Local<External>::Cast(args.Data()); \
         JSComponent *comp = (JSComponent*)wrap->Value(); \

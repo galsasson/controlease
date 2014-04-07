@@ -8,10 +8,13 @@
 
 #include "CanvasComponent.h"
 
-CanvasComponent::CanvasComponent(Canvas *c, ComponentType t)
+CanvasComponent::CanvasComponent(Canvas *c, Vec2f p)
 {
     canvas = c;
-    type = t;
+    canvasRect = Rectf(p, Vec2f(0, 0));
+    
+    showInputPlus = false;
+    showOutputPlus = false;
 }
 
 CanvasComponent::~CanvasComponent() {
@@ -21,6 +24,25 @@ CanvasComponent::~CanvasComponent() {
     for (int i=0; i<outputNodes.size(); i++) {
         delete outputNodes[i];
     }
+}
+
+void CanvasComponent::setSize(Vec2f size)
+{
+    canvasRect.x2 = canvasRect.x1 + size.x;
+    canvasRect.y2 = canvasRect.y1 + size.y;
+    localRect = Rectf(Vec2f(0, 0), size);
+    titleRect = Rectf(2, 2, size.x-2, 20);
+    
+    nextInputPos = Vec2f(6, titleRect.y2 + 8);
+    nextOutputPos = Vec2f(size.x - 6, titleRect.y2 + 8);
+    inputPlusRect = Rectf(nextInputPos - Vec2f(4, 3), nextInputPos + Vec2f(4, 5));
+    outputPlusRect = Rectf(nextOutputPos - Vec2f(4, 3), nextOutputPos + Vec2f(4, 5));
+}
+
+void CanvasComponent::setName(std::string n)
+{
+    name = n;
+    nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
 }
 
 void CanvasComponent::drawOutline()
@@ -196,10 +218,31 @@ bool CanvasComponent::contains(const Vec2f& canvasPoint)
     return canvasRect.contains(canvasPoint);
 }
 
-void CanvasComponent::setName(std::string n)
+void CanvasComponent::pack(float minX, float minY)
 {
-    name = n;
-    nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
+    float neededHeight = max(nextInputPos.y, nextOutputPos.y);
+    if (showInputPlus || showOutputPlus) {
+        neededHeight += 10;
+    }
+    
+    float neededWidth = max(nameSize.x, titleRect.getWidth());
+    
+    neededWidth = max(neededWidth, minX);
+    neededHeight = max(neededHeight, minY);
+    
+    canvasRect.x2 = canvasRect.x1 + neededWidth;
+    canvasRect.y2 = canvasRect.y1 + neededHeight;
+    localRect.x2 = localRect.x1 + neededWidth;
+    localRect.y2 = localRect.y1 + neededHeight;
+    titleRect.x2 = titleRect.x1 + neededWidth;
+    
+    // update node positions
+    nextOutputPos.x = localRect.getWidth() - 6;
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        outputNodes[i]->pos.x = localRect.getWidth() - 6;
+    }
+    outputPlusRect = Rectf(nextOutputPos - Vec2f(4, 3), nextOutputPos + Vec2f(4, 5));
 }
 
 string CanvasComponent::getComponentTypeString(ComponentType t)
@@ -217,9 +260,7 @@ string CanvasComponent::getComponentTypeString(ComponentType t)
         case COMPONENT_TYPE_EXP:
             return "Expression";
         case COMPONENT_TYPE_JS:
-        {
             return "Javascript";
-        }
         case COMPONENT_TYPE_OSCCONTROLLER:
             return "OscController";
     }
@@ -253,7 +294,7 @@ XmlTree CanvasComponent::getXml()
     XmlTree onodes("OutputNodes", "");
     for (int i=0; i<outputNodes.size(); i++)
     {
-        cComp.push_back(outputNodes[i]->getXml());
+        onodes.push_back(outputNodes[i]->getXml());
     }
     cComp.push_back(onodes);
     
@@ -268,4 +309,24 @@ Vec2f CanvasComponent::toLocal(const Vec2f& p)
 Vec2f CanvasComponent::toCanvas(const Vec2f& p)
 {
     return canvasRect.getUpperLeft() + p;
+}
+
+InputNode* CanvasComponent::addNewInputNode()
+{
+    InputNode* node = new InputNode(inputNodes.size(), this, nextInputPos);
+    inputNodes.push_back(node);
+    nextInputPos.y += 9;
+    inputPlusRect += Vec2f(0, 9);
+    
+    return node;
+}
+
+OutputNode* CanvasComponent::addNewOutputNode()
+{
+    OutputNode* node = new OutputNode(outputNodes.size(), this, nextOutputPos);
+    outputNodes.push_back(node);
+    nextOutputPos.y += 9;
+    outputPlusRect += Vec2f(0, 9);
+    
+    return node;
 }

@@ -38,16 +38,16 @@ using namespace v8;
 class JSComponent : public CanvasComponent
 {
 public:
-    JSComponent(Canvas *c, Vec2f p, fs::path script);
+    JSComponent(Canvas *c, Vec2f pos, fs::path script);
     ~JSComponent();
+    
+    void initNew();
+    void initFromXml(XmlTree xml);
     
     void initNodes(int nIns, int nOuts);
     void initGUI(Vec2f size);
     void update();
     void draw();
-    
-    void translate(Vec2f offset);
-    Rectf getBounds();
     
     void mouseDown(const cease::MouseEvent& event);
 	void mouseUp(const cease::MouseEvent& event);
@@ -62,8 +62,6 @@ private:
     void resizeComponent();
     
     Rectf originRect;
-    Rectf localRect;
-    Rectf titleRect;
     Rectf jsRect;
     
     // color of js drawings
@@ -74,11 +72,6 @@ private:
     // component dragging
     Vec2f compDragAnchor;
     bool isDragging;
-    
-    Vec2f nextOutputPos;
-    Vec2f nextInputPos;
-//    vector<OutputNode*> outputNodes;
-//    vector<InputNode*> inputNodes;
     
     vector<float> ivals;
     

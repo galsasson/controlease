@@ -40,8 +40,16 @@ typedef enum _ComponentType {
 class CanvasComponent : public MouseListener
 {
 public:
-    CanvasComponent(Canvas *c, ComponentType type);
+    CanvasComponent(Canvas *c, Vec2f p);
     virtual ~CanvasComponent();
+    
+    virtual void initNew() = 0;
+    virtual void initFromXml(XmlTree xml) = 0;
+    
+    void setType(ComponentType t) { type = t; }
+    void setSize(Vec2f size);
+    virtual void setName(std::string n);
+    
     virtual void update() {};
     virtual void draw() {};
     virtual void drawOutline();
@@ -69,8 +77,11 @@ public:
     virtual KeyboardListener* getCurrentKeyboardListener() {return NULL;};
     virtual Node* getNodeBelow(const cease::MouseEvent& event);
     virtual bool contains(const Vec2f& canvasPoint);
+
+    // set component size to match content
+    // (number of inputs, outputs, plus sign, name)
+    virtual void pack(float minX, float minY);
     
-    virtual void setName(std::string n);
     static std::string getComponentTypeString(ComponentType t);
     static std::string getJSComponentTypeString(std::string scriptFile);
 
@@ -81,13 +92,24 @@ protected:
     virtual Vec2f toCanvas(const Vec2f& p);
     
     Canvas *canvas;
-    Rectf canvasRect;
+    Rectf canvasRect;   // component rect in canvas space
+    Rectf localRect;    // component rect in local space
+    Rectf titleRect;    // the title rect of the component
     ComponentType type;
     std::string name;
     cinder::Vec2f nameSize;
     
+    // component nodes
+    InputNode* addNewInputNode();
+    OutputNode* addNewOutputNode();
+    Vec2f nextOutputPos;
+    Vec2f nextInputPos;
     vector<InputNode*> inputNodes;
     vector<OutputNode*> outputNodes;
+    Rectf inputPlusRect;
+    Rectf outputPlusRect;
+    bool showInputPlus;
+    bool showOutputPlus;
 };
 
 

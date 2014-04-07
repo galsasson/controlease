@@ -36,16 +36,15 @@ using namespace v8;
 class Exp : public CanvasComponent
 {
 public:
-    Exp(Canvas *c, Vec2f p, Vec2f s);
+    Exp(Canvas *c, Vec2f pos);
     ~Exp();
     
-    void initInterface(Vec2f size);
+    void initNew();
+    void initFromXml(XmlTree xml);
+    
     void update();
     void draw();
     void drawOutline();
-    
-    void translate(Vec2f offset);
-    Rectf getBounds();
     
     void mouseDown(const cease::MouseEvent& event);
 	void mouseDrag(const cease::MouseEvent& event);
@@ -58,26 +57,12 @@ public:
     void setValue(int i, float v);
     
 private:
-    void resizeComponent();
-    
     TextInput* codeInput;
     bool isEditing;
     Rectf textEditRect;
     
-    Rectf rect;
-    Rectf titleRect;
-    Rectf inPlusRect;
-    Rectf outPlusRect;
-    Rectf dragRect;
-    Rectf valRect;
-    
     // component dragging
     Vec2f compDragAnchor;
-    
-    Vec2f nextOutputPos;
-    Vec2f nextInputPos;
-//    vector<OutputNode*> outputNodes;
-//    vector<InputNode*> inputNodes;
     
     vector<float> ivals;
     

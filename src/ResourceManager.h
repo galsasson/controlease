@@ -24,24 +24,27 @@ class ResourceManager
 public:
     static ResourceManager& getInstance()
     {
-        static ResourceManager instance; // Guaranteed to be destroyed.
+        static ResourceManager instance;
         // Instantiated on first use.
         return instance;
     }
     
     void initResources();
+    
     gl::TextureFontRef getTextureFont();
     Colorf getColor(int index);
+    gl::Texture& getPlusTexture();
+    
 private:
     ResourceManager() {};
-    // Dont forget to declare these two. You want to make sure they
-    // are unaccessable otherwise you may accidently get copies of
-    // your singleton appearing.
-    ResourceManager(ResourceManager const&);              // Don't Implement
-    void operator=(ResourceManager const&); // Don't implement
+
+    // make sure there are no copies
+    ResourceManager(ResourceManager const&);
+    void operator=(ResourceManager const&);
     
     Font mFont;
     gl::TextureFontRef mTextureFont;
+    gl::Texture mPlusTexture;
     vector<Colorf> colors;
 };
 #endif /* defined(__tunnelvars__ResourceManager__) */

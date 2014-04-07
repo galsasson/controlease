@@ -32,10 +32,12 @@ using namespace std;
 class Number : public CanvasComponent
 {
 public:
-    Number(Canvas *c, Vec2f p, Vec2f s);
+    Number(Canvas *c, Vec2f pos);
     ~Number();
     
-    void initInterface(Vec2f size);
+    void initNew();
+    void initFromXml(XmlTree xml);
+    
     void update();
     void draw();
 
@@ -55,9 +57,6 @@ private:
     
     bool immediateChange;
     
-    Rectf rect;
-    Rectf titleRect;
-    Rectf dragRect;
     Rectf valRect;
     
     // component dragging
@@ -74,10 +73,6 @@ private:
     float val;
     std::string valStr;
     float valInc;
-    
-    
-    
-    
 };
 
 #endif /* defined(__Controlease__Number__) */

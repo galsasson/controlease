@@ -161,6 +161,31 @@ void ControleaseApp::resize()
 void ControleaseApp::menuButtonClicked(Button* button)
 {
     console() << button->text << " was clicked"<<endl;
+    if (button->text == "New") {
+        canvas->reset();
+    }
+    else if (button->text == "Open") {
+        fs::path file = getOpenFilePath();
+        if (file.string().length() == 0) {
+            // user cancelled
+            return;
+        }
+        
+        console() << "opening patch from: " << file.string() << endl;
+    }
+    else if (button->text == "Save") {
+        console() << "File:\n" << canvas->getXml() << endl;
+        
+        return;
+        
+        fs::path file = getSaveFilePath();
+        if (file.string().length() == 0) {
+            // user cancelled
+            return;
+        }
+        
+        console() << "saving file to: " << file.string() << endl;
+    }
 }
 
 Vec2f ControleaseApp::getMenubarSize()

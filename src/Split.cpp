@@ -8,33 +8,35 @@
 
 #include "Split.h"
 
-Split::Split(Canvas *c, Vec2f p) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_SPLIT)
+Split::Split(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
-    Vec2f s(40, 50);
-    canvasRect = Rectf(p, p+s);
-    initInterface(s);
-    
-    nextVal = 0;
-    updateVal(0);
-    
+    setType(ComponentType::COMPONENT_TYPE_SPLIT);
+    setSize(Vec2f(40, 50));
+    setName("Split");
+
     immediateChange = false;
+    showOutputPlus = true;
 }
 
 Split::~Split()
 {
 }
 
-void Split::initInterface(Vec2f size)
+void Split::initNew()
 {
-    rect = Rectf(Vec2f(0, 0), size);
-    titleRect = Rectf(2, 2, size.x-20, 20);
-    plusRect = Rectf(size.x-12, 5, size.x-2, 15);
-    inputNodes.push_back(new InputNode(0, this, Vec2f(6, 26)));
-    for (int i=0; i<2; i++)
-    {
-        outputNodes.push_back(new OutputNode(i, this, Vec2f(size.x - 6, titleRect.y2 + 6 + i*9)));
-    }
-    nextOutputPos = Vec2f(size.x - 6, titleRect.y2 + 24);
+    // add one input and two outputs to begin with
+    addNewInputNode();
+    addNewOutputNode();
+    addNewOutputNode();
+    pack(0, 0);
+    
+    nextVal = 0;
+    updateVal(0);
+}
+
+void Split::initFromXml(XmlTree xml)
+{
+    
 }
 
 void Split::update()
@@ -53,17 +55,16 @@ void Split::draw()
     gl::translate(canvasRect.getUpperLeft());
     
     gl::color(1, 1, 1);
-    gl::drawSolidRoundedRect(rect, 2);
+    gl::drawSolidRoundedRect(localRect, 2);
     gl::color(0, 0, 0);
-    gl::drawStrokedRoundedRect(rect, 2);
+    gl::drawStrokedRoundedRect(localRect, 2);
     
     // draw title
-    ResourceManager::getInstance().getTextureFont()->drawString("Split", titleRect);
-    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(rect.getWidth(), titleRect.y2));
+    ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
+    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(localRect.getWidth(), titleRect.y2));
     
     // draw + sign
-    gl::drawLine(Vec2f(plusRect.x1, plusRect.y1 + plusRect.getHeight()/2), Vec2f(plusRect.x2, plusRect.y1 + plusRect.getHeight()/2));
-    gl::drawLine(Vec2f(plusRect.x1 + plusRect.getWidth()/2, plusRect.y1), Vec2f(plusRect.x1 + plusRect.getWidth()/2, plusRect.y2));
+    gl::draw(ResourceManager::getInstance().getPlusTexture(), outputPlusRect.getUpperLeft());
     
     // draw nodes
     inputNodes[0]->draw();
@@ -75,25 +76,13 @@ void Split::draw()
     gl::popMatrices();
 }
 
-void Split::translate(Vec2f offset)
-{
-    canvasRect += offset;
-}
-
-Rectf Split::getBounds()
-{
-    return canvasRect;
-}
-
 void Split::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    if (plusRect.contains(local)) {
+    if (outputPlusRect.contains(local)) {
         // add another output
-        outputNodes.push_back(new OutputNode(outputNodes.size(), this, nextOutputPos));
-        nextOutputPos.y += 9;
-        canvasRect.y2 += 9;
-        rect.y2 += 9;
+        addNewOutputNode();
+        pack(0, 0);
     }
     
     compDragAnchor = event.getPos();
@@ -117,7 +106,7 @@ bool Split::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     
-    return titleRect.contains(local) || plusRect.contains(local);
+    return titleRect.contains(local) || outputPlusRect.contains(local);
 }
 
 float Split::getValue(int i)

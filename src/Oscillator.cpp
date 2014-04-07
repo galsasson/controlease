@@ -10,15 +10,12 @@
 
 #define TWO_PI_DIV_1000 M_PI/500
 
-Oscillator::Oscillator(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_OSCILLATOR)
+Oscillator::Oscillator(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
-    canvasRect = Rectf(p, p+s);
-    initInterface(s);
-    
-    frequency = 0;
-    
-    updateVal(0);
-    time = 0;
+    setType(ComponentType::COMPONENT_TYPE_OSCILLATOR);
+    setSize(Vec2f(100, 40));
+    setName("Oscillator");
+
     immediateChange = false;
 }
 
@@ -26,14 +23,22 @@ Oscillator::~Oscillator()
 {
 }
 
-void Oscillator::initInterface(Vec2f size)
+void Oscillator::initNew()
 {
-    rect = Rectf(Vec2f(0, 0), size);
-    titleRect = Rectf(2, 2, size.x-2, size.y/2-2);
-    inputNodes.push_back(new InputNode(0, this, Vec2f(6, size.y*3/4)));
+    addNewInputNode();
     inputNodes[0]->setName("Frequency");
-    outputNodes.push_back(new OutputNode(0, this, Vec2f(size.x - 6, size.y*3/4)));
+    addNewOutputNode();
+    
+    frequency = 0;
+    updateVal(0);
+    time = 0;
 }
+
+void Oscillator::initFromXml(cinder::XmlTree xml)
+{
+    
+}
+
 
 void Oscillator::update()
 {
@@ -67,13 +72,13 @@ void Oscillator::draw()
     gl::translate(canvasRect.getUpperLeft());
     
     gl::color(1, 1, 1);
-    gl::drawSolidRoundedRect(rect, 2);
+    gl::drawSolidRoundedRect(localRect, 2);
     gl::color(0, 0, 0);
-    gl::drawStrokedRoundedRect(rect, 2);
+    gl::drawStrokedRoundedRect(localRect, 2);
     
     // draw title
     ResourceManager::getInstance().getTextureFont()->drawString("Oscillator", titleRect);
-    gl::drawLine(Vec2f(0, rect.getHeight()/2), Vec2f(rect.getWidth(), rect.getHeight()/2));
+    gl::drawLine(Vec2f(0, titleRect.getHeight()), Vec2f(localRect.getWidth(), titleRect.getHeight()));
     
     // draw nodes
     inputNodes[0]->draw();
@@ -82,16 +87,6 @@ void Oscillator::draw()
     gl::color(0, 0, 0);
     ResourceManager::getInstance().getTextureFont()->drawString(valStr, valRect);
     gl::popMatrices();
-}
-
-void Oscillator::translate(Vec2f offset)
-{
-    canvasRect += offset;
-}
-
-Rectf Oscillator::getBounds()
-{
-    return canvasRect;
 }
 
 void Oscillator::mouseDown(const cease::MouseEvent& event)
@@ -135,8 +130,7 @@ void Oscillator::updateVal(float newVal)
     val = newVal;
     valStr = getValueString();
     Vec2f valStrSize = ResourceManager::getInstance().getTextureFont()->measureString(valStr);
-    valRect = Rectf(rect.getWidth()/2 - valStrSize.x/2, rect.getHeight()/2+3,
-                    rect.getWidth()/2 + valStrSize.x/2, rect.getHeight()-2);
+    valRect = Rectf(localRect.getWidth()/2 - valStrSize.x/2, localRect.getHeight()/2+3, localRect.getWidth()/2 + valStrSize.x/2, localRect.getHeight()-2);
     
     outputNodes[0]->updateVal(val);
 }

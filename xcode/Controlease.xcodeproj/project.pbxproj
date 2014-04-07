@@ -183,6 +183,8 @@
 		080E96DDFE201D6D7F000001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2ABE5C9918F107B8002DCD65 /* Nodes */,
+				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
 				2ABE5C9518EFB550002DCD65 /* Menu */,
 				2ABE5C8F18EF23C1002DCD65 /* ComponentFactory.cpp */,
 				2ABE5C9018EF23C1002DCD65 /* ComponentFactory.h */,
@@ -191,7 +193,6 @@
 				2AAB76C118CF73EB007833C4 /* ComponentBox.cpp */,
 				2AAB76C218CF73EB007833C4 /* ComponentBox.h */,
 				2A798DC318B85D6100421573 /* Controlease.h */,
-				AE121F5261EC471D934283FE /* ControleaseApp.cpp */,
 				2AF1CC5118C1365C000A49BB /* GUI elements */,
 				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
 				2A20D07B18BF081E005C206F /* ProgramOutput.h */,
@@ -205,16 +206,8 @@
 				2AD2E23518B7E4E20084A524 /* MouseListener.h */,
 				2A798DC718B97C8600421573 /* Wire.cpp */,
 				2A798DC818B97C8600421573 /* Wire.h */,
-				2A798DD118B997DF00421573 /* InputNode.cpp */,
-				2A798DD218B997DF00421573 /* InputNode.h */,
-				2A798DD418B998DC00421573 /* OutputNode.cpp */,
-				2A798DD518B998DC00421573 /* OutputNode.h */,
-				2A3443AE18E0839A0080DC6D /* Node.cpp */,
-				2A798DBC18B84FC000421573 /* Node.h */,
 				2A798DD718B9A33B00421573 /* ConnectionResult.h */,
 				2AF1CC5518C137A6000A49BB /* KeyboardListener.h */,
-				2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */,
-				2A49CAE418DDE83400348E6A /* NodeInfoBox.h */,
 				2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */,
 				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 			);
@@ -340,6 +333,21 @@
 				2ABE5C9318EFB542002DCD65 /* MenuBar.h */,
 			);
 			name = Menu;
+			sourceTree = "<group>";
+		};
+		2ABE5C9918F107B8002DCD65 /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				2A49CAE318DDE83400348E6A /* NodeInfoBox.cpp */,
+				2A49CAE418DDE83400348E6A /* NodeInfoBox.h */,
+				2A798DD118B997DF00421573 /* InputNode.cpp */,
+				2A798DD218B997DF00421573 /* InputNode.h */,
+				2A798DD418B998DC00421573 /* OutputNode.cpp */,
+				2A798DD518B998DC00421573 /* OutputNode.h */,
+				2A3443AE18E0839A0080DC6D /* Node.cpp */,
+				2A798DBC18B84FC000421573 /* Node.h */,
+			);
+			name = Nodes;
 			sourceTree = "<group>";
 		};
 		2AF1CC5118C1365C000A49BB /* GUI elements */ = {

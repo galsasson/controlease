@@ -39,6 +39,9 @@ public:
     Program(Canvas *c, Vec2f _pos);
     ~Program();
     
+    void initNew();
+    void initFromXml(XmlTree xml);
+    
     void setupConnection(string host, int oport);
     void update();
     void draw();
@@ -65,7 +68,6 @@ private:
     void addInput(osc::Message msg);
     void addOutput(osc::Message msg);
     void handleOutputMessage(osc::Message& msg);
-    void resizeComponent();
     
     string programHost;
     int programPort;
@@ -82,16 +84,6 @@ private:
     
     bool isEditing;
     Rectf textInputRect;
-    
-    // graphical representation
-    void setSize(Vec2f s);
-    
-    Rectf localRect;
-    Rectf titleRect;
-    string name;
-    Rectf nameRect;
-    Vec2f nextInputPos;
-    Vec2f nextOutputPos;
     
     // interaction
     Vec2f prevMouse;

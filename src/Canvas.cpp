@@ -403,10 +403,26 @@ void Canvas::disconnectNode(Node *node)
 
 void Canvas::reset()
 {
-    for (int i=0; i<components.size(); i++)
+    for (int i=components.size()-1; i>=0; i--)
     {
         deleteComponent(components[i]);
     }
+}
+
+XmlTree Canvas::getXml()
+{
+    XmlTree canvasTree("Canvas", "");
+    
+    // add components xmls
+    for (int i=0; i<components.size(); i++)
+    {
+        canvasTree.push_back(components[i]->getXml());
+    }
+    
+    // add wires xmls
+    
+    
+    return canvasTree;
 }
 
 void Canvas::drawGridFbo()

@@ -8,35 +8,39 @@
 
 #include "Exp.h"
 
-Exp::Exp(Canvas *c, Vec2f p, Vec2f s) : CanvasComponent(c, ComponentType::COMPONENT_TYPE_EXP)
+Exp::Exp(Canvas *c, Vec2f pos) : CanvasComponent(c, pos)
 {
-    canvasRect = Rectf(p, p+s);
-    initInterface(s);
-    
+    setType(ComponentType::COMPONENT_TYPE_EXP);
+    setSize(Vec2f(250, 50));
+    setName("Exp");
+
     isEditing = false;
+    showOutputPlus = true;
+    showInputPlus = true;
 }
 
 Exp::~Exp()
 {
+    delete codeInput;
+    
     pFunction.Reset();
     pContext.Reset();
 }
 
-void Exp::initInterface(Vec2f size)
+void Exp::initNew()
 {
-    rect = Rectf(Vec2f(0, 0), size);
-    titleRect = Rectf(15, 2, size.x-20, 20);
-    outPlusRect = Rectf(size.x-10, 6, size.x-2, 14);
-    inPlusRect = Rectf(2, 6, 10, 14);
-    inputNodes.push_back(new InputNode(0, this, Vec2f(6, titleRect.y2 + 6)));
-    outputNodes.push_back(new OutputNode(0, this, Vec2f(size.x - 6, titleRect.y2 + 6)));
-    nextInputPos = Vec2f(6, titleRect.y2 + 15);
-    nextOutputPos = Vec2f(size.x - 6, titleRect.y2 + 15);
     ivals.push_back(0);
+    addNewInputNode();
+    addNewOutputNode();
     
-    textEditRect = Rectf(22, 22, size.x-20, size.y-2);
-    codeInput = new TextInput(Vec2f(25, 25), Vec2f(size.x-40, 14), true);
+    textEditRect = Rectf(22, 22, localRect.getWidth()-20, localRect.getHeight()-2);
+    codeInput = new TextInput(Vec2f(25, 25), Vec2f(localRect.getWidth()-40, 14), true);
     codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
+}
+
+void Exp::initFromXml(cinder::XmlTree xml)
+{
+    
 }
 
 void Exp::inputEnterPressed()
@@ -57,8 +61,9 @@ void Exp::inputEnterPressed()
 void Exp::update()
 {
     codeInput->update();
-    resizeComponent();
+    pack(codeInput->getTextSize().x, codeInput->getTextSize().y);
 
+    // call 'update' function
     runCompiledScript();
 }
 
@@ -68,20 +73,17 @@ void Exp::draw()
     gl::translate(canvasRect.getUpperLeft());
     
     gl::color(1, 1, 1);
-    gl::drawSolidRoundedRect(rect, 2);
+    gl::drawSolidRoundedRect(localRect, 2);
     gl::color(0, 0, 0);
-    gl::drawStrokedRoundedRect(rect, 2);
+    gl::drawStrokedRoundedRect(localRect, 2);
     
     // draw title
     ResourceManager::getInstance().getTextureFont()->drawString("Expression", titleRect);
-    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(rect.getWidth(), titleRect.y2));
+    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(localRect.getWidth(), titleRect.y2));
     
     // draw + sign
-    gl::drawLine(Vec2f(inPlusRect.x1, inPlusRect.y1 + inPlusRect.getHeight()/2), Vec2f(inPlusRect.x2, inPlusRect.y1 + inPlusRect.getHeight()/2));
-    gl::drawLine(Vec2f(inPlusRect.x1 + inPlusRect.getWidth()/2, inPlusRect.y1), Vec2f(inPlusRect.x1 + inPlusRect.getWidth()/2, inPlusRect.y2));
-    // draw + sign
-    gl::drawLine(Vec2f(outPlusRect.x1, outPlusRect.y1 + outPlusRect.getHeight()/2), Vec2f(outPlusRect.x2, outPlusRect.y1 + outPlusRect.getHeight()/2));
-    gl::drawLine(Vec2f(outPlusRect.x1 + outPlusRect.getWidth()/2, outPlusRect.y1), Vec2f(outPlusRect.x1 + outPlusRect.getWidth()/2, outPlusRect.y2));
+    gl::draw(ResourceManager::getInstance().getPlusTexture(), inputPlusRect.getUpperLeft());
+    gl::draw(ResourceManager::getInstance().getPlusTexture(), outputPlusRect.getUpperLeft());
 
     // draw text input
     codeInput->draw();
@@ -121,34 +123,21 @@ void Exp::drawOutline()
     gl::popMatrices();
 }
 
-void Exp::translate(Vec2f offset)
-{
-    canvasRect += offset;
-}
-
-Rectf Exp::getBounds()
-{
-    return canvasRect;
-}
-
 void Exp::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
     isEditing = false;
     
-    if (outPlusRect.contains(local)) {
+    if (outputPlusRect.contains(local)) {
         // add another output
-        outputNodes.push_back(new OutputNode(outputNodes.size(), this, nextOutputPos));
-        nextOutputPos.y += 9;
-        resizeComponent();
+        addNewOutputNode();
+        pack(codeInput->getTextSize().x, codeInput->getTextSize().y);
         return;
     }
-    else if (inPlusRect.contains(local)){
+    else if (inputPlusRect.contains(local)){
         // add another input
-        inputNodes.push_back(new InputNode(inputNodes.size(), this, nextInputPos));
-        ivals.push_back(0);
-        nextInputPos.y += 9;
-        resizeComponent();
+        addNewInputNode();
+        pack(codeInput->getTextSize().x, codeInput->getTextSize().y);
         return;
     }
     else if (textEditRect.contains(local)) {
@@ -178,8 +167,8 @@ bool Exp::isHotspot(const cease::MouseEvent& event)
     Vec2f local = toLocal(event.getPos());
     
     return titleRect.contains(local) ||
-        inPlusRect.contains(local) ||
-        outPlusRect.contains(local) ||
+        inputPlusRect.contains(local) ||
+        outputPlusRect.contains(local) ||
         textEditRect.contains(local);
 }
 
@@ -210,20 +199,6 @@ void Exp::setValue(int i, float v)
     
     ivals[i] = v;
 }
-
-void Exp::resizeComponent()
-{
-    int maxNodes = max(inputNodes.size(), outputNodes.size());
-    float heightNeededForNodes = 26 + 9*maxNodes;
-    float heightNeededForText = 26 + codeInput->getTextSize().y;
-    
-    float neededHeight = max(heightNeededForNodes, heightNeededForText);
-    
-    canvasRect.y2 = canvasRect.y1 + neededHeight;
-    rect.y2 = neededHeight;
-}
-
-
 
 
 void Exp::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
