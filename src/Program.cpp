@@ -34,8 +34,7 @@ void Program::initNew(Vec2f pos)
     setSize(Vec2f(200, 40));
     setName("Program");
 
-    textInputRect = Rectf(7, 22, 200, 36);
-    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
+    addressInput = new TextInput(Vec2f(4, 23), Vec2f(192, 14));
     addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
     
     listenPort = Rand::randInt(5000, 9000);
@@ -45,6 +44,7 @@ void Program::initNew(Vec2f pos)
 
 void Program::initFromXml(const XmlTree& xml)
 {
+    CanvasComponent::initFromXml(xml);
     
 }
 
@@ -158,7 +158,7 @@ void Program::mouseDown(const cease::MouseEvent& event)
     isEditing = false;
     
     if (!connected) {
-        if (textInputRect.contains(local)) {
+        if (addressInput->contains(local)) {
             isEditing = true;
             return;
         }
@@ -178,7 +178,7 @@ void Program::mouseDrag(const cease::MouseEvent& event)
 bool Program::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    return titleRect.contains(local) || (!connected && textInputRect.contains(local));
+    return titleRect.contains(local) || (!connected && addressInput->contains(local));
 }
 
 bool Program::isDragPoint(const cease::MouseEvent& event)
@@ -203,6 +203,12 @@ float Program::getValue(int i)
 void Program::setValue(int i, float v)
 {
     inputs[i]->sendVal(v);
+}
+
+XmlTree Program::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+        
 }
 
 void Program::connect()

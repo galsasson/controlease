@@ -35,8 +35,6 @@ public:
     
     float getLastVal() { return lastVal; }
     Vec2f getCanvasPos();
-    
-    bool bDisplayName;
 };
 
 #endif /* defined(__Controlease__OutputNode__) */

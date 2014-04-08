@@ -39,9 +39,10 @@ public:
     
     float lastVal;
     cinder::Vec2f pos;
-    std::string name;
-    Vec2f nameSize;
-    bool bDrawActive;
+    std::string name;       // node name
+    Vec2f nameSize;         // dimensions of name
+    bool bDisplayName;      // display the name as well
+    bool bDrawActive;       // draw the node as sending
     
     virtual void updateVal(float val, bool force = false) = 0;
     virtual void connect(Node *node) = 0;

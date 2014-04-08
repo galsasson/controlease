@@ -33,6 +33,10 @@ void InputNode::draw()
         gl::color(0, 0, 0);
         gl::drawStrokedCircle(pos, 3);
     }
+    
+    if (bDisplayName) {
+        ResourceManager::getInstance().getTextureFont()->drawString(name, pos + Vec2f(5, 3));
+    }
 }
 
 void InputNode::updateVal(float val, bool force)

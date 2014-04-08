@@ -12,7 +12,6 @@
 OutputNode::OutputNode(CanvasComponent *comp) : Node(comp)
 {
     setName("Output");    
-    bDisplayName = false;
 }
 
 OutputNode::~OutputNode()
@@ -34,6 +33,10 @@ void OutputNode::draw()
         gl::drawSolidCircle(pos, 3);
         gl::color(0, 0, 0);
         gl::drawStrokedCircle(pos, 3);
+    }
+    
+    if (bDisplayName) {
+        ResourceManager::getInstance().getTextureFont()->drawString(name, pos - Vec2f(nameSize.x+5, -3));
     }
 }
 

@@ -10,6 +10,7 @@
 
 TextInput::TextInput(Vec2f p, Vec2f s, bool multiline)
 {
+    minSize = s;
     canvasRect = Rectf(p, p+s);
     localRect = Rectf(0, 0, s.x, s.y);
     isMultiline = multiline;
@@ -39,6 +40,9 @@ void TextInput::draw()
     gl::translate(canvasRect.getUpperLeft());
     
     gl::color(0, 0, 0);
+    gl::lineWidth(0.5f);
+    gl::drawStrokedRect(localRect);
+    gl::lineWidth(1);
     ResourceManager::getInstance().getTextureFont()->drawString(str, strRect);
     
     gl::popMatrices();
@@ -52,7 +56,9 @@ void TextInput::drawInFocus()
     // draw blinking cursor
     if (blinkCounter > 10) {
         gl::color(0, 0, 0);
+        gl::lineWidth(2);
         gl::drawLine(cursorLocation, cursorLocation + Vec2f(0, fontHeight));
+        gl::lineWidth(1);
     }
     
     gl::popMatrices();
@@ -133,6 +139,11 @@ Vec2f TextInput::getTextSize()
     return localRect.getSize();
 }
 
+bool TextInput::contains(Vec2f p)
+{
+    return canvasRect.contains(p);
+}
+
 int TextInput::getLineStart(const std::string& text, int pos)
 {
     if (pos==0) {
@@ -182,10 +193,18 @@ Vec2f TextInput::getCursorLocation()
 
 void TextInput::updateSize()
 {
-    localRect = strRect;
-    localRect.y2 = getNumLines()*fontHeight;
-    canvasRect.x2 = localRect.x2;
-    canvasRect.y2 = localRect.y2;
+    Vec2f size = Vec2f(strRect.getWidth(), strRect.getHeight());
+    if (size.x < minSize.x) {
+        size.x = minSize.x;
+    }
+    if (size.y < minSize.y) {
+        size.y = minSize.y;
+    }
+    
+    localRect.x2 = localRect.x1 + size.x;
+    localRect.y2 = localRect.y1 + getNumLines()*fontHeight;
+    canvasRect.x2 = canvasRect.x1 + localRect.getWidth();
+    canvasRect.y2 = canvasRect.y1 + localRect.getHeight();
 }
 
 

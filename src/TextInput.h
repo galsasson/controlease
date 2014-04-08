@@ -43,11 +43,14 @@ public:
     static int getLineIndex(const std::string& text, int pos);
     
     Vec2f getTextSize();
+    
+    bool contains(Vec2f p);
 
 private:
     Vec2f getCursorLocation();
     void updateSize();
     
+    Vec2f minSize;
     Rectf canvasRect;
     Rectf localRect;
     string str;

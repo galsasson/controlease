@@ -11,6 +11,9 @@
 CanvasComponent::CanvasComponent(Canvas *c)
 {
     canvas = c;
+    
+    showInputPlus = false;
+    showOutputPlus = false;
 }
 
 CanvasComponent::~CanvasComponent() {
@@ -26,9 +29,6 @@ void CanvasComponent::initNew(Vec2f p)
 {
     originalSize = Vec2f(0, 0);
     canvasRect = Rectf(p, p+originalSize);
-    
-    showInputPlus = false;
-    showOutputPlus = false;
 }
 
 void CanvasComponent::initFromXml(const XmlTree& xml)
@@ -258,7 +258,7 @@ void CanvasComponent::pack(float minX, float minY)
 {
     float neededHeight = max(nextInputPos.y, nextOutputPos.y);
     if (showInputPlus || showOutputPlus) {
-        neededHeight += 10;
+        neededHeight += 9;
     }
     
     float neededWidth = max(nameSize.x, originalSize.x);

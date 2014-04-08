@@ -15,6 +15,7 @@ Node::Node(CanvasComponent *comp)
     component = comp;
     
     bDrawActive = false;
+    bDisplayName = false;
     
     next = NULL;
     prev = NULL;

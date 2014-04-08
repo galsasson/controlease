@@ -59,7 +59,7 @@ public:
     float getValue(int i);
     void setValue(int i, float v);
     
-    
+    XmlTree getXml();
 
 private:
     void connect();
@@ -83,7 +83,6 @@ private:
     vector<ProgramOutput*> outputs;
     
     bool isEditing;
-    Rectf textInputRect;
     
     // interaction
     Vec2f prevMouse;
