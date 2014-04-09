@@ -62,7 +62,9 @@ public:
     XmlTree getXml();
 
 private:
-    void connect();
+    void createSenderListener();
+    void sendHelloMessage();
+    void sendAliveMessage();
     void handleMessages();
     void handleAlive(osc::Message msg);
     void addInput(osc::Message msg);
@@ -78,16 +80,13 @@ private:
 
     TextInput *addressInput;
     
-    bool connected;
+    bool bConnected;
+    bool bEditing;
     vector<ProgramInput*> inputs;
     vector<ProgramOutput*> outputs;
     
-    bool isEditing;
-    
     // interaction
     Vec2f prevMouse;
-    
-    
 };
 
 #endif /* defined(__tunnelvars__Program__) */

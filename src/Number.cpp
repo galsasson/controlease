@@ -40,7 +40,6 @@ void Number::initNew(Vec2f pos)
 void Number::initFromXml(const XmlTree& xml)
 {
     CanvasComponent::initFromXml(xml);
-    setName("Number");
     
     nextVal = roundFloat(xml.getAttributeValue<float>("value"));
     updateVal(nextVal);

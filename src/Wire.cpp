@@ -33,7 +33,8 @@ void Wire::update()
 void Wire::draw()
 {
     gl::color(1, 1, 1);
-
+    gl::lineWidth(1);
+    
     if (inode && onode) {
         gl::drawLine(inode->getCanvasPos(), onode->getCanvasPos());
     }
@@ -114,8 +115,8 @@ XmlTree Wire::getXml()
     
     if (inode && onode)
     {
-        xml.setAttribute("inputID", inode->id);
-        xml.setAttribute("outputID", onode->id);
+        xml.setAttribute("inputID", inode->getId());
+        xml.setAttribute("outputID", onode->getId());
     }
     
     return xml;

@@ -19,13 +19,13 @@ void NodeInfoBox::setNode(Node *n)
     Vec2f pos = n->getCanvasPos() + Vec2f(20, -50);
     canvasRect = Rectf(0, 0, 0, 0);
     canvasRect.offset(pos);
-    float nameWidth = ResourceManager::getInstance().getTextureFont()->measureString(n->name).length();
+    float nameWidth = ResourceManager::getInstance().getTextureFont()->measureString(n->getName()).length();
     setSize(nameWidth, 40);
 }
 
 void NodeInfoBox::update()
 {
-    strVal = getValueString(node->lastVal);
+    strVal = getValueString(node->getLastVal());
     float valWidth = ResourceManager::getInstance().getTextureFont()->measureString(strVal).length();
     if (valWidth > localRect.getWidth()) {
         setSize(valWidth, 40);
@@ -43,7 +43,7 @@ void NodeInfoBox::draw()
     gl::drawStrokedRoundedRect(localRect, 2);
     
     // draw title
-    ResourceManager::getInstance().getTextureFont()->drawString(node->name, nameRect);
+    ResourceManager::getInstance().getTextureFont()->drawString(node->getName(), nameRect);
     
     ResourceManager::getInstance().getTextureFont()->drawString(strVal, valueRect);
     

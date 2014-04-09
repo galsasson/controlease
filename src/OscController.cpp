@@ -13,12 +13,15 @@ void printMessage(osc::Message message);
 OscController::OscController(Canvas *c) : CanvasComponent(c)
 {
     type = ComponentType::COMPONENT_TYPE_OSCCONTROLLER;
+    
+    bEditing = false;
+    bConnected = false;
 }
 
 OscController::~OscController()
 {
-    if (connected) {
-        connected = false;
+    if (bConnected) {
+        bConnected = false;
         handleMsg.join();
     }
     
@@ -31,12 +34,9 @@ void OscController::initNew(Vec2f pos)
     setSize(Vec2f(100, 40));
     setName("OscController");
     
-    textInputRect = Rectf(7, 22, 100, 36);
-    addressInput = new TextInput(Vec2f(7, 22), Vec2f(200, 14));
+    addressInput = new TextInput();
+    addressInput->initNew(Vec2f(5, 23), Vec2f(100-10, 14));
     addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
-    
-    isEditing = true;
-    connected = false;
 }
 
 void OscController::initFromXml(const XmlTree& xml)
@@ -69,12 +69,12 @@ void OscController::setupConnection(int port)
 {
     listenPort = port;
     
-    connect();
+    startListener();
 }
 
 void OscController::update()
 {
-    if (!connected && isEditing) {
+    if (!bConnected && bEditing) {
         addressInput->update();
         return;
     }
@@ -93,7 +93,7 @@ void OscController::draw()
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
     gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
 
-    if (connected)
+    if (bConnected)
     {
         // draw all input nodes
         for (int i=0; i<inputNodes.size(); i++)
@@ -104,7 +104,6 @@ void OscController::draw()
         for (int i=0; i<outputNodes.size(); i++)
         {
             outputNodes[i]->draw();
-            ResourceManager::getInstance().getTextureFont()->drawString(outputNodes[i]->name, outputNodes[i]->pos - Vec2f(outputNodes[i]->nameSize.x+5, -3));
         }
     }
     else {
@@ -118,7 +117,7 @@ void OscController::drawOutline()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft());
-    if (!connected)
+    if (!bConnected)
     {
         addressInput->drawInFocus();
     }
@@ -140,11 +139,11 @@ void OscController::drawOutline()
 void OscController::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    isEditing = false;
+    bEditing = false;
     
-    if (!connected) {
-        if (textInputRect.contains(local)) {
-            isEditing = true;
+    if (!bConnected) {
+        if (addressInput->contains(local)) {
+            bEditing = true;
             return;
         }
     }
@@ -163,7 +162,7 @@ void OscController::mouseDrag(const cease::MouseEvent& event)
 bool OscController::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    return titleRect.contains(local) || (!connected && textInputRect.contains(local));
+    return titleRect.contains(local) || (!bConnected && addressInput->contains(local));
 }
 
 bool OscController::isDragPoint(const cease::MouseEvent& event)
@@ -173,7 +172,7 @@ bool OscController::isDragPoint(const cease::MouseEvent& event)
 
 KeyboardListener* OscController::getCurrentKeyboardListener()
 {
-    if (!connected && isEditing) {
+    if (!bConnected && bEditing) {
         return addressInput;
     }
     
@@ -183,7 +182,6 @@ KeyboardListener* OscController::getCurrentKeyboardListener()
 float OscController::getValue(int i)
 {
     return outputNodes[i]->getLastVal();
-//    return inputs[i]->getValue();
 }
 
 void OscController::setValue(int i, float v)
@@ -192,48 +190,48 @@ void OscController::setValue(int i, float v)
 //    inputs[i]->sendVal(v);
 }
 
-void OscController::connect()
+void OscController::startListener()
 {
     oscListener.setup(listenPort);
     // handle incoming messages from the OscController
-    connected = true;
+    bConnected = true;
 //    int id = oscListener.registerMessageReceived(this, &OscController::handleMessage);
     handleMsg = std::thread(&OscController::handleMessages, this);
 }
 
 void OscController::handleMessages()
 {
-    while (connected)
+    while (bConnected)
     {
         osc::Message message;
         try
         {
-        while( oscListener.hasWaitingMessages() )
-        {
-            oscListener.getNextMessage( &message );
-            
-            if (message.getNumArgs() < 1) {
-                printMessage(message);
-                continue;
+            while( oscListener.hasWaitingMessages() )
+            {
+                oscListener.getNextMessage( &message );
+                
+                if (message.getNumArgs() < 1) {
+                    printMessage(message);
+                    continue;
+                }
+                
+                char *s= NULL;
+                s = strstr(message.getAddress().c_str(), "xy");
+                if (s) {
+                    handleTwoValues(message);
+                    continue;
+                }
+                else {
+                    handleOneValue(message);
+                    continue;
+                }
             }
-            
-            char *s= NULL;
-            s = strstr(message.getAddress().c_str(), "xy");
-            if (s) {
-                handleTwoValues(message);
-                continue;
-            }
-            else {
-                handleOneValue(message);
-                continue;
-            }
-        }
         }
         catch (cinder::Exception e) {
             console() << "error parsing message: " << e.what() << endl;
             printMessage(message);
         }
-        usleep(5000);
+        usleep(1000);
     }
 }
 
@@ -242,7 +240,7 @@ void OscController::handleOneValue(osc::Message &msg)
     std::string name = msg.getAddress();
     for (int i=0; i<outputNodes.size(); i++)
     {
-        if (outputNodes[i]->name == name)
+        if (outputNodes[i]->getName() == name)
         {
             outputNodes[i]->updateVal(msg.getArgAsFloat(0));
             return;
@@ -267,7 +265,7 @@ void OscController::handleTwoValues(osc::Message &msg)
         bool bExists = false;
         for (int n=0; n<outputNodes.size(); n++)
         {
-            if (outputNodes[n]->name == names[i].str())
+            if (outputNodes[n]->getName() == names[i].str())
             {
                 bExists = true;
                 outputNodes[n]->updateVal(msg.getArgAsFloat(i));
@@ -287,6 +285,7 @@ void OscController::addOutput(std::string name, float val)
     OutputNode* node = addNewOutputNode();
     node->setName(name);
     node->updateVal(val);
+    node->bDisplayName = true;
 
     pack(0, 0);
 }

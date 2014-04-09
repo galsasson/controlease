@@ -25,7 +25,11 @@ using namespace std;
 class TextInput : public KeyboardListener
 {
 public:
-    TextInput(Vec2f p, Vec2f s, bool multiline = false);
+    TextInput();
+    
+    void initNew(Vec2f p, Vec2f minSize, bool multiline = false);
+    void initFromXml(const XmlTree& xml);
+    XmlTree getXml();
     
     void update();
     void draw();
@@ -37,26 +41,27 @@ public:
     void onReturn(boost::function<void(void)> func);
 
     int getNumLines();
-    std::string& getValue() { return str; };
-    static std::string getLineUntil(const std::string& text, int pos);
-    static int getLineStart(const std::string& text, int pos);
-    static int getLineIndex(const std::string& text, int pos);
+    std::string& getValue() { return text; };
+    static std::string getLineUntil(const std::string& str, int pos);
+    static int getLineStart(const std::string& str, int pos);
+    static int getLineIndex(const std::string& str, int pos);
     
     Vec2f getTextSize();
     
     bool contains(Vec2f p);
 
 private:
+    void updateTextSize();
     Vec2f getCursorLocation();
     void updateSize();
     
     Vec2f minSize;
     Rectf canvasRect;
     Rectf localRect;
-    string str;
-    Rectf strRect;
+    string text;
+    Rectf textRect;
     
-    bool isMultiline;
+    bool bMultiline;
     
     int cursorPos;
     Vec2f cursorLocation;

@@ -8,7 +8,7 @@
 
 #include "Node.h"
 
-static int globalNodeID = 0;
+int Node::globalNodeID = 0;
 
 Node::Node(CanvasComponent *comp)
 {
@@ -23,7 +23,7 @@ Node::Node(CanvasComponent *comp)
 
 void Node::initNew(int i, Vec2f p)
 {
-    id = globalNodeID++;
+    id = Node::globalNodeID++;
 
     index = i;
     pos = p;
@@ -34,10 +34,17 @@ void Node::initNew(int i, Vec2f p)
 void Node::initFromXml(const cinder::XmlTree& xml)
 {
     id = xml.getAttributeValue<int>("globalID");
+    // when loading a patch, update globalID so future
+    // nodes will be created with a unique id
+    if (id >= Node::globalNodeID) {
+        Node::globalNodeID = id+1;
+    }
+    
     index = xml.getAttributeValue<int>("index");
     pos = Vec2f(xml.getAttributeValue<float>("pos.x"), xml.getAttributeValue<float>("pos.y"));
     setName(xml.getAttributeValue<std::string>("name"));
     lastVal = xml.getAttributeValue<float>("lastVal");
+    bDisplayName = xml.getAttributeValue<bool>("bDisplayName");
 }
 
 bool Node::contains(Vec2f p)
@@ -62,6 +69,7 @@ XmlTree Node::getXml()
     nodeXml.setAttribute("pos.x", pos.x);
     nodeXml.setAttribute("pos.y", pos.y);
     nodeXml.setAttribute("name", name);
+    nodeXml.setAttribute("bDisplayName", bDisplayName);
     
     return nodeXml;
 }

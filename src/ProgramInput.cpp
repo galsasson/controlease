@@ -14,7 +14,7 @@ ProgramInput::ProgramInput()
     minVal = maxVal = 0;
 }
 
-bool ProgramInput::setup(osc::Sender *sender, osc::Message msg)
+bool ProgramInput::initNew(osc::Sender *sender, osc::Message msg)
 {
     oscSender = sender;
     try {
@@ -31,13 +31,9 @@ bool ProgramInput::setup(osc::Sender *sender, osc::Message msg)
         }
         else if (type == TYPE_INT32) {
             intVal = (int)msg.getArgAsFloat(4);
-//            minVal = msg.getArgAsInt32(5);
-//            maxVal = msg.getArgAsInt32(6);
         }
         else if (type == TYPE_FLOAT) {
             floatVal = msg.getArgAsFloat(4);
-//            minVal = msg.getArgAsFloat(5);
-//            maxVal = msg.getArgAsFloat(6);
         }
     }
     catch(...) {
@@ -46,6 +42,48 @@ bool ProgramInput::setup(osc::Sender *sender, osc::Message msg)
     
     initialized = true;
     return true;
+}
+
+void ProgramInput::initFromXml(osc::Sender *sender, const cinder::XmlTree& xml)
+{
+    oscSender = sender;
+    
+    name = xml.getAttributeValue<std::string>("name");
+    address = xml.getAttributeValue<std::string>("address");
+    index = xml.getAttributeValue<int>("index");
+    type = (ValueType)xml.getAttributeValue<int>("type");
+    if (type == ValueType::TYPE_BOOLEAN) {
+        boolVal = xml.getAttributeValue<bool>("value");
+    }
+    else if (type == ValueType::TYPE_INT32) {
+        intVal = xml.getAttributeValue<int>("value");
+    }
+    else if (type == ValueType::TYPE_FLOAT) {
+        floatVal = xml.getAttributeValue<float>("value");
+    }
+    
+    initialized = true;
+}
+
+XmlTree ProgramInput::getXml()
+{
+    XmlTree xml("ProgramInput", "");
+    xml.setAttribute("name", name);
+    xml.setAttribute("address", address);
+    xml.setAttribute("index", index);
+    xml.setAttribute("type", type);
+    
+    if (type == ValueType::TYPE_BOOLEAN) {
+        xml.setAttribute("value", boolVal);
+    }
+    else if (type == ValueType::TYPE_INT32) {
+        xml.setAttribute("value", intVal);
+    }
+    else if (type == ValueType::TYPE_FLOAT) {
+        xml.setAttribute("value", floatVal);
+    }
+    
+    return xml;
 }
 
 string ProgramInput::getName()

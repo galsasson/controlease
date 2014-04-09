@@ -33,6 +33,7 @@ void CanvasComponent::initNew(Vec2f p)
 
 void CanvasComponent::initFromXml(const XmlTree& xml)
 {
+    setName(xml.getAttributeValue<std::string>("name"));
     Vec2f pos = Vec2f(xml.getAttributeValue<float>("position.x"), xml.getAttributeValue<float>("position.y"));
     Vec2f size = Vec2f(xml.getAttributeValue<float>("size.x"), xml.getAttributeValue<float>("size.y"));
     canvasRect = Rectf(pos, pos+size);
@@ -196,14 +197,14 @@ Node* CanvasComponent::getNodeWithID(int id)
 {
     for (int i=0; i<inputNodes.size(); i++)
     {
-        if (id == inputNodes[i]->id) {
+        if (id == inputNodes[i]->getId()) {
             return inputNodes[i];
         }
     }
     
     for (int i=0; i<outputNodes.size(); i++)
     {
-        if (id == outputNodes[i]->id) {
+        if (id == outputNodes[i]->getId()) {
             return outputNodes[i];
         }
     }
@@ -276,7 +277,7 @@ void CanvasComponent::pack(float minX, float minY)
     nextOutputPos.x = localRect.getWidth() - 6;
     for (int i=0; i<outputNodes.size(); i++)
     {
-        outputNodes[i]->pos.x = localRect.getWidth() - 6;
+        outputNodes[i]->getPosition().x = localRect.getWidth() - 6;
     }
     outputPlusRect = Rectf(nextOutputPos - Vec2f(4, 3), nextOutputPos + Vec2f(4, 5));
 }
@@ -315,6 +316,7 @@ XmlTree CanvasComponent::getXml()
 {
     XmlTree cComp("CanvasComponent", "");
     cComp.setAttribute("type", ci::toString(type));
+    cComp.setAttribute("name", name);
     cComp.setAttribute("position.x", canvasRect.x1);
     cComp.setAttribute("position.y", canvasRect.y1);
     cComp.setAttribute("size.x", localRect.getWidth());

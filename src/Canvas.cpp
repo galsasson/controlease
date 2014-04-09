@@ -10,7 +10,8 @@
 
 Canvas::Canvas()
 {
-    
+    // each node in the canvas has a unique ID
+    Node::globalNodeID = 0;
 }
 
 void Canvas::setup(Vec2f _pos, Vec2f _size)
@@ -394,6 +395,8 @@ void Canvas::disconnectNode(Node *node)
 
 void Canvas::reset()
 {
+    Node::globalNodeID = 0;
+    
     for (int i=components.size()-1; i>=0; i--)
     {
         deleteComponent(components[i]);

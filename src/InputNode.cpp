@@ -35,6 +35,7 @@ void InputNode::draw()
     }
     
     if (bDisplayName) {
+        gl::color(0, 0, 0);
         ResourceManager::getInstance().getTextureFont()->drawString(name, pos + Vec2f(5, 3));
     }
 }

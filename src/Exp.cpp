@@ -35,7 +35,8 @@ void Exp::initNew(Vec2f pos)
     addNewOutputNode();
     
 //    textEditRect = Rectf(16, 22, localRect.getWidth()-20, localRect.getHeight()-2);
-    codeInput = new TextInput(Vec2f(16, 23), Vec2f(localRect.getWidth()-32, 14), true);
+    codeInput = new TextInput();
+    codeInput->initNew(Vec2f(16, 23), Vec2f(localRect.getWidth()-32, 14), true);
     codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
     
     resizeComponent();

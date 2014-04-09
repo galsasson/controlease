@@ -12,6 +12,8 @@
 #include <iostream>
 #include <sstream>
 
+#include "cinder/Xml.h"
+
 #include "OscListener.h"
 #include "OscSender.h"
 
@@ -25,18 +27,16 @@ class ProgramOutput
 {
 public:
     ProgramOutput();
-    bool setup(osc::Message msg, Vec2f p);
+    bool initNew(osc::Message msg);
+    void initFromXml(const XmlTree& xml);
+    XmlTree getXml();
     
-    void draw();
-
     int getIndex() { return index; }
     string getName() { return name; }
     float getValue() { return value; }
 private:
     
-    Vec2f pos;
     string name;
-    Rectf nameRect;
     int index;
     ValueType type;
     float value;

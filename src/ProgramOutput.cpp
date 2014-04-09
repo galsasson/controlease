@@ -12,21 +12,8 @@ ProgramOutput::ProgramOutput()
 {
 }
 
-void ProgramOutput::draw()
+bool ProgramOutput::initNew(osc::Message msg)
 {
-    gl::pushMatrices();
-    gl::translate(pos);
-    
-    ResourceManager::getInstance().getTextureFont()->drawString(name, nameRect);
-    
-    gl::popMatrices();
-    
-}
-
-bool ProgramOutput::setup(osc::Message msg, Vec2f p)
-{
-    pos = p;
-    
     if (msg.getNumArgs() < 4) {
         return false;
     }
@@ -36,12 +23,25 @@ bool ProgramOutput::setup(osc::Message msg, Vec2f p)
     type = (ValueType)msg.getArgAsInt32(2);
     value = msg.getArgAsFloat(3);
     
-    Vec2f nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
-    nameRect = Rectf(-nameSize.x - 5, -nameSize.y/2-1, nameSize.x, nameSize.y);
-    
-
     return true;
 }
 
+void ProgramOutput::initFromXml(const cinder::XmlTree &xml)
+{
+    name = xml.getAttributeValue<std::string>("name");
+    index = xml.getAttributeValue<int>("index");
+    type = (ValueType)xml.getAttributeValue<int>("type");
+    value = xml.getAttributeValue<float>("value");
+}
 
-
+XmlTree ProgramOutput::getXml()
+{
+    XmlTree xml("ProgramOutput", "");
+    
+    xml.setAttribute("name", name);
+    xml.setAttribute("index", index);
+    xml.setAttribute("type", type);
+    xml.setAttribute("value", value);
+    
+    return xml;
+}

@@ -52,13 +52,14 @@ class Controlease
       float value = msg.get(1).floatValue();
       inputsByIndex.get(index).setVal(value);
     }
-    
-    if (type.contains("/alive?")) {
-      String controleaseHost = msg.get(0).stringValue();
-      int controleasePort = msg.get(1).intValue();
+    else if (type.contains("/hello")) {
+      String controleaseHost = msg.netAddress().address();
+      int controleasePort = msg.get(0).intValue();
       println("params: " + controleaseHost + ":" + controleasePort);
       controleaseAddr = new NetAddress(controleaseHost, controleasePort);
-      
+      connected = true;      
+    }
+    else if (type.contains("/alive?")) {
       // send the alive message
       OscMessage aliveMsg = new OscMessage("/alive!");
       aliveMsg.add(name);
@@ -92,7 +93,6 @@ class Controlease
       // send end params message
       OscMessage endMsg = new OscMessage("/end_nodes");
       controlease_oscP5.send(endMsg, controleaseAddr);
-      connected = true;
     }
   }
 

@@ -8,22 +8,53 @@
 
 #include "TextInput.h"
 
-TextInput::TextInput(Vec2f p, Vec2f s, bool multiline)
+TextInput::TextInput()
 {
-    minSize = s;
-    canvasRect = Rectf(p, p+s);
-    localRect = Rectf(0, 0, s.x, s.y);
-    isMultiline = multiline;
-    
     blinkCounter = 0;
     
-    str = "";
+    text = "";
     fontHeight = ResourceManager::getInstance().getTextureFont()->getAscent() +
     ResourceManager::getInstance().getTextureFont()->getDescent();
 
     cursorPos = 0;
     cursorLocation = Vec2f(0,0);
-    strRect = Rectf(0, 0, 0, fontHeight);
+    textRect = Rectf(0, 0, 0, fontHeight);
+}
+
+void TextInput::initNew(Vec2f p, Vec2f mSize, bool multiline)
+{
+    minSize = mSize;
+    canvasRect = Rectf(p, p+minSize);
+    localRect = Rectf(0, 0, minSize.x, minSize.y);
+    bMultiline = multiline;
+}
+
+void TextInput::initFromXml(const cinder::XmlTree &xml)
+{
+    // TODO: implement
+    Vec2f pos = Vec2f(xml.getAttributeValue<float>("pos.x"),
+                      xml.getAttributeValue<float>("pos.y"));
+    minSize = Vec2f(xml.getAttributeValue<float>("minSize.x"),
+                    xml.getAttributeValue<float>("minSize.y"));
+    canvasRect = Rectf(pos, pos+minSize);
+    localRect = Rectf(Vec2f(0, 0), minSize);
+    bMultiline = xml.getAttributeValue<bool>("bMultiline");
+    text = xml.getAttributeValue<std::string>("text");
+    updateTextSize();
+}
+
+XmlTree TextInput::getXml()
+{
+    XmlTree xml("TextInput", "");
+    
+    xml.setAttribute("pos.x", canvasRect.x1);
+    xml.setAttribute("pos.y", canvasRect.y1);
+    xml.setAttribute("minSize.x", minSize.x);
+    xml.setAttribute("minSize.y", minSize.y);
+    xml.setAttribute("bMultiline", bMultiline);
+    xml.setAttribute("text", text);
+    
+    return xml;
 }
 
 void TextInput::update()
@@ -43,7 +74,7 @@ void TextInput::draw()
     gl::lineWidth(0.5f);
     gl::drawStrokedRect(localRect);
     gl::lineWidth(1);
-    ResourceManager::getInstance().getTextureFont()->drawString(str, strRect);
+    ResourceManager::getInstance().getTextureFont()->drawString(text, textRect);
     
     gl::popMatrices();
 }
@@ -69,9 +100,9 @@ void TextInput::keyDown(cinder::app::KeyEvent event)
 //    console() << event.getCode() << endl;
     
     if (event.getCode() == event.KEY_RETURN) {
-        if (isMultiline && event.isShiftDown()) {
+        if (bMultiline && event.isShiftDown()) {
             // SHIFT enter: do enter
-            str.insert(cursorPos, 1, event.getChar());
+            text.insert(cursorPos, 1, event.getChar());
             cursorPos++;
         }
         else if (!returnFunction.empty()) {
@@ -80,8 +111,8 @@ void TextInput::keyDown(cinder::app::KeyEvent event)
         }
     }
     else if (event.getCode() == event.KEY_BACKSPACE) {
-        if (str.length() > 0 && cursorPos > 0) {
-            str.erase(cursorPos-1, 1);
+        if (text.length() > 0 && cursorPos > 0) {
+            text.erase(cursorPos-1, 1);
             cursorPos--;
         }
     }
@@ -91,24 +122,22 @@ void TextInput::keyDown(cinder::app::KeyEvent event)
         }
     }
     else if (event.getCode() == event.KEY_RIGHT) {
-        if (cursorPos < str.length()) {
+        if (cursorPos < text.length()) {
             cursorPos++;
         }
     }
     else if (event.getCode() == event.KEY_KP_MINUS) {
-        str.insert(cursorPos, 1, event.getChar());
+        text.insert(cursorPos, 1, event.getChar());
         cursorPos++;
     }
     else if (event.getCode() >= 32 && event.getCode() <= 126) {
-        str.insert(cursorPos, 1, event.getChar());
+        text.insert(cursorPos, 1, event.getChar());
         cursorPos++;
     }
     
-    Vec2f strSize = ResourceManager::getInstance().getTextureFont()->measureString(str);
-    strRect = Rectf(0, 0, strSize.x, strSize.y);
+    updateTextSize();
 
     cursorLocation = getCursorLocation();
-    updateSize();
 }
 
 void TextInput::keyUp(cinder::app::KeyEvent event)
@@ -124,9 +153,9 @@ void TextInput::onReturn(boost::function<void(void)> func)
 int TextInput::getNumLines()
 {
     int lines=1;
-    for (int i=0; i<str.length(); i++)
+    for (int i=0; i<text.length(); i++)
     {
-        if (str[i] == 13) {
+        if (text[i] == 13) {
             lines++;
         }
     }
@@ -144,12 +173,12 @@ bool TextInput::contains(Vec2f p)
     return canvasRect.contains(p);
 }
 
-int TextInput::getLineStart(const std::string& text, int pos)
+int TextInput::getLineStart(const std::string& str, int pos)
 {
     if (pos==0) {
         return 0;
     }
-    int index = text.rfind(13, pos-1);
+    int index = str.rfind(13, pos-1);
     
     if (index < 0) {
         return 0;
@@ -157,32 +186,40 @@ int TextInput::getLineStart(const std::string& text, int pos)
     return index+1;
 }
 
-std::string TextInput::getLineUntil(const std::string& text, int pos)
+std::string TextInput::getLineUntil(const std::string& str, int pos)
 {
-    int start = getLineStart(text, pos);
-    return text.substr(start, pos-start);
+    int start = getLineStart(str, pos);
+    return str.substr(start, pos-start);
 }
 
-int TextInput::getLineIndex(const std::string& text, int pos)
+int TextInput::getLineIndex(const std::string& str, int pos)
 {
     int lines=0;
     for (int i=0; i<pos; i++)
     {
-        if (text[i] == 13) {
+        if (str[i] == 13) {
             lines++;
         }
     }
     return lines;
 }
 
+void TextInput::updateTextSize()
+{
+    Vec2f textSize = ResourceManager::getInstance().getTextureFont()->measureString(text);
+    textRect = Rectf(0, 0, textSize.x, textSize.y);
+    
+    updateSize();
+}
+
 Vec2f TextInput::getCursorLocation()
 {
     Vec2f loc(0, 0);
     
-    std::string line = getLineUntil(str, cursorPos);
+    std::string line = getLineUntil(text, cursorPos);
     
     loc.x = ResourceManager::getInstance().getTextureFont()->measureString(line).x;
-    loc.y = (float)getLineIndex(str, cursorPos)*fontHeight;
+    loc.y = (float)getLineIndex(text, cursorPos)*fontHeight;
     
     if (loc.y < 0) {
         loc.y = 0;
@@ -193,7 +230,7 @@ Vec2f TextInput::getCursorLocation()
 
 void TextInput::updateSize()
 {
-    Vec2f size = Vec2f(strRect.getWidth(), strRect.getHeight());
+    Vec2f size = Vec2f(textRect.getWidth(), textRect.getHeight());
     if (size.x < minSize.x) {
         size.x = minSize.x;
     }

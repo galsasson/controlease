@@ -63,7 +63,7 @@ public:
     
 
 private:
-    void connect();
+    void startListener();
     void handleMessages();
     void handleMessage(const osc::Message &msg);
     void handleOneValue(osc::Message &msg);
@@ -73,7 +73,7 @@ private:
     void handleOutputMessage(osc::Message msg);
     void resizeComponent();
     
-    bool connected;
+    bool bConnected;
     
     string OscControllerHost;
     int OscControllerPort;
@@ -84,9 +84,7 @@ private:
     std::thread handleMsg;
 
     TextInput *addressInput;
-    
-    bool isEditing;
-    Rectf textInputRect;
+    bool bEditing;
     
     // interaction
     Vec2f prevMouse;

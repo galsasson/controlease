@@ -11,6 +11,8 @@
 Program::Program(Canvas *c) : CanvasComponent(c)
 {
     type = ComponentType::COMPONENT_TYPE_PROGRAM;
+    bConnected = false;
+    bEditing = false;
 }
 
 Program::~Program()
@@ -34,26 +36,100 @@ void Program::initNew(Vec2f pos)
     setSize(Vec2f(200, 40));
     setName("Program");
 
-    addressInput = new TextInput(Vec2f(4, 23), Vec2f(192, 14));
+    addressInput = new TextInput();
+    addressInput->initNew(Vec2f(4, 23), Vec2f(192, 14));
     addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
     
     listenPort = Rand::randInt(5000, 9000);
-    connected = false;
-    isEditing = false;    
 }
 
 void Program::initFromXml(const XmlTree& xml)
 {
     CanvasComponent::initFromXml(xml);
     
+    addressInput = new TextInput();
+    addressInput->initFromXml(xml.getChild("TextInput"));
+    
+    listenPort = xml.getAttributeValue<int>("listenPort");
+    bConnected = xml.getAttributeValue<bool>("bConnected");
+    bEditing = xml.getAttributeValue<bool>("bEditing");
+    
+    if (bConnected) {
+        programHost = xml.getAttributeValue<std::string>("programHost");
+        programPort = xml.getAttributeValue<int>("programPort");
+        
+        createSenderListener();
+        
+        // send the program the hello message to update on our
+        // current ip and port number
+        sendHelloMessage();
+
+        // create program inputs
+        XmlTree programInputsXml = xml.getChild("ProgramInputs");
+        for(XmlTree::ConstIter iter = programInputsXml.begin(); iter != programInputsXml.end(); ++iter)
+        {
+            if (iter->getTag() == "ProgramInput") {
+                ProgramInput *newInput = new ProgramInput();
+                newInput->initFromXml(oscSender, iter->getChild(""));
+                inputs.push_back(newInput);
+            }
+        }
+        
+        // create program outputs
+        XmlTree programOutputsXml = xml.getChild("ProgramOutputs");
+        for(XmlTree::ConstIter iter = programOutputsXml.begin(); iter != programOutputsXml.end(); ++iter)
+        {
+            if (iter->getTag() == "ProgramOutput") {
+                ProgramOutput *newOutput = new ProgramOutput();
+                newOutput->initFromXml(iter->getChild(""));
+                outputs.push_back(newOutput);
+            }
+        }
+    }
+    
 }
+
+XmlTree Program::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+ 
+    xml.push_back(addressInput->getXml());
+    xml.setAttribute("listenPort", listenPort);
+    xml.setAttribute("bConnected", bConnected);
+    xml.setAttribute("bEditing", bEditing);
+    
+    if (bConnected) {
+        xml.setAttribute("programHost", programHost);
+        xml.setAttribute("programPort", programPort);
+        
+        // save all program inputs
+        XmlTree pInputs("ProgramInputs", "");
+        for (int i=0; i<inputs.size(); i++)
+        {
+            pInputs.push_back(inputs[i]->getXml());
+        }
+        xml.push_back(pInputs);
+        
+        // save all program outputs
+        XmlTree pOutputs("ProgramOutputs", "");
+        for (int i=0; i<outputs.size(); i++)
+        {
+            pOutputs.push_back(outputs[i]->getXml());
+        }
+        xml.push_back(pOutputs);        
+    }
+    return xml;
+}
+
 
 void Program::setupConnection(string host, int oport)
 {
     programHost = host;
     programPort = oport;
     
-    connect();
+    createSenderListener();
+    sendHelloMessage();
+    sendAliveMessage();
 }
 
 void Program::addressInputSet(void)
@@ -81,7 +157,7 @@ void Program::update()
     // handle incoming messages from the program
     handleMessages();
     
-    if (!connected && isEditing) {
+    if (!bConnected && bEditing) {
         addressInput->update();
         return;
     }
@@ -100,16 +176,16 @@ void Program::draw()
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
     gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
 
-    if (connected) {
+    if (bConnected) {
         // draw all the input names
         for (int i=0; i<inputs.size(); i++)
         {
             ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 31+i*9));
         }
-        for (int i=0; i<outputs.size(); i++)
-        {
-            outputs[i]->draw();
-        }
+//        for (int i=0; i<outputs.size(); i++)
+//        {
+//            outputs[i]->draw();
+//        }
     
         // draw all input nodes
         for (int i=0; i<inputNodes.size(); i++)
@@ -133,7 +209,7 @@ void Program::drawOutline()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft());
-    if (!connected)
+    if (!bConnected)
     {
         addressInput->drawInFocus();
     }
@@ -155,11 +231,11 @@ void Program::drawOutline()
 void Program::mouseDown(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    isEditing = false;
+    bEditing = false;
     
-    if (!connected) {
+    if (!bConnected) {
         if (addressInput->contains(local)) {
-            isEditing = true;
+            bEditing = true;
             return;
         }
     }
@@ -178,7 +254,7 @@ void Program::mouseDrag(const cease::MouseEvent& event)
 bool Program::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    return titleRect.contains(local) || (!connected && addressInput->contains(local));
+    return titleRect.contains(local) || (!bConnected && addressInput->contains(local));
 }
 
 bool Program::isDragPoint(const cease::MouseEvent& event)
@@ -188,7 +264,7 @@ bool Program::isDragPoint(const cease::MouseEvent& event)
 
 KeyboardListener* Program::getCurrentKeyboardListener()
 {
-    if (!connected && isEditing) {
+    if (!bConnected && bEditing) {
         return addressInput;
     }
     
@@ -205,30 +281,32 @@ void Program::setValue(int i, float v)
     inputs[i]->sendVal(v);
 }
 
-XmlTree Program::getXml()
+void Program::createSenderListener()
 {
-    XmlTree xml = CanvasComponent::getXml();
-        
+    oscSender = new osc::Sender();
+    oscSender->setup(programHost, programPort);
+    oscListener.setup(listenPort);
 }
 
-void Program::connect()
+/* sendHelloMessage will tell the remote program
+   my ip and my listen port
+ */
+void Program::sendHelloMessage()
 {
-    connected = false;
-    boost::posix_time::ptime s = boost::posix_time::second_clock::local_time();
-    
-    oscSender = new osc::Sender();
-    oscSender->setup("localhost", programPort);
-    oscListener.setup(listenPort);
-    
     osc::Message helloMsg;
-    helloMsg.setAddress("/alive?");
-    helloMsg.addStringArg("127.0.0.1");
+    helloMsg.setAddress("/hello");
     helloMsg.addIntArg(listenPort);
     oscSender->sendMessage(helloMsg);
-    
-    boost::posix_time::ptime e = boost::posix_time::second_clock::local_time();
-    boost::posix_time::time_duration duration = e-s;
-    console() <<"Time to connect: "<<duration.total_milliseconds()<<endl;
+}
+
+/* sendAliveMessage will tell the remote program to
+   send me all its inputs and outputs in a following 
+   '/alive!' message */
+void Program::sendAliveMessage()
+{
+    osc::Message aliveMsg;
+    aliveMsg.setAddress("/alive?");
+    oscSender->sendMessage(aliveMsg);
 }
 
 void Program::handleMessages()
@@ -259,7 +337,7 @@ void Program::handleMessages()
         }
         else if (message.getAddress() == "/end_nodes") {
             if (inputs.size() > 0 && name != "") {
-                connected = true;
+                bConnected = true;
             }
             continue;
         }
@@ -309,7 +387,7 @@ void Program::handleAlive(osc::Message msg)
 void Program::addInput(osc::Message msg)
 {
     ProgramInput *input = new ProgramInput();
-    if (input->setup(oscSender, msg)) {
+    if (input->initNew(oscSender, msg)) {
         inputs.push_back(input);
         InputNode *node = addNewInputNode();
         node->setName(input->getName());
@@ -323,12 +401,13 @@ void Program::addInput(osc::Message msg)
 void Program::addOutput(osc::Message msg)
 {
     ProgramOutput *poutput = new ProgramOutput();
-    if (poutput->setup(msg, nextOutputPos))
+    if (poutput->initNew(msg))
     {
         outputs.push_back(poutput);
         OutputNode *node = addNewOutputNode();
         node->updateVal(poutput->getValue());
         node->setName(poutput->getName());
+        node->bDisplayName = true;
         pack(0, 0);
     }
     else {

@@ -36,6 +36,7 @@ void OutputNode::draw()
     }
     
     if (bDisplayName) {
+        gl::color(0, 0, 0);
         ResourceManager::getInstance().getTextureFont()->drawString(name, pos - Vec2f(nameSize.x+5, -3));
     }
 }
@@ -86,7 +87,7 @@ std::string OutputNode::getEndpointName()
         return std::string("Input");
     }
     
-    return std::string(next->name);
+    return std::string(next->getName());
 }
 
 Vec2f OutputNode::getCanvasPos()

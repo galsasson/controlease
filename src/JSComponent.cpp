@@ -606,8 +606,8 @@ void JSComponent::v8GetCanvasInputs(const FunctionCallbackInfo<v8::Value> &args)
     for (int i=0; i<inodes.size(); i++)
     {
         Handle<Object> inputObject = Object::New(Isolate::GetCurrent());
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "id"), v8::Number::New(Isolate::GetCurrent(), inodes[i]->id));
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "name"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->name.data()));
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "id"), v8::Number::New(Isolate::GetCurrent(), inodes[i]->getId()));
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "name"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->getName().data()));
         inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "distance"), v8::Number::New(Isolate::GetCurrent(), (canvasRect.getCenter() - inodes[i]->getCanvasPos()).length()));
         inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "connected"), v8::Boolean::New(Isolate::GetCurrent(), inodes[i]->isConnected()));
         array->Set(i, inputObject);

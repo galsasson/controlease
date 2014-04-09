@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include "cinder/Xml.h"
 #include "OscListener.h"
 #include "OscSender.h"
 
@@ -23,7 +24,9 @@ class ProgramInput
 {
 public:
     ProgramInput();
-    bool setup(osc::Sender *sender, osc::Message msg);
+    bool initNew(osc::Sender *sender, osc::Message msg);
+    void initFromXml(osc::Sender *sender, const XmlTree& xml);
+    XmlTree getXml();
 
     string getName();
     float getValue();
