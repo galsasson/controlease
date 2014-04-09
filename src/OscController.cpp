@@ -35,13 +35,34 @@ void OscController::initNew(Vec2f pos)
     setName("OscController");
     
     addressInput = new TextInput();
-    addressInput->initNew(Vec2f(5, 23), Vec2f(100-10, 14));
+    addressInput->initNew(Vec2f(5, 23), Vec2f(90, 14));
     addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
 }
 
 void OscController::initFromXml(const XmlTree& xml)
 {
+    CanvasComponent::initFromXml(xml);
     
+    addressInput = new TextInput();
+    addressInput->initFromXml(xml.getChild("TextInput"));
+    addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
+
+    bConnected = xml.getAttributeValue<bool>("bConnected");
+    if (bConnected) {
+        listenPort = xml.getAttributeValue<int>("listenPort");
+        setupConnection(listenPort);
+    }
+}
+
+XmlTree OscController::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+    
+    xml.setAttribute("bConnected", bConnected);
+    xml.setAttribute("listenPort", listenPort);
+    xml.push_back(addressInput->getXml());
+    
+    return xml;
 }
 
 void OscController::addressInputSet(void)

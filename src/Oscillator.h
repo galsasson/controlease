@@ -38,6 +38,7 @@ public:
     
     void initNew(Vec2f pos);
     void initFromXml(const XmlTree& xml);
+    XmlTree getXml();
     
     void update();
     void draw();

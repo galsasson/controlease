@@ -49,6 +49,7 @@ void Program::initFromXml(const XmlTree& xml)
     
     addressInput = new TextInput();
     addressInput->initFromXml(xml.getChild("TextInput"));
+    addressInput->onReturn(boost::bind(&Program::addressInputSet, this));
     
     listenPort = xml.getAttributeValue<int>("listenPort");
     bConnected = xml.getAttributeValue<bool>("bConnected");

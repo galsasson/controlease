@@ -19,7 +19,7 @@ void ResourceManager::initResources()
     
     colors.push_back(Color::hex(0x334d5c));
     colors.push_back(Color::hex(0x45b29d));
-    colors.push_back(Color::hex(0xbbaa00));
+    colors.push_back(Color::hex(0xdddd33));
     colors.push_back(Color::hex(0xff0000));
     colors.push_back(Color::hex(0xdf5a49));
 }

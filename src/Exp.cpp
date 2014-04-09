@@ -30,11 +30,9 @@ void Exp::initNew(Vec2f pos)
     setSize(Vec2f(150, 50));
     setName("Exp");
     
-    ivals.push_back(0);
     addNewInputNode();
     addNewOutputNode();
     
-//    textEditRect = Rectf(16, 22, localRect.getWidth()-20, localRect.getHeight()-2);
     codeInput = new TextInput();
     codeInput->initNew(Vec2f(16, 23), Vec2f(localRect.getWidth()-32, 14), true);
     codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
@@ -44,22 +42,31 @@ void Exp::initNew(Vec2f pos)
 
 void Exp::initFromXml(const XmlTree& xml)
 {
+    CanvasComponent::initFromXml(xml);
     
+    codeInput = new TextInput();
+    codeInput->initFromXml(xml.getChild("TextInput"));
+    codeInput->onReturn(boost::bind(&Exp::inputEnterPressed, this));
+
+    resizeComponent();
+    
+    prepareJSScript();
+}
+
+XmlTree Exp::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+    
+    xml.push_back(codeInput->getXml());
+    
+    return xml;
 }
 
 void Exp::inputEnterPressed()
 {
     isEditing = false;
 
-    // remove old code function
-    if (!pFunction.IsEmpty()) {
-        pFunction.Reset();
-    }
-    
-    std::ostringstream str;
-    str << "var time=0; var update = function() {"<<codeInput->getValue()<<"}";
-
-    compileAndRun(str.str());
+    prepareJSScript();
 }
 
 void Exp::update()
@@ -144,7 +151,7 @@ void Exp::mouseDown(const cease::MouseEvent& event)
     else if (inputPlusRect.contains(local)){
         // add another input
         addNewInputNode();
-        ivals.push_back(0);
+//        ivals.push_back(0);
         resizeComponent();
         return;
     }
@@ -197,22 +204,39 @@ void Exp::resizeComponent()
 float Exp::getValue(int i)
 {
     // this returns the input values
-    if (i >= ivals.size()) {
+    if (i >= inputNodes.size()) {
         return 0;
     }
     
-    return ivals[i];
+    return inputNodes[i]->getLastVal();
+//    if (i >= ivals.size()) {
+//        return 0;
+//    }
+//    
+//    return ivals[i];
 }
 
 void Exp::setValue(int i, float v)
 {
-    if (i >= ivals.size()) {
-        return;
-    }
-    
-    ivals[i] = v;
+//    if (i >= ivals.size()) {
+//        return;
+//    }
+//    
+//    ivals[i] = v;
 }
 
+void Exp::prepareJSScript()
+{
+    // remove old code function
+    if (!pFunction.IsEmpty()) {
+        pFunction.Reset();
+    }
+    
+    std::ostringstream str;
+    str << "var time=0; var update = function() {"<<codeInput->getValue()<<"}";
+    
+    compileAndRun(str.str());
+}
 
 void Exp::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
 {
@@ -220,8 +244,8 @@ void Exp::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     Exp *component = (Exp*)wrap->Value();
     ReturnValue<Value> ret = info.GetReturnValue();
-    if (component->ivals.size() > index) {
-        ret.Set(component->ivals[index]);
+    if (component->inputNodes.size() > index) {
+        ret.Set(component->inputNodes[index]->getLastVal());
     }
     else {
         // return 0 if no input exists
@@ -235,7 +259,7 @@ void Exp::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &inf
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     Exp *component = (Exp*)wrap->Value();
     ReturnValue<Value> ret = info.GetReturnValue();
-    if (component->ivals.size() > index) {
+    if (component->inputNodes.size() > index) {
         ret.Set(component->outputNodes[index]->getLastVal());
     }
 }

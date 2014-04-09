@@ -45,6 +45,16 @@ void Number::initFromXml(const XmlTree& xml)
     updateVal(nextVal);
 }
 
+XmlTree Number::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+    
+    xml.setAttribute("value", roundFloat(val));
+    
+    return xml;
+}
+
+
 void Number::update()
 {
     if (!immediateChange)
@@ -178,15 +188,6 @@ void Number::outputConnected(int i)
 void Number::outputDisconnected(int i)
 {
     setName("Number");
-}
-
-XmlTree Number::getXml()
-{
-    XmlTree xml = CanvasComponent::getXml();
-    
-    xml.setAttribute("value", roundFloat(val));
-    
-    return xml;
 }
 
 void Number::updateVal(float newVal)

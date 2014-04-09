@@ -37,7 +37,20 @@ void Oscillator::initNew(Vec2f pos)
 
 void Oscillator::initFromXml(const XmlTree& xml)
 {
+    CanvasComponent::initFromXml(xml);
     
+    val = xml.getAttributeValue<float>("value");
+    time = xml.getAttributeValue<double>("time");
+}
+
+XmlTree Oscillator::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+    
+    xml.setAttribute("value", val);
+    xml.setAttribute("time", time);
+    
+    return xml;
 }
 
 

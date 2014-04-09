@@ -41,6 +41,8 @@ public:
     
     void initNew(Vec2f pos);
     void initFromXml(const XmlTree& xml);
+    
+    XmlTree getXml();
 
     void inputEnterPressed();
 
@@ -60,14 +62,13 @@ public:
     void setValue(int i, float v);
     
 private:
+    void prepareJSScript();
     TextInput* codeInput;
     bool isEditing;
     Rectf textEditRect;
     
     // component dragging
     Vec2f compDragAnchor;
-    
-    vector<float> ivals;
     
     // V8
     static void v8InGetter(uint32_t index, const PropertyCallbackInfo<Value>& info);

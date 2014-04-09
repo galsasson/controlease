@@ -42,6 +42,8 @@ public:
     
     void initNew(Vec2f pos);
     void initFromXml(const XmlTree& xml);
+    XmlTree getXml();
+    
     
     void addressInputSet(void);
     void setupConnection(int port);
@@ -60,8 +62,6 @@ public:
     float getValue(int i);
     void setValue(int i, float v);
     
-    
-
 private:
     void startListener();
     void handleMessages();
