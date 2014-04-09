@@ -49,6 +49,8 @@ public:
     float getValue(int i);
     void setValue(int i, float v);
     
+    XmlTree getXml();
+    
 private:
     void updateVal(float newVal);
     
