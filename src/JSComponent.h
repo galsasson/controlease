@@ -138,6 +138,8 @@ private:
     bool getFunction(Handle<Context> &context, std::string name, Persistent<Function> &func);
     bool callV8Function(Persistent<Function> &func);
     bool callV8MouseFunction(Persistent<Function> &func, float x, float y);
+    std::string getInternalState();
+    void setInternalState(std::string stateJSON);
     
     void compileAndRun(std::string code);
     void scriptRunMouseDown();
@@ -149,6 +151,8 @@ private:
     Persistent<Function> pMouseDownFunc;
     Persistent<Function> pMouseUpFunc;
     Persistent<Function> pMouseDragFunc;
+    Persistent<Function> pSaveFunc;
+    Persistent<Function> pLoadFunc;
     
 };
 

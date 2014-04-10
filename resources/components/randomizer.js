@@ -47,8 +47,6 @@ var lookForInputNode = function()
         return;
     }
     
-    var available
-    
     var closest = 101;
     var closestNode;
     for (var i=0; i<nodes.length; i++)

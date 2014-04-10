@@ -9,6 +9,9 @@
 #ifndef Controlease_Controlease_h
 #define Controlease_Controlease_h
 
+#include <sstream>
+#include "cinder/app/App.h"
+
 #define FLOAT_PRECISION "2"
 #define PRECISION_FACTOR 100
 
@@ -45,6 +48,14 @@ typedef enum
     COMPONENT_TYPE_JS,
     COMPONENT_TYPE_OSCCONTROLLER,
 } ComponentType;
+
+static std::string getJSComponentsPath()
+{
+    std::stringstream pathStr;
+    pathStr << cinder::app::getAppPath().c_str()<<"/Contents/Resources/components/";
+    
+    return pathStr.str();
+}
 
 static float roundFloat(float f)
 {

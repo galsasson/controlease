@@ -11,6 +11,7 @@
 
 #include <iostream>
 #include <sstream>
+#include "Controlease.h"
 #include "cinder/app/App.h"
 #include "cinder/gl/gl.h"
 

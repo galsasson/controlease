@@ -79,9 +79,7 @@ void ComponentBox::createButtons()
 void ComponentBox::createJSButtons(float y)
 {
     // scan components dir and look for .js files
-    stringstream pathStr;
-    pathStr << getAppPath().c_str()<<"/Contents/Resources/components/";
-    fs::path path(pathStr.str());
+    fs::path path(getJSComponentsPath());
     fs::directory_iterator end_iter;
     
     if (!fs::exists(path) || !fs::is_directory(path)) {

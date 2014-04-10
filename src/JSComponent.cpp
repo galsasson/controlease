@@ -13,6 +13,10 @@ JSComponent::JSComponent(Canvas *c) : CanvasComponent(c)
 {
     type = ComponentType::COMPONENT_TYPE_JS;
     isDragging = false;
+
+    jsRect = Rectf(10, 26, 0, 0);
+    jsColor = Color(0, 0, 0);
+    jsColorVec = Vec3f(0, 0, 0);
 }
 
 JSComponent::~JSComponent()
@@ -33,33 +37,39 @@ void JSComponent::initNew(Vec2f pos, fs::path script)
     jsScript = script;
 
     originRect = canvasRect;
-    jsRect = Rectf(10, 26, 0, 0);
-    jsColor = Color(0, 0, 0);
-    jsColorVec = Vec3f(0, 0, 0);
     
     initComponent();
 }
 
 void JSComponent::initFromXml(const XmlTree& xml)
 {
+    CanvasComponent::initFromXml(xml);
+    stringstream compPath;
+    compPath << getJSComponentsPath();
+    compPath << xml.getAttributeValue<std::string>("jsScript");
+    jsScript = fs::path(compPath.str());
     
+    initComponent();
+    setInternalState(xml.getAttributeValue<std::string>("stateJson"));
 }
 
 XmlTree JSComponent::getXml()
 {
     XmlTree xml = CanvasComponent::getXml();
     
+    xml.setAttribute("jsScript", jsScript.filename().string());
+    xml.setAttribute("stateJson", getInternalState());
+    
     return xml;
 }
 
 void JSComponent::initNodes(int nIns, int nOuts)
 {
-    for (int i=0; i<nIns; i++)
+    for (int i=inputNodes.size(); i<nIns; i++)
     {
         addNewInputNode();
-        ivals.push_back(0);
     }
-    for (int i=0; i<nOuts; i++)
+    for (int i=outputNodes.size(); i<nOuts; i++)
     {
         addNewOutputNode();
     }
@@ -178,21 +188,21 @@ bool JSComponent::isHotspot(const cease::MouseEvent& event)
 float JSComponent::getValue(int i)
 {
     // this returns the input values
-    if (i >= ivals.size()) {
+    if (i >= inputNodes.size()) {
         return 0;
     }
     
-    return ivals[i];
+    return inputNodes[i]->getLastVal();
 }
 
 void JSComponent::setValue(int i, float v)
 {
-    if (i >= ivals.size()) {
-        console() << "warning: index "<<i<<"?? are you crazy? what value are you setting?"<<endl;
-        return;
-    }
-    
-    ivals[i] = v;
+//    if (i >= ivals.size()) {
+//        console() << "warning: index "<<i<<"?? are you crazy? what value are you setting?"<<endl;
+//        return;
+//    }
+//    
+//    ivals[i] = v;
 }
 
 void JSComponent::resizeComponent()
@@ -211,7 +221,16 @@ void JSComponent::initComponent()
     }
     
     stringstream buffer;
+    
+    // declare the 'state' object that will be saved with the component.
+    buffer << "var state = {};"<<endl;
+    // declare save and load functions
+    buffer << "var saveComp = function() { return JSON.stringify(state); }"<<endl;
+    buffer << "var loadComp = function(stateObj) { state = eval('(' + stateObj + ')'); }"<<endl;
+    
+    // put script contents into the buffer
     buffer << jsfile.rdbuf();
+    
     compileAndRun(buffer.str());
 }
 
@@ -221,13 +240,7 @@ void JSComponent::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Valu
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     JSComponent *comp = (JSComponent*)wrap->Value();
     ReturnValue<Value> ret = info.GetReturnValue();
-    if (comp->ivals.size() > index) {
-        ret.Set(comp->ivals[index]);
-    }
-    else {
-        // return 0 if no input exists
-        ret.Set(0);
-    }
+    ret.Set(comp->getValue(index));
 }
 
 void JSComponent::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
@@ -236,7 +249,7 @@ void JSComponent::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Val
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     JSComponent *comp = (JSComponent*)wrap->Value();
     ReturnValue<Value> ret = info.GetReturnValue();
-    if (comp->ivals.size() > index) {
+    if (comp->outputNodes.size() > index) {
         ret.Set(comp->outputNodes[index]->getLastVal());
     }
 }
@@ -343,6 +356,8 @@ void JSComponent::compileAndRun(std::string code)
     getFunction(context, "mousedown", pMouseDownFunc);
     getFunction(context, "mouseup", pMouseUpFunc);
     getFunction(context, "mousedrag", pMouseDragFunc);
+    getFunction(context, "saveComp", pSaveFunc);
+    getFunction(context, "loadComp", pLoadFunc);
     
     callV8Function(pSetupFunc);
 }
@@ -388,6 +403,47 @@ bool JSComponent::callV8MouseFunction(Persistent<v8::Function> &func, float x, f
     localFunction->Call(context->Global(), 2, args);
     
     return true;
+}
+
+std::string JSComponent::getInternalState()
+{
+    if (pSaveFunc.IsEmpty()) {
+        return "";
+    }
+
+    // Create a stack-allocated handle scope.
+    HandleScope handle_scope(Isolate::GetCurrent());
+    
+    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    
+    Context::Scope context_scope(context);
+    
+    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), pSaveFunc);
+    
+    Handle<Value> result = localFunction->Call(context->Global(), 0, NULL);
+    
+    v8::String::Utf8Value utfString(result->ToString());
+    return std::string(*utfString);
+}
+
+void JSComponent::setInternalState(std::string stateJSON)
+{
+    if (pLoadFunc.IsEmpty()) {
+        return;
+    }
+    
+    // Create a stack-allocated handle scope.
+    HandleScope handle_scope(Isolate::GetCurrent());
+    
+    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    
+    Context::Scope context_scope(context);
+    
+    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), pLoadFunc);
+    Handle<Value> args[1];
+    args[0] = v8::String::NewFromUtf8(Isolate::GetCurrent(), stateJSON.data());
+    
+    localFunction->Call(context->Global(), 1, args);
 }
 
 /*****************************************************************************/
