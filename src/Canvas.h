@@ -38,7 +38,11 @@ class Canvas : public MouseListener, public KeyboardListener
 public:
     Canvas();
     void setup(Vec2f _pos, Vec2f _size);
+    // save / load stuff
+    void initFromXml(const XmlTree& xml);
+    XmlTree getXml();
     
+
     void update();
     void draw();    
     void addComponent(CanvasComponent *comp);
@@ -72,10 +76,6 @@ public:
 
     // remove all components and start with a new canvas
     void reset();
-    
-    // save / load stuff
-    XmlTree getXml();
-    void initFromXml(const XmlTree& xml);
     
     Vec2f pos;
     Vec2f size;

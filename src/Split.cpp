@@ -40,6 +40,12 @@ void Split::initFromXml(const XmlTree& xml)
     CanvasComponent::initFromXml(xml);
 }
 
+XmlTree Split::getXml()
+{
+    return CanvasComponent::getXml();
+}
+
+
 void Split::update()
 {
     if (!immediateChange)
@@ -123,11 +129,6 @@ void Split::setValue(int i, float v)
     else {
         nextVal = v;
     }
-}
-
-XmlTree Split::getXml()
-{
-    return CanvasComponent::getXml();
 }
 
 void Split::updateVal(float newVal)

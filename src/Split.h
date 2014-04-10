@@ -37,7 +37,8 @@ public:
     
     void initNew(Vec2f pos);
     void initFromXml(const XmlTree& xml);
-    
+    XmlTree getXml();
+        
     void update();
     void draw();
 
@@ -48,8 +49,6 @@ public:
     
     float getValue(int i);
     void setValue(int i, float v);
-    
-    XmlTree getXml();
     
 private:
     void updateVal(float newVal);

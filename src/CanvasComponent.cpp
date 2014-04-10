@@ -60,6 +60,35 @@ void CanvasComponent::initFromXml(const XmlTree& xml)
     }
 }
 
+XmlTree CanvasComponent::getXml()
+{
+    XmlTree cComp("CanvasComponent", "");
+    cComp.setAttribute("type", ci::toString(type));
+    cComp.setAttribute("name", name);
+    cComp.setAttribute("position.x", canvasRect.x1);
+    cComp.setAttribute("position.y", canvasRect.y1);
+    cComp.setAttribute("size.x", localRect.getWidth());
+    cComp.setAttribute("size.y", localRect.getHeight());
+    cComp.setAttribute("showInputPlus", showInputPlus);
+    cComp.setAttribute("showOutputPlus", showOutputPlus);
+    
+    XmlTree inodes("InputNodes", "");
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        inodes.push_back(inputNodes[i]->getXml());
+    }
+    cComp.push_back(inodes);
+    
+    XmlTree onodes("OutputNodes", "");
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        onodes.push_back(outputNodes[i]->getXml());
+    }
+    cComp.push_back(onodes);
+    
+    return cComp;
+}
+
 
 void CanvasComponent::setSize(Vec2f size)
 {
@@ -310,35 +339,6 @@ string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
     fs::path fileNoExt(scriptFile);
     fileNoExt = fileNoExt.replace_extension("").filename();
     return fileNoExt.string();
-}
-
-XmlTree CanvasComponent::getXml()
-{
-    XmlTree cComp("CanvasComponent", "");
-    cComp.setAttribute("type", ci::toString(type));
-    cComp.setAttribute("name", name);
-    cComp.setAttribute("position.x", canvasRect.x1);
-    cComp.setAttribute("position.y", canvasRect.y1);
-    cComp.setAttribute("size.x", localRect.getWidth());
-    cComp.setAttribute("size.y", localRect.getHeight());
-    cComp.setAttribute("showInputPlus", showInputPlus);
-    cComp.setAttribute("showOutputPlus", showOutputPlus);
-    
-    XmlTree inodes("InputNodes", "");
-    for (int i=0; i<inputNodes.size(); i++)
-    {
-        inodes.push_back(inputNodes[i]->getXml());
-    }
-    cComp.push_back(inodes);
-    
-    XmlTree onodes("OutputNodes", "");
-    for (int i=0; i<outputNodes.size(); i++)
-    {
-        onodes.push_back(outputNodes[i]->getXml());
-    }
-    cComp.push_back(onodes);
-    
-    return cComp;
 }
 
 Vec2f CanvasComponent::toLocal(const Vec2f& p)

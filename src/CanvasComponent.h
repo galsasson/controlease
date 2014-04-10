@@ -36,7 +36,8 @@ public:
     
     virtual void initNew(Vec2f p);
     virtual void initFromXml(const XmlTree& xml);
-    
+    virtual XmlTree getXml();
+        
     void setType(ComponentType t) { type = t; }
     void setSize(Vec2f size);
     virtual void setName(std::string n);
@@ -76,8 +77,6 @@ public:
     static std::string getComponentTypeString(ComponentType t);
     static std::string getJSComponentTypeString(std::string scriptFile);
 
-    virtual XmlTree getXml();
-    
 protected:
     virtual Vec2f toLocal(const Vec2f& p);
     virtual Vec2f toCanvas(const Vec2f& p);

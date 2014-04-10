@@ -43,6 +43,7 @@ public:
     
     void initNew(Vec2f pos, fs::path script);
     void initFromXml(const XmlTree& xml);
+    XmlTree getXml();
     
     void initNodes(int nIns, int nOuts);
     void initGUI(Vec2f size);

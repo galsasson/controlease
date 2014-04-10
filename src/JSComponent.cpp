@@ -45,6 +45,13 @@ void JSComponent::initFromXml(const XmlTree& xml)
     
 }
 
+XmlTree JSComponent::getXml()
+{
+    XmlTree xml = CanvasComponent::getXml();
+    
+    return xml;
+}
+
 void JSComponent::initNodes(int nIns, int nOuts)
 {
     for (int i=0; i<nIns; i++)

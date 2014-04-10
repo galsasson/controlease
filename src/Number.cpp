@@ -54,7 +54,6 @@ XmlTree Number::getXml()
     return xml;
 }
 
-
 void Number::update()
 {
     if (!immediateChange)
