@@ -623,7 +623,15 @@ void Canvas::deleteComponent(CanvasComponent *comp)
 
 CanvasComponent* Canvas::getComponentUnder(Vec2f p)
 {
-    for (int i=0; i<components.size(); i++)
+    // try first focus component
+    if (focusComponent != NULL) {
+        if (focusComponent->contains(p)) {
+            return focusComponent;
+        }
+    }
+    
+    // go in reverse order so the top-most component will be chosen first
+    for (int i=components.size()-1; i>=0; i--)
     {
         if (components[i]->contains(p))
         {

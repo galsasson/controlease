@@ -127,7 +127,7 @@ void JSComponent::draw()
     
     gl::popMatrices();
 
-    gl::color(255, 0, 0);
+    gl::color(0.7, 0, 0);
     gl::drawStrokedRect(originRect);
 }
 

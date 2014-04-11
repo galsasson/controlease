@@ -35,7 +35,7 @@ var lastFrameClicked;
 var setup = function()
 {
     ceInit("Timeline", 1, 1);
-    ceSetGuiSize(frames+10, height);
+    ceSetGuiSize(frames, height);
 
     for (var i=0; i<frames; i++)
     {
@@ -48,8 +48,8 @@ var setup = function()
 var update = function()
 {
     tlPos = inn[0];
-    if (tlPos > frames-2) {
-        tlPos = frames-2;
+    if (tlPos > frames-1) {
+        tlPos = frames-1;
     }
     else if (tlPos < 0) {
         tlPos = 0;
@@ -78,7 +78,7 @@ var draw = function()
 
 var mousedown = function(_x, _y)
 {
-    var i = Math.floor(_x)-5;
+    var i = Math.floor(_x);
     if (i<0 || i>frames) {
         return;
     }
@@ -89,7 +89,7 @@ var mousedown = function(_x, _y)
 
 var mousedrag = function(_x, _y)
 {
-    var f = Math.floor(_x)-5;
+    var f = Math.floor(_x);
     if (f<0 || f>=frames) {
         return;
     }
