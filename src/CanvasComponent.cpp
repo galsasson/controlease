@@ -125,7 +125,7 @@ void CanvasComponent::drawOutline()
     glLineStipple(1, 0xff00);
     gl::enable(GL_LINE_STIPPLE);
     
-    gl::color(0.5, 0.5, 0.5);
+    gl::color(0.8, 0.8, 0.8);
     gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
     
     glPopAttrib();

@@ -14,7 +14,7 @@ JSComponent::JSComponent(Canvas *c) : CanvasComponent(c)
     setType(ComponentType::COMPONENT_TYPE_JS);
     isDragging = false;
 
-    jsRect = Rectf(10, 26, 0, 0);
+    jsRect = Rectf(10, 25, 0, 0);
     jsColor = Color(0, 0, 0);
     jsColorVec = Vec3f(0, 0, 0);
 }
@@ -115,6 +115,10 @@ void JSComponent::draw()
     }
     
     // call draw of js component
+    gl::lineWidth(0.5);
+    gl::color(0, 0, 0);
+    gl::drawStrokedRect(jsRect);
+    gl::lineWidth(1);
     gl::pushMatrices();
     gl::translate(jsRect.getUpperLeft() + jsRect.getSize()/2);
     gl::color(jsColor);
