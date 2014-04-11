@@ -12,7 +12,7 @@ void printMessage(osc::Message message);
 
 OscController::OscController(Canvas *c) : CanvasComponent(c)
 {
-    type = ComponentType::COMPONENT_TYPE_OSCCONTROLLER;
+    setType(ComponentType::COMPONENT_TYPE_OSCCONTROLLER);
     
     bEditing = false;
     bConnected = false;
@@ -32,7 +32,6 @@ void OscController::initNew(Vec2f pos)
 {
     CanvasComponent::initNew(pos);
     setSize(Vec2f(100, 40));
-    setName("OscController");
     
     addressInput = new TextInput();
     addressInput->initNew(Vec2f(5, 23), Vec2f(90, 14));

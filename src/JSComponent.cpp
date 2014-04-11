@@ -11,7 +11,7 @@
 
 JSComponent::JSComponent(Canvas *c) : CanvasComponent(c)
 {
-    type = ComponentType::COMPONENT_TYPE_JS;
+    setType(ComponentType::COMPONENT_TYPE_JS);
     isDragging = false;
 
     jsRect = Rectf(10, 26, 0, 0);
@@ -33,7 +33,6 @@ void JSComponent::initNew(Vec2f pos, fs::path script)
 {
     CanvasComponent::initNew(pos);
     setSize(Vec2f(10, 0));
-    setName(script.filename().replace_extension("").string());
     jsScript = script;
 
     originRect = canvasRect;

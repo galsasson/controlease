@@ -12,7 +12,7 @@
 
 Oscillator::Oscillator(Canvas *c) : CanvasComponent(c)
 {
-    type = ComponentType::COMPONENT_TYPE_OSCILLATOR;
+    setType(ComponentType::COMPONENT_TYPE_OSCILLATOR);
     immediateChange = false;
 }
 
@@ -24,7 +24,6 @@ void Oscillator::initNew(Vec2f pos)
 {
     CanvasComponent::initNew(pos);
     setSize(Vec2f(100, 40));
-    setName("Oscillator");
     
     addNewInputNode();
     inputNodes[0]->setName("Frequency");
@@ -91,7 +90,7 @@ void Oscillator::draw()
     gl::drawStrokedRoundedRect(localRect, 2);
     
     // draw title
-    ResourceManager::getInstance().getTextureFont()->drawString("Oscillator", titleRect);
+    ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
     gl::drawLine(Vec2f(0, titleRect.getHeight()), Vec2f(localRect.getWidth(), titleRect.getHeight()));
     
     // draw nodes

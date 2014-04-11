@@ -194,11 +194,11 @@
 				2AAB76C118CF73EB007833C4 /* ComponentBox.cpp */,
 				2AAB76C218CF73EB007833C4 /* ComponentBox.h */,
 				2AF1CC5118C1365C000A49BB /* GUI elements */,
-				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
-				2A20D07B18BF081E005C206F /* ProgramOutput.h */,
 				2A798DE018BAFAD200421573 /* Components */,
 				2A7F105218B562EA006CA100 /* ProgramInput.cpp */,
 				2A7F105318B562EA006CA100 /* ProgramInput.h */,
+				2A20D07A18BF081E005C206F /* ProgramOutput.cpp */,
+				2A20D07B18BF081E005C206F /* ProgramOutput.h */,
 				2A2E083018B5714B0060A535 /* ResourceManager.cpp */,
 				2A2E083118B5714B0060A535 /* ResourceManager.h */,
 				2A2E083318B58E270060A535 /* Canvas.cpp */,
@@ -208,8 +208,6 @@
 				2A798DC818B97C8600421573 /* Wire.h */,
 				2A798DD718B9A33B00421573 /* ConnectionResult.h */,
 				2AF1CC5518C137A6000A49BB /* KeyboardListener.h */,
-				2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */,
-				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -308,6 +306,8 @@
 		2A798DE018BAFAD200421573 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				2A49CAE618DDEF2900348E6A /* CanvasComponent.cpp */,
+				2A798DC518B86ACA00421573 /* CanvasComponent.h */,
 				2A49CAEB18DFCD7600348E6A /* OscController.cpp */,
 				2A49CAEC18DFCD7600348E6A /* OscController.h */,
 				2A697E0C18C81C7800ACA9D2 /* JSComponent.cpp */,

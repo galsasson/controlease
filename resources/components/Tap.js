@@ -43,7 +43,7 @@ var update = function()
 
 var draw = function()
 {
-    ceDrawString(nClicks, -15, 0);
+    ceDrawString(nClicks, 0, 0);
 }
 
 var mousedown = function(x, y)

@@ -10,7 +10,7 @@
 
 Program::Program(Canvas *c) : CanvasComponent(c)
 {
-    type = ComponentType::COMPONENT_TYPE_PROGRAM;
+    setType(ComponentType::COMPONENT_TYPE_PROGRAM);
     bConnected = false;
     bEditing = false;
 }
@@ -34,7 +34,6 @@ void Program::initNew(Vec2f pos)
 {
     CanvasComponent::initNew(pos);
     setSize(Vec2f(200, 40));
-    setName("Program");
 
     addressInput = new TextInput();
     addressInput->initNew(Vec2f(4, 23), Vec2f(192, 14));

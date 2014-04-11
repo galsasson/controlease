@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Canvas>
+	<Components>
+		<CanvasComponent type="0" name="Particle example sketch" position.x="2512" position.y="1180" size.x="200" size.y="55" showInputPlus="0" showOutputPlus="0" listenPort="6846" bConnected="1" bEditing="0" programHost="localhost" programPort="7777">
+			<InputNodes>
+				<Node globalID="0" index="0" lastVal="30" pos.x="6" pos.y="28" name="Particle size" bDisplayName="0"/>
+				<Node globalID="1" index="1" lastVal="93" pos.x="6" pos.y="37" name="Minimum distance" bDisplayName="0"/>
+				<Node globalID="2" index="2" lastVal="8" pos.x="6" pos.y="46" name="Line width" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="3" index="0" lastVal="0" pos.x="194" pos.y="28" name="Mouse X" bDisplayName="1"/>
+				<Node globalID="4" index="1" lastVal="254" pos.x="194" pos.y="37" name="Mouse Y" bDisplayName="1"/>
+			</OutputNodes>
+			<TextInput pos.x="4" pos.y="23" minSize.x="192" minSize.y="14" bMultiline="0" text="localhost:7777"/>
+			<ProgramInputs>
+				<ProgramInput name="Particle size" address="/ic" index="0" type="1" value="30"/>
+				<ProgramInput name="Minimum distance" address="/ic" index="1" type="1" value="93"/>
+				<ProgramInput name="Line width" address="/ic" index="2" type="1" value="8"/>
+			</ProgramInputs>
+			<ProgramOutputs>
+				<ProgramOutput name="Mouse X" index="0" type="0" value="0"/>
+				<ProgramOutput name="Mouse Y" index="1" type="0" value="0"/>
+			</ProgramOutputs>
+		</CanvasComponent>
+		<CanvasComponent type="1" name="Input" position.x="2281" position.y="1114" size.x="100" size.y="40" showInputPlus="0" showOutputPlus="0" value="30">
+			<InputNodes>
+				<Node globalID="5" index="0" lastVal="30" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="6" index="0" lastVal="30" pos.x="94" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="1" name="Line width" position.x="2250" position.y="1201" size.x="100" size.y="40" showInputPlus="0" showOutputPlus="0" value="8">
+			<InputNodes>
+				<Node globalID="7" index="0" lastVal="0" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="8" index="0" lastVal="8" pos.x="94" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="1" name="Minimum distance" position.x="2322" position.y="1266" size.x="100" size.y="40" showInputPlus="0" showOutputPlus="0" value="93">
+			<InputNodes>
+				<Node globalID="9" index="0" lastVal="0" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="10" index="0" lastVal="93" pos.x="94" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="5" name="JAVASCRIPT" position.x="2307" position.y="1350" size.x="229" size.y="80" showInputPlus="0" showOutputPlus="0" jsScript="timeline.js" stateJson='{"values":[0,15,15,16,19,20,23,25,28,31,35,35,37,39,40,42,44,46,47,47,49,49,49,48,47,45,43,35,34,32,30,28,27,26,24,23,22,21,20,19,19,18,17,16,15,15,14,13,13,13,12,11,11,11,10,10,9,9,9,8,8,8,8,7,7,7,46,47,48,49,49,49,49,40,37,35,32,30,29,27,26,24,23,19,19,18,16,15,15,15,15,16,19,21,22,23,26,26,29,30,30,31,34,36,37,38,39,42,43,44,45,47,48,49,49,50,50,50,49,48,48,47,46,44,43,41,39,35,34,28,24,22,21,17,15,14,13,12,12,12,12,13,13,14,14,14,15,15,16,16,16,17,18,19,19,19,20,21,24,25,26,27,29,30,33,35,39,39,43,45,47,48,49,49,50,50,50,50,50,50,49,49,47,47,45,45,43,41,38,33,29,26,24,22,21,19,18,17,16,14]}'>
+			<InputNodes>
+				<Node globalID="11" index="0" lastVal="117" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="12" index="0" lastVal="1" pos.x="223" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="5" name="JAVASCRIPT" position.x="2202" position.y="1356" size.x="69" size.y="80" showInputPlus="0" showOutputPlus="0" jsScript="clock.js" stateJson="{}">
+			<InputNodes>
+				<Node globalID="13" index="0" lastVal="200" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+				<Node globalID="14" index="1" lastVal="1" pos.x="6" pos.y="37" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="15" index="0" lastVal="117" pos.x="63" pos.y="28" name="Output" bDisplayName="0"/>
+				<Node globalID="16" index="1" lastVal="0" pos.x="63" pos.y="37" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="1" name="Input" position.x="2074" position.y="1317" size.x="100" size.y="40" showInputPlus="0" showOutputPlus="0" value="200">
+			<InputNodes>
+				<Node globalID="17" index="0" lastVal="0" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="18" index="0" lastVal="200" pos.x="94" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="1" name="Input" position.x="2050" position.y="1397" size.x="100" size.y="40" showInputPlus="0" showOutputPlus="0" value="1">
+			<InputNodes>
+				<Node globalID="19" index="0" lastVal="1" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="20" index="0" lastVal="1" pos.x="94" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+		<CanvasComponent type="4" name="EXPRESSION" position.x="2403" position.y="1466" size.x="150" size.y="46" showInputPlus="1" showOutputPlus="1">
+			<InputNodes>
+				<Node globalID="21" index="0" lastVal="1" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="22" index="0" lastVal="30" pos.x="144" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+			<TextInput pos.x="16" pos.y="23" minSize.x="118" minSize.y="14" bMultiline="1" text="out[0] = inn[0]*30;"/>
+		</CanvasComponent>
+		<CanvasComponent type="6" name="OSC RECEIVER" position.x="2000" position.y="1093" size.x="100" size.y="37" showInputPlus="0" showOutputPlus="0" bConnected="1" listenPort="8000">
+			<InputNodes/>
+			<OutputNodes>
+				<Node globalID="23" index="0" lastVal="1" pos.x="94" pos.y="28" name="/1/fader1" bDisplayName="1"/>
+			</OutputNodes>
+			<TextInput pos.x="5" pos.y="23" minSize.x="90" minSize.y="14" bMultiline="0" text="8000"/>
+		</CanvasComponent>
+		<CanvasComponent type="5" name="JAVASCRIPT" position.x="2431" position.y="1097" size.x="69" size.y="55" showInputPlus="0" showOutputPlus="0" jsScript="switch.js" stateJson='{"selectedInput":0}'>
+			<InputNodes>
+				<Node globalID="29" index="0" lastVal="30" pos.x="6" pos.y="28" name="Input" bDisplayName="0"/>
+				<Node globalID="30" index="1" lastVal="0" pos.x="6" pos.y="37" name="Input" bDisplayName="0"/>
+				<Node globalID="31" index="2" lastVal="0" pos.x="6" pos.y="46" name="Input" bDisplayName="0"/>
+			</InputNodes>
+			<OutputNodes>
+				<Node globalID="32" index="0" lastVal="30" pos.x="63" pos.y="28" name="Output" bDisplayName="0"/>
+			</OutputNodes>
+		</CanvasComponent>
+	</Components>
+	<Wires>
+		<Wire inputID="2" outputID="8"/>
+		<Wire inputID="1" outputID="10"/>
+		<Wire inputID="13" outputID="18"/>
+		<Wire inputID="14" outputID="20"/>
+		<Wire inputID="11" outputID="15"/>
+		<Wire inputID="21" outputID="12"/>
+		<Wire inputID="5" outputID="22"/>
+		<Wire inputID="19" outputID="23"/>
+		<Wire inputID="29" outputID="6"/>
+		<Wire inputID="0" outputID="32"/>
+	</Wires>
+</Canvas>
+

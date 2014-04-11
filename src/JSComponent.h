@@ -12,10 +12,11 @@
 #include <iostream>
 #include <sstream>
 #include <fstream>
+#include <boost/algorithm/string.hpp>
+#include <boost/container/vector.hpp>
 #include "cinder/app/AppNative.h"
 #include "cinder/gl/gl.h"
 #include "cinder/Rect.h"
-#include <boost/container/vector.hpp>
 #include "cinder/Perlin.h"
 #include "v8.h"
 

@@ -10,10 +10,12 @@
 
 void ResourceManager::initResources()
 {
-//    mFont = Font("Arial", 12);
 //    mFont = Font(loadAsset("Blender-BOOK.ttf"), 14);
-    mFont = Font(loadAsset("Blender-BOLD.ttf"), 14);
-    mTextureFont = gl::TextureFont::create(mFont);
+//    mFont = Font(loadAsset("Blender-BOLD.ttf"), 14);
+    mFont = Font(loadAsset("Overlock-Bold.ttf"), 12);
+    gl::TextureFont::Format format;
+//    format.premultiply();
+    mTextureFont = gl::TextureFont::create(mFont, format);
     
     mPlusTexture = loadImage(getAssetPath("plus.png"));
     

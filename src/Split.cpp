@@ -10,7 +10,7 @@
 
 Split::Split(Canvas *c) : CanvasComponent(c)
 {
-    type = ComponentType::COMPONENT_TYPE_SPLIT;
+    setType(ComponentType::COMPONENT_TYPE_SPLIT);
     immediateChange = false;
     showOutputPlus = true;
 }
@@ -23,7 +23,6 @@ void Split::initNew(Vec2f pos)
 {
     CanvasComponent::initNew(pos);
     setSize(Vec2f(30, 50));
-    setName("Split");
     
     // add one input and two outputs to begin with
     addNewInputNode();

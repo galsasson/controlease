@@ -471,7 +471,7 @@ void Canvas::drawGridFbo()
     gl::setViewport(gridFbo.getBounds());
 
     gl::clear(Color(0.0, 0.0, 0.0));
-    gl::color(0.2, 0.2, 0.2);
+    gl::color(0.35, 0.35, 0.35);
     gl::lineWidth(1);
     
     for (float x=0; x<=virtualSize.x; x+=40)

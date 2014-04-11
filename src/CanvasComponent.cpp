@@ -89,6 +89,11 @@ XmlTree CanvasComponent::getXml()
     return cComp;
 }
 
+void CanvasComponent::setType(ComponentType t)
+{
+    type = t;
+    setName(CanvasComponent::getComponentTypeString(t));
+}
 
 void CanvasComponent::setSize(Vec2f size)
 {
@@ -316,19 +321,19 @@ string CanvasComponent::getComponentTypeString(ComponentType t)
     switch (t)
     {
         case COMPONENT_TYPE_PROGRAM:
-            return "Program";
+            return "PROGRAM";
         case COMPONENT_TYPE_NUMBER:
-            return "Number";
+            return "NUMBER";
         case COMPONENT_TYPE_SPLIT:
-            return "Split";
+            return "SPLIT";
         case COMPONENT_TYPE_OSCILLATOR:
-            return "Oscillator";
+            return "OSCILLATOR";
         case COMPONENT_TYPE_EXP:
-            return "Expression";
+            return "EXPRESSION";
         case COMPONENT_TYPE_JS:
-            return "Javascript";
+            return "JAVASCRIPT";
         case COMPONENT_TYPE_OSCCONTROLLER:
-            return "OscController";
+            return "OSC RECEIVER";
     }
     
     return "Unknown";
@@ -336,9 +341,8 @@ string CanvasComponent::getComponentTypeString(ComponentType t)
 
 string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
 {
-    fs::path fileNoExt(scriptFile);
-    fileNoExt = fileNoExt.replace_extension("").filename();
-    return fileNoExt.string();
+    fs::path file(scriptFile);
+    return boost::to_upper_copy(file.filename().string());
 }
 
 Vec2f CanvasComponent::toLocal(const Vec2f& p)

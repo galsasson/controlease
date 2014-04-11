@@ -10,7 +10,7 @@
 
 Number::Number(Canvas *c) : CanvasComponent(c)
 {
-    type = ComponentType::COMPONENT_TYPE_NUMBER;
+    setType(ComponentType::COMPONENT_TYPE_NUMBER);
     
     immediateChange = false;
     valInc = 1;
@@ -25,10 +25,8 @@ Number::~Number()
 
 void Number::initNew(Vec2f pos)
 {
-    CanvasComponent::initNew(pos);
-    
+    CanvasComponent::initNew(pos);    
     setSize(Vec2f(100, 40));
-    setName("Number");
     
     addNewInputNode();
     addNewOutputNode();

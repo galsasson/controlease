@@ -14,7 +14,7 @@ TextInput::TextInput()
     
     text = "";
     fontHeight = ResourceManager::getInstance().getTextureFont()->getAscent() +
-    ResourceManager::getInstance().getTextureFont()->getDescent();
+        ResourceManager::getInstance().getTextureFont()->getDescent();
 
     cursorPos = 0;
     cursorLocation = Vec2f(0,0);

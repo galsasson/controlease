@@ -10,6 +10,7 @@
 #define __Controlease__CanvasComponent__
 
 #include <vector>
+#include <boost/algorithm/string.hpp>
 
 #include "cinder/app/App.h"
 #include "cinder/Xml.h"
@@ -38,7 +39,7 @@ public:
     virtual void initFromXml(const XmlTree& xml);
     virtual XmlTree getXml();
         
-    void setType(ComponentType t) { type = t; }
+    void setType(ComponentType t);
     void setSize(Vec2f size);
     virtual void setName(std::string n);
     

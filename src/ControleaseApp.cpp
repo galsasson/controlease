@@ -58,7 +58,7 @@ void ControleaseApp::prepareSettings(cinder::app::AppBasic::Settings *settings)
 {
     settings->enableHighDensityDisplay();
     settings->setWindowSize(800, 600);
-    settings->setFrameRate(30);
+    settings->setFrameRate(60);
     
     settings->enablePowerManagement(true);
 }
@@ -99,14 +99,20 @@ void ControleaseApp::threadUpdate()
     }
 }
 
+//static int counter = 0;
+
 void ControleaseApp::draw()
 {
 	// clear out the window with black
-	gl::clear( Color( 0.7, 0.7, 0.7 ) );
+//	gl::clear( Color( 0.7, 0.7, 0.7 ) );
     
     menuBar->draw();
     compbox->draw();
     canvas->draw();
+    
+//    if (++counter%120 == 0) {
+//        console() << "frame rate: " << ci::app::getFrameRate() << endl;
+//    }
     
 }
 
@@ -218,7 +224,7 @@ Vec2f ControleaseApp::getMenubarSize()
 
 Vec2f ControleaseApp::getCompboxSize()
 {
-    return Vec2f(150, getWindowHeight()-getMenubarSize().y);
+    return Vec2f(120, getWindowHeight()-getMenubarSize().y);
 }
 
 Vec2f ControleaseApp::getCanvasSize()
