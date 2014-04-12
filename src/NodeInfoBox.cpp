@@ -16,10 +16,10 @@ NodeInfoBox::NodeInfoBox(Node *n)
 void NodeInfoBox::setNode(Node *n)
 {
     node = n;
-    Vec2f pos = n->getCanvasPos() + Vec2f(20, -50);
+    float nameWidth = ResourceManager::getInstance().getTextureFont()->measureString(n->getName()).length();
+    Vec2f pos = n->getCanvasPos() + Vec2f(-nameWidth - 20, 0);
     canvasRect = Rectf(0, 0, 0, 0);
     canvasRect.offset(pos);
-    float nameWidth = ResourceManager::getInstance().getTextureFont()->measureString(n->getName()).length();
     setSize(nameWidth, 40);
 }
 
@@ -53,8 +53,8 @@ void NodeInfoBox::draw()
     glLineStipple(1, 0xf0f0);
     gl::enable(GL_LINE_STIPPLE);
     
-    gl::color(0.5, 0.5, 0.5);
-    gl::drawLine(canvasRect.getUpperLeft(), node->getCanvasPos());
+    gl::color(0.75, 0.75, 0.75);
+    gl::drawLine(canvasRect.getUpperRight(), node->getCanvasPos());
     
     glPopAttrib();
 
