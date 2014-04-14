@@ -12,11 +12,26 @@
 InputNode::InputNode(CanvasComponent *comp) : Node(comp)
 {
     setName("Input");
+    setOriginalVal(0);
 }
 
 InputNode::~InputNode()
 {
     
+}
+
+void InputNode::initFromXml(const cinder::XmlTree &xml)
+{
+    Node::initFromXml(xml);
+    originalVal = xml.getAttributeValue<float>("originalVal");
+}
+
+XmlTree InputNode::getXml()
+{
+    XmlTree xml = Node::getXml();
+    xml.setAttribute("originalVal", originalVal);
+    
+    return xml;
 }
 
 void InputNode::draw()
@@ -58,8 +73,8 @@ void InputNode::disconnect(Node *node)
 {
     if (prev == node) {
         prev = NULL;
-        lastVal = 0;
-        component->setValue(index, 0);
+        lastVal = originalVal;
+        component->setValue(index, originalVal);
         component->inputDisconnected(index);
     }
     
@@ -68,6 +83,11 @@ void InputNode::disconnect(Node *node)
 bool InputNode::isConnected()
 {
     return (prev != NULL);
+}
+
+void InputNode::setOriginalVal(float val)
+{
+    originalVal = lastVal = val;
 }
 
 Vec2f InputNode::getCanvasPos()

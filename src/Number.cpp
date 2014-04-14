@@ -79,8 +79,9 @@ void Number::draw()
     
     // draw title
     gl::color(0, 0, 0);
+    gl::lineWidth(1);
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
-    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(localRect.getWidth(), titleRect.y2));
+    gl::drawLine(Vec2f(2, titleRect.y2), Vec2f(localRect.getWidth()-4, titleRect.y2));
     
     // draw nodes
     inputNodes[0]->draw();
@@ -119,6 +120,8 @@ void Number::mouseDrag(const cease::MouseEvent& event)
             float inc = (event.keyModifiers&MouseEvent::SHIFT_DOWN)?valInc*0.01:valInc;
             nextVal += (dragX - dragLastX) * inc;
             nextVal = roundFloat(nextVal);
+            // set this as the original value of the input node
+            inputNodes[0]->setOriginalVal(nextVal);
             dragLastX = dragX;
         }
     }
@@ -164,11 +167,6 @@ float Number::getValue(int i)
 
 void Number::setValue(int i, float v)
 {
-    // this is a hack: don't update disconnect 0 in Number components
-    if (!inputNodes[i]->isConnected()) {
-        return;
-    }
-    
     if (immediateChange) {
         updateVal(v);
     }
@@ -184,7 +182,7 @@ void Number::outputConnected(int i)
 
 void Number::outputDisconnected(int i)
 {
-    setName("Number");
+    setName(CanvasComponent::getComponentTypeString(type));
 }
 
 void Number::updateVal(float newVal)

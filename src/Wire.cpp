@@ -33,8 +33,8 @@ void Wire::update()
 void Wire::draw()
 {
     gl::color(1, 1, 1);
-    gl::lineWidth(1);
     
+    gl::lineWidth(2);
     if (inode && onode) {
         gl::drawLine(inode->getCanvasPos(), onode->getCanvasPos());
     }
@@ -44,6 +44,7 @@ void Wire::draw()
     else if (onode) {
         gl::drawLine(currentEnd, onode->getCanvasPos());
     }
+    gl::lineWidth(1);
 }
 
 void Wire::setEnd(Vec2f p)

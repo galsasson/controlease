@@ -26,8 +26,9 @@ public:
     ~Node() {};
     
     void initNew(int i, Vec2f p);
-    void initFromXml(const XmlTree& xml);
-    
+    virtual void initFromXml(const XmlTree& xml);
+    virtual XmlTree getXml();
+        
     virtual void updateVal(float val, bool force = false) = 0;
     virtual void connect(Node *node) = 0;
     virtual void disconnect(Node *node) = 0;
@@ -40,8 +41,6 @@ public:
     virtual float getLastVal() { return lastVal; }
     virtual Vec2f& getPosition() { return pos; }
     virtual int getId() { return id; }
-
-    virtual XmlTree getXml();
 
     bool bDisplayName;      // display the name as well
 

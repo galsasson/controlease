@@ -173,8 +173,10 @@ void Program::draw()
     gl::color(0, 0, 0);
     gl::drawStrokedRoundedRect(localRect, 3);
 
+    gl::lineWidth(1);
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
-    gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
+    gl::color(0, 0, 0);
+    gl::drawLine(Vec2f(2, titleRect.y2), Vec2f(localRect.getWidth()-4, titleRect.y2));
 
     if (bConnected) {
         // draw all the input names
@@ -223,6 +225,7 @@ void Program::drawOutline()
     gl::color(0.5, 0.5, 0.5);
     gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
     
+    gl::disable(GL_LINE_STIPPLE);
     glPopAttrib();
     
     gl::popMatrices();
@@ -390,6 +393,7 @@ void Program::addInput(osc::Message msg)
     if (input->initNew(oscSender, msg)) {
         inputs.push_back(input);
         InputNode *node = addNewInputNode();
+        node->setOriginalVal(input->getValue());
         node->setName(input->getName());
         pack(0, 0);
     }

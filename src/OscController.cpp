@@ -111,7 +111,7 @@ void OscController::draw()
     gl::drawStrokedRoundedRect(localRect, 3);
 
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
-    gl::drawLine(Vec2f(0, 20), Vec2f(localRect.x2, 20));
+    gl::drawLine(Vec2f(2, titleRect.y2), Vec2f(localRect.x2-4, titleRect.y2));
 
     if (bConnected)
     {

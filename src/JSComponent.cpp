@@ -102,7 +102,7 @@ void JSComponent::draw()
     
     // draw title
     ResourceManager::getInstance().getTextureFont()->drawString(compName, titleRect);
-    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(localRect.getWidth(), titleRect.y2));
+    gl::drawLine(Vec2f(2, titleRect.y2), Vec2f(localRect.getWidth()-4, titleRect.y2));
 
     // draw inputs and outputs
     gl::color(0, 0, 0);
@@ -113,11 +113,13 @@ void JSComponent::draw()
     for (int i=0; i<outputNodes.size(); i++) {
         outputNodes[i]->draw();
     }
-    
+
+    // draw the bounding rect of javascript
+//    gl::lineWidth(0.5f);
+//    gl::color(0, 0, 0);
+//    gl::drawStrokedRect(jsRect);
+
     // call draw of js component
-    gl::lineWidth(0.5);
-    gl::color(0, 0, 0);
-    gl::drawStrokedRect(jsRect);
     gl::lineWidth(1);
     gl::pushMatrices();
     gl::translate(jsRect.getUpperLeft() + jsRect.getSize()/2);

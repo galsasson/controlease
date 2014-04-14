@@ -232,4 +232,4 @@ Vec2f ControleaseApp::getCanvasSize()
     return Vec2f(getWindowWidth()-getCompboxSize().x, getWindowHeight()-getMenubarSize().y);
 }
 
-CINDER_APP_NATIVE( ControleaseApp, RendererGl )
+CINDER_APP_NATIVE( ControleaseApp, RendererGl/*(RendererGl::AA_MSAA_8)*/ )

@@ -6,7 +6,6 @@
  *
  ******/
 
-var topLeft = {};
 var lastClickTime = 0;
 var timeDiff = -1;
 var counter = 0;
@@ -15,11 +14,8 @@ var nClicks = 0;
 
 var setup = function()
 {
-    ceInit("Tap", 0, 1);
-    ceSetGuiSize(50, 50);
-    
-    topLeft.x = -25;
-    topLeft.y = -25;
+    ceInit("Rhythm", 0, 1);
+    ceSetGuiSize(40, 20);
 }
 
 var update = function()
@@ -59,13 +55,13 @@ var mousedown = function(x, y)
         if (nClicks == 2) {
             // second click
             timeDiff = curTime - lastClickTime;
-            ceLog("second click: " + timeDiff);
+            ceLog("second click ("+(curTime - lastClickTime)+"): " + timeDiff);
         }
         else {
             // third or more, average timing
             timeDiff += curTime - lastClickTime;
             timeDiff /= 2;
-            ceLog("third or more: " + timeDiff);
+            ceLog("third or more ("+(curTime - lastClickTime)+"): " + timeDiff);
         }
     }
     lastClickTime = curTime;

@@ -47,19 +47,6 @@ void Node::initFromXml(const cinder::XmlTree& xml)
     bDisplayName = xml.getAttributeValue<bool>("bDisplayName");
 }
 
-bool Node::contains(Vec2f p)
-{
-    return (p-pos).length() <= 5;
-}
-
-
-void Node::setName(std::string n)
-{
-    name = n;
-    nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
-}
-
-
 XmlTree Node::getXml()
 {
     XmlTree nodeXml("Node", "");
@@ -72,6 +59,18 @@ XmlTree Node::getXml()
     nodeXml.setAttribute("bDisplayName", bDisplayName);
     
     return nodeXml;
+}
+
+bool Node::contains(Vec2f p)
+{
+    return (p-pos).length() <= 5;
+}
+
+
+void Node::setName(std::string n)
+{
+    name = n;
+    nameSize = ResourceManager::getInstance().getTextureFont()->measureString(name);
 }
 
 

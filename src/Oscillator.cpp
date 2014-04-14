@@ -91,7 +91,7 @@ void Oscillator::draw()
     
     // draw title
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
-    gl::drawLine(Vec2f(0, titleRect.getHeight()), Vec2f(localRect.getWidth(), titleRect.getHeight()));
+    gl::drawLine(Vec2f(2, titleRect.getHeight()), Vec2f(localRect.getWidth()-4, titleRect.getHeight()));
     
     // draw nodes
     inputNodes[0]->draw();

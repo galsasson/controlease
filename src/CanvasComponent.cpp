@@ -130,6 +130,7 @@ void CanvasComponent::drawOutline()
     gl::drawStrokedRect(Rectf(Vec2f(0, 0), canvasRect.getSize() + Vec2f(8, 8)));
     gl::lineWidth(1);
     glPopAttrib();
+    gl::disable(GL_LINE_STIPPLE);
     
     gl::popMatrices();
 }

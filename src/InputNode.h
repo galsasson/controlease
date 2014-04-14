@@ -23,8 +23,11 @@ class CanvasComponent;
 class InputNode : public Node
 {
 public:
-    InputNode(CanvasComponent *val);
+    InputNode(CanvasComponent *comp);
     ~InputNode();
+    
+    void initFromXml(const XmlTree &xml);
+    XmlTree getXml();
     
     void draw();
     
@@ -33,7 +36,12 @@ public:
     void disconnect(Node *node);
     bool isConnected();
     
+    void setOriginalVal(float val);
+    
     Vec2f getCanvasPos();
+    
+private:
+    float originalVal;  // this value will be set as the value when the node is disconnected
 };
 
 

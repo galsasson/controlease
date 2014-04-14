@@ -92,7 +92,7 @@ void Exp::draw()
     
     // draw title
     ResourceManager::getInstance().getTextureFont()->drawString(name, titleRect);
-    gl::drawLine(Vec2f(0, titleRect.y2), Vec2f(localRect.getWidth(), titleRect.y2));
+    gl::drawLine(Vec2f(2, titleRect.y2), Vec2f(localRect.getWidth()-4, titleRect.y2));
     
     // draw + sign
     gl::draw(ResourceManager::getInstance().getPlusTexture(), inputPlusRect.getUpperLeft());
