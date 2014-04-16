@@ -13,7 +13,8 @@ var targetNode;
 
 var setup = function()
 {
-    ceInit("Randomizer", 0, 1);
+    ceSetName("Randomizer");
+    ceAddOutput();
     ceSetGuiSize(30, 10);
     
     currentValue = 0;

@@ -10,7 +10,8 @@ var bSendOne;
 
 var setup = function()
 {
-    ceInit("Button", 0, 1);
+    ceSetName("Button");
+    ceAddOutput();
     ceSetGuiSize(30, 30);
     
     bSendOne = false;

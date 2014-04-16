@@ -10,7 +10,9 @@ var currentValue;
 
 var setup = function()
 {
-    ceInit("Counter", 1, 1);
+    ceSetName("Counter");
+    ceAddInput("Increment");
+    ceAddOutput("Value");
     ceSetGuiSize(30, 30);
     
     currentValue = 0;

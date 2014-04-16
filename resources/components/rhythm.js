@@ -14,7 +14,8 @@ var nClicks = 0;
 
 var setup = function()
 {
-    ceInit("Rhythm", 0, 1);
+    ceSetName("Rhythm");
+    ceAddOutput("Beat");
     ceSetGuiSize(40, 20);
 }
 

@@ -7,10 +7,13 @@
  ******/
 
 var currentValue;
+var maxValue;
 
 var setup = function()
 {
-    ceInit("Balloon", 1, 1);
+    ceSetName("Balloon");
+    ceAddInput("Trigger");
+    ceAddOutput();
     ceSetGuiSize(40, 30);
     
     currentValue = 0;
@@ -19,7 +22,7 @@ var setup = function()
 var update = function()
 {
     if (inn[0] > 0) {
-        currentValue = 1;
+        maxValue = currentValue = inn[0];
     }
     else {
         currentValue *= 0.85;
@@ -30,7 +33,7 @@ var update = function()
 
 var draw = function()
 {
-    var size = 15*currentValue;
+    var size = 15*(currentValue / maxValue);
     ceEllipse(0, 0, size, size);
 }
 

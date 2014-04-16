@@ -19,17 +19,19 @@
  * in the 'state' object when the component was saved as part of the patch.
  ******/
 
-var topLeft = {};
-var inputs = 3;
+var inputs = 2;
 
 var setup = function()
 {
-    ceInit("Switch", inputs, 1);
-    ceSetGuiSize(50, 25);
+    ceSetName("Switch");
+    for (var i=0; i<inputs; i++)
+    {
+        ceAddInput("Source");
+    }
+    ceAddOutput("Target");
+    ceSetGuiSize(40, 20);
     
     state.selectedInput = 0;
-    topLeft.x = -25;
-    topLeft.y = -25;
 }
 
 var update = function()
@@ -39,8 +41,8 @@ var update = function()
 
 var draw = function()
 {
-    var y = -10 + state.selectedInput*9;
-    ceLine(-25, y, 25, -10);
+    var y = -7 + state.selectedInput*9;
+    ceLine(-20, y, 20, -7);
 }
 
 var mousedown = function(x, y)

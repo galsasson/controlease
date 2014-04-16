@@ -11,7 +11,12 @@ var bang;
 
 var setup = function()
 {
-    ceInit("Clock", 2, 2);
+    ceSetName("Clock");
+    ceAddInput("Period");
+    ceAddInput("Speed");
+    ceAddOutput("Value");
+    ceAddOutput("Loop Start");
+    
     ceSetGuiSize(50, 50);
     
     currentValue = 0;

@@ -36,7 +36,7 @@ public:
     virtual ~CanvasComponent();
     
     virtual void initNew(Vec2f p);
-    virtual void initFromXml(const XmlTree& xml);
+    virtual void initFromXml(const XmlTree& xml, bool createNodes = true);
     virtual XmlTree getXml();
         
     void setType(ComponentType t);

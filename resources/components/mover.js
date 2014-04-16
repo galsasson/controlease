@@ -10,7 +10,11 @@ var currentValue;
 
 var setup = function()
 {
-    ceInit("Mover", 2, 2);
+    ceSetName("Mover")
+    ceAddInput("X");
+    ceAddInput("Y");
+    ceAddOutput("X");
+    ceAddOutput("Y");
     ceSetGuiSize(30, 10);
     
     currentValue = 0;

@@ -45,8 +45,9 @@ public:
     void initNew(Vec2f pos, fs::path script);
     void initFromXml(const XmlTree& xml);
     XmlTree getXml();
-    
-    void initNodes(int nIns, int nOuts);
+
+    void addInputNode(std::string name);
+    void addOutputNode(std::string name);
     void initGUI(Vec2f size);
     void update();
     void draw();
@@ -92,7 +93,9 @@ private:
     static void v8OutSetter(uint32_t index, Local<Value> value, const PropertyCallbackInfo<Value>& info);
     // 'map' function
     static void v8Map(const FunctionCallbackInfo<v8::Value>& args);
-    static void v8InitCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8SetNameCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8AddInputCB(const FunctionCallbackInfo<v8::Value>& args);
+    static void v8AddOutputCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8SetGuiSizeCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8DrawEllipseCB(const FunctionCallbackInfo<v8::Value>& args);
     static void v8DrawLineCB(const FunctionCallbackInfo<v8::Value>& args);
@@ -115,7 +118,9 @@ private:
 
     
     
-    void v8Init(const FunctionCallbackInfo<v8::Value>& args); // (name, inputs, outputs)
+    void v8SetName(const FunctionCallbackInfo<v8::Value>& args); // (name)
+    void v8AddInput(const FunctionCallbackInfo<v8::Value>& args); // (name)
+    void v8AddOutput(const FunctionCallbackInfo<v8::Value>& args); // (name)
     void v8SetGuiSize(const FunctionCallbackInfo<v8::Value>& args); // (width, height)
     void v8DrawEllipse(const FunctionCallbackInfo<v8::Value>& args); // (cx, cy, w, h)
     void v8DrawLine(const FunctionCallbackInfo<v8::Value>& args); // (sx, sy, tx, ty)

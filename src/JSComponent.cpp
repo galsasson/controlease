@@ -42,7 +42,7 @@ void JSComponent::initNew(Vec2f pos, fs::path script)
 
 void JSComponent::initFromXml(const XmlTree& xml)
 {
-    CanvasComponent::initFromXml(xml);
+    CanvasComponent::initFromXml(xml, false);   // do not restore the nodes of this object
     stringstream compPath;
     compPath << getJSComponentsPath();
     compPath << xml.getAttributeValue<std::string>("jsScript");
@@ -62,17 +62,23 @@ XmlTree JSComponent::getXml()
     return xml;
 }
 
-void JSComponent::initNodes(int nIns, int nOuts)
+void JSComponent::addInputNode(std::string name)
 {
-    for (int i=inputNodes.size(); i<nIns; i++)
-    {
-        addNewInputNode();
+    InputNode* node = addNewInputNode();
+    if (node != NULL) {
+        node->setName(name);
     }
-    for (int i=outputNodes.size(); i<nOuts; i++)
-    {
-        addNewOutputNode();
-    }
+    
+    resizeComponent();
+}
 
+void JSComponent::addOutputNode(std::string name)
+{
+    OutputNode* node = addNewOutputNode();
+    if (node != NULL) {
+        node->setName(name);
+    }
+    
     resizeComponent();
 }
 
@@ -212,7 +218,12 @@ void JSComponent::setValue(int i, float v)
 
 void JSComponent::resizeComponent()
 {
-    pack(jsRect.getWidth()+19, jsRect.getHeight()+30);
+    pack(jsRect.getWidth()+20, jsRect.getHeight()+28);
+    
+    // center jsRect
+    float jsWidth = jsRect.getWidth();
+    jsRect.x1 = (localRect.getWidth() - jsWidth) / 2;
+    jsRect.x2 = jsRect.x1 + jsWidth;
     
     originRect = canvasRect;
 }
@@ -293,9 +304,12 @@ void JSComponent::compileAndRun(std::string code)
     HandleScope handle_scope(Isolate::GetCurrent());
 
     // add callback functions
+    // TODO: make an object (maybe 'c.<...>')
     Handle<ObjectTemplate> global = ObjectTemplate::New(Isolate::GetCurrent());
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceMap"), FunctionTemplate::New(Isolate::GetCurrent(), v8Map));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceInit"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8InitCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetName"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetNameCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceAddInput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8AddInputCB, External::New(Isolate::GetCurrent(), this)));
+    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceAddOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8AddOutputCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetGuiSize"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetGuiSizeCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceEllipse"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawEllipseCB, External::New(Isolate::GetCurrent(), this)));
     global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceRect"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawRectCB, External::New(Isolate::GetCurrent(), this)));
@@ -457,9 +471,10 @@ void JSComponent::setInternalState(std::string stateJSON)
 /*****************************************************************************/
 /*****************************************************************************/
 
-void JSComponent::v8Init(const FunctionCallbackInfo<v8::Value> &args)
+void JSComponent::v8SetName(const FunctionCallbackInfo<v8::Value> &args)
 {
-    if (args.Length() < 3) {
+    if (args.Length() != 1) {
+        console() << "please use ceSetName(name)"<<endl;
         return;
     }
     
@@ -467,7 +482,39 @@ void JSComponent::v8Init(const FunctionCallbackInfo<v8::Value> &args)
     
     v8::String::Utf8Value v8Str(args[0]->ToString());
     compName = std::string(*v8Str);
-    initNodes(args[1]->NumberValue(), args[2]->NumberValue());
+//    initNodes(args[1]->NumberValue(), args[2]->NumberValue());
+}
+
+void JSComponent::v8AddInput(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() > 1) {
+        console() << "please use ceAddInput(name)"<<endl;
+        return;
+    }
+
+    if (args.Length() == 0) {
+        addInputNode("Input");
+    }
+    else {
+        v8::String::Utf8Value v8Str(args[0]->ToString());
+        addInputNode(*v8Str);
+    }
+}
+
+void JSComponent::v8AddOutput(const FunctionCallbackInfo<v8::Value> &args)
+{
+    if (args.Length() > 1) {
+        console() << "please use ceAddOutput(name)"<<endl;
+        return;
+    }
+    
+    if (args.Length() == 0) {
+        addOutputNode("Output");
+    }
+    else {
+        v8::String::Utf8Value v8Str(args[0]->ToString());
+        addOutputNode(*v8Str);
+    }
 }
 
 void JSComponent::v8SetGuiSize(const FunctionCallbackInfo<v8::Value> &args)
@@ -766,11 +813,25 @@ void JSComponent::v8Log(const FunctionCallbackInfo<v8::Value> &args)
         return comp->X(args); \
     }
 
-void JSComponent::v8InitCB(const FunctionCallbackInfo<v8::Value> &args)
+void JSComponent::v8SetNameCB(const FunctionCallbackInfo<v8::Value> &args)
 {
     Local<External> wrap = Local<External>::Cast(args.Data());
     JSComponent *comp = (JSComponent*)wrap->Value();
-    return comp->v8Init(args);
+    return comp->v8SetName(args);
+}
+
+void JSComponent::v8AddInputCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8AddInput(args);
+}
+
+void JSComponent::v8AddOutputCB(const FunctionCallbackInfo<v8::Value> &args)
+{
+    Local<External> wrap = Local<External>::Cast(args.Data());
+    JSComponent *comp = (JSComponent*)wrap->Value();
+    return comp->v8AddOutput(args);
 }
 
 void JSComponent::v8SetGuiSizeCB(const FunctionCallbackInfo<v8::Value> &args)

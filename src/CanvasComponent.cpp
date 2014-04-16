@@ -31,7 +31,7 @@ void CanvasComponent::initNew(Vec2f p)
     canvasRect = Rectf(p, p+originalSize);
 }
 
-void CanvasComponent::initFromXml(const XmlTree& xml)
+void CanvasComponent::initFromXml(const XmlTree& xml, bool createNodes)
 {
     setName(xml.getAttributeValue<std::string>("name"));
     Vec2f pos = Vec2f(xml.getAttributeValue<float>("position.x"), xml.getAttributeValue<float>("position.y"));
@@ -43,19 +43,22 @@ void CanvasComponent::initFromXml(const XmlTree& xml)
     showInputPlus = xml.getAttributeValue<bool>("showInputPlus");
     showOutputPlus = xml.getAttributeValue<bool>("showOutputPlus");
     
-    // add inputs and outputs
-    XmlTree inputNodesTree = xml.getChild("InputNodes");
-    for(XmlTree::ConstIter iter = inputNodesTree.begin(); iter != inputNodesTree.end(); ++iter)
+    if (createNodes)
     {
-        if (iter->getTag() == "Node") {
-            addInputNodeFromXml(iter->getChild(""));
+        // add inputs and outputs
+        XmlTree inputNodesTree = xml.getChild("InputNodes");
+        for(XmlTree::ConstIter iter = inputNodesTree.begin(); iter != inputNodesTree.end(); ++iter)
+        {
+            if (iter->getTag() == "Node") {
+                addInputNodeFromXml(iter->getChild(""));
+            }
         }
-    }
-    XmlTree outputNodesTree = xml.getChild("OutputNodes");
-    for(XmlTree::ConstIter iter = outputNodesTree.begin(); iter != outputNodesTree.end(); ++iter)
-    {
-        if (iter->getTag() == "Node") {
-            addOutputNodeFromXml(iter->getChild(""));
+        XmlTree outputNodesTree = xml.getChild("OutputNodes");
+        for(XmlTree::ConstIter iter = outputNodesTree.begin(); iter != outputNodesTree.end(); ++iter)
+        {
+            if (iter->getTag() == "Node") {
+                addOutputNodeFromXml(iter->getChild(""));
+            }
         }
     }
 }

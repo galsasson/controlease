@@ -34,7 +34,9 @@ var lastFrameClicked;
 
 var setup = function()
 {
-    ceInit("Timeline", 1, 1);
+    ceSetName("Timeline");
+    ceAddInput("Frame");
+    ceAddOutput();
     ceSetGuiSize(frames, height);
 
     for (var i=0; i<frames; i++)
