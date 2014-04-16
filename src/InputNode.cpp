@@ -36,13 +36,14 @@ XmlTree InputNode::getXml()
 
 void InputNode::draw()
 {
-    gl::color(ResourceManager::getInstance().getColor(2));
+    gl::color(ResourceManager::getInstance().getColor(1));
     
     if (bDrawActive) {
-        gl::drawSolidCircle(pos, 5);
+        gl::drawSolidCircle(pos, 4);
         bDrawActive = false;
     }
     else {
+        gl::drawSolidCircle(pos, 3);
         gl::color(0, 0, 0, 0.5);
         gl::drawSolidCircle(pos, 3);
         gl::color(0, 0, 0);

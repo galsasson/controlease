@@ -21,10 +21,10 @@ OutputNode::~OutputNode()
 
 void OutputNode::draw()
 {
-    gl::color(ResourceManager::getInstance().getColor(4));
+    gl::color(ResourceManager::getInstance().getColor(1));
     
     if (bDrawActive) {
-        gl::drawSolidCircle(pos, 5);
+        gl::drawSolidCircle(pos, 4);
         bDrawActive = false;
     }
     else {

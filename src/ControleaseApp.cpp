@@ -44,6 +44,8 @@ private:
     Canvas *canvas;
     ComponentBox *compbox;
     
+    bool bUpdate;
+    
     void saveCanvasToFile(fs::path file);
     void loadCanvasFromFile(fs::path file);
 
@@ -78,14 +80,17 @@ void ControleaseApp::setup()
     glEnable(GL_LINE_SMOOTH);
     gl::enableAlphaBlending();
     
+    bUpdate = true;
 //    updateThread = std::thread(&ControleaseApp::threadUpdate, this);
 
 }
 
 void ControleaseApp::update()
 {
-    compbox->update();
-    canvas->update();
+//    compbox->update();
+    if (bUpdate) {
+        canvas->update();
+    }
 }
 
 void ControleaseApp::threadUpdate()
@@ -160,7 +165,12 @@ void ControleaseApp::keyDown( KeyEvent event )
 
 void ControleaseApp::keyUp( KeyEvent event )
 {
-    canvas->appKeyUp(event);
+    if (event.getChar() == ' ') {
+        bUpdate = !bUpdate;
+    }
+    else {
+        canvas->appKeyUp(event);
+    }
 }
 
 void ControleaseApp::resize()

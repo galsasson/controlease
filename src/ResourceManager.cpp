@@ -19,11 +19,11 @@ void ResourceManager::initResources()
     
     mPlusTexture = loadImage(getAssetPath("plus.png"));
     
-    colors.push_back(Color::hex(0x334d5c));
-    colors.push_back(Color::hex(0x45b29d));
-    colors.push_back(Color::hex(0xdddd33));
-    colors.push_back(Color::hex(0xff0000));
-    colors.push_back(Color::hex(0xdf5a49));
+    colors.push_back(Color::hex(0xdc534e));
+    colors.push_back(Color::hex(0x5f78b4));
+    colors.push_back(Color::hex(0x5b3a6f));
+    colors.push_back(Color::hex(0xbaa326));
+    colors.push_back(Color::hex(0xF26835));
 }
 
 gl::TextureFontRef ResourceManager::getTextureFont()

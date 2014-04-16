@@ -129,8 +129,8 @@ void JSComponent::draw()
     
     gl::popMatrices();
 
-    gl::color(0.7, 0, 0);
-    gl::drawStrokedRect(originRect);
+//    gl::color(0.7, 0, 0);
+//    gl::drawStrokedRect(originRect);
 }
 
 void JSComponent::mouseDown(const cease::MouseEvent& event)

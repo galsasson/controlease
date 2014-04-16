@@ -39,8 +39,8 @@ var update = function()
 
 var draw = function()
 {
-    var y = -11 + state.selectedInput*9;
-    ceLine(-25, y, 25, -11);
+    var y = -10 + state.selectedInput*9;
+    ceLine(-25, y, 25, -10);
 }
 
 var mousedown = function(x, y)
