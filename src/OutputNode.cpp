@@ -26,7 +26,6 @@ void OutputNode::initNew(int i, Vec2f p)
     stringstream ss;
     ss << component->getId() << "-o"<<i;
     id = std::string(ss.str());
-    console() << "creating output id = "<<id<<endl;
 }
 
 void OutputNode::draw()

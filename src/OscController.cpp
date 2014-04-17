@@ -258,17 +258,25 @@ void OscController::handleMessages()
 void OscController::handleOneValue(osc::Message &msg)
 {
     std::string name = msg.getAddress();
+    float val = 0;
+    if (msg.getArgType(0) == osc::ArgType::TYPE_FLOAT) {
+        val = msg.getArgAsFloat(0);
+    }
+    else if (msg.getArgType(0) == osc::ArgType::TYPE_INT32) {
+        val = msg.getArgAsInt32(0);
+    }
+    
     for (int i=0; i<outputNodes.size(); i++)
     {
         if (outputNodes[i]->getName() == name)
         {
-            outputNodes[i]->updateVal(msg.getArgAsFloat(0));
+            outputNodes[i]->updateVal(val);
             return;
         }
     }
 
     // create new output node
-    addOutput(name, msg.getArgAsFloat(0));
+    addOutput(name, val);
 }
 
 void OscController::handleTwoValues(osc::Message &msg)
