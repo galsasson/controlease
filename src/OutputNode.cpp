@@ -19,6 +19,16 @@ OutputNode::~OutputNode()
     
 }
 
+void OutputNode::initNew(int i, Vec2f p)
+{
+    Node::initNew(i, p);
+    
+    stringstream ss;
+    ss << component->getId() << "-o"<<i;
+    id = std::string(ss.str());
+    console() << "creating output id = "<<id<<endl;
+}
+
 void OutputNode::draw()
 {
     gl::color(ResourceManager::getInstance().getColor(1));

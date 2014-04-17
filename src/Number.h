@@ -36,7 +36,7 @@ public:
     ~Number();
     
     void initNew(Vec2f pos);
-    void initFromXml(const XmlTree& xml);
+    void initFromXml(const XmlTree& xml, bool createNodes = true);
     XmlTree getXml();
     
     void update();

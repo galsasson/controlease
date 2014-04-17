@@ -20,6 +20,16 @@ InputNode::~InputNode()
     
 }
 
+void InputNode::initNew(int i, Vec2f p)
+{
+    Node::initNew(i, p);
+    
+    stringstream ss;
+    ss << component->getId() << "-i"<<i;
+    id = std::string(ss.str());
+    console() << "creating input id = "<<id<<endl;
+}
+
 void InputNode::initFromXml(const cinder::XmlTree &xml)
 {
     Node::initFromXml(xml);

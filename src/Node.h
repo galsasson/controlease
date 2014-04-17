@@ -25,7 +25,7 @@ public:
     Node(CanvasComponent *comp);
     ~Node() {};
     
-    void initNew(int i, Vec2f p);
+    virtual void initNew(int i, Vec2f p);
     virtual void initFromXml(const XmlTree& xml);
     virtual XmlTree getXml();
         
@@ -40,14 +40,12 @@ public:
     virtual std::string& getName() { return name; }
     virtual float getLastVal() { return lastVal; }
     virtual Vec2f& getPosition() { return pos; }
-    virtual int getId() { return id; }
+    virtual std::string getId() { return id; }
 
     bool bDisplayName;      // display the name as well
 
-    static int globalNodeID;
-
 protected:
-    int id;
+    std::string id;
     Node *prev;
     Node *next;
     

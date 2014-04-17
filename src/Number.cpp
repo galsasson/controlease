@@ -35,7 +35,7 @@ void Number::initNew(Vec2f pos)
     updateVal(0);
 }
 
-void Number::initFromXml(const XmlTree& xml)
+void Number::initFromXml(const XmlTree& xml, bool createNodes)
 {
     CanvasComponent::initFromXml(xml);
     

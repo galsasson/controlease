@@ -42,7 +42,7 @@ void Program::initNew(Vec2f pos)
     listenPort = Rand::randInt(5000, 9000);
 }
 
-void Program::initFromXml(const XmlTree& xml)
+void Program::initFromXml(const XmlTree& xml, bool createNodes)
 {
     CanvasComponent::initFromXml(xml);
     

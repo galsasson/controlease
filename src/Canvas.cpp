@@ -10,8 +10,8 @@
 
 Canvas::Canvas()
 {
-    // each node in the canvas has a unique ID
-    Node::globalNodeID = 0;
+    // each component in the canvas has a unique ID
+    CanvasComponent::globalComponentID = 0;
 }
 
 void Canvas::setup(Vec2f _pos, Vec2f _size)
@@ -347,11 +347,11 @@ vector<InputNode*> Canvas::getInputNodesAtArea(Vec2f center, float rad)
     return nodes;
 }
 
-void Canvas::makeConnection(int outputID, int inputID)
+void Canvas::makeConnection(std::string outputNodeId, std::string inputNodeId)
 {
     // find output node
-    Node *onode = getNodeWithID(outputID);
-    Node *inode = getNodeWithID(inputID);
+    Node *onode = getNodeWithID(outputNodeId);
+    Node *inode = getNodeWithID(inputNodeId);
 
     if (onode != NULL && inode != NULL)
     {
@@ -359,13 +359,13 @@ void Canvas::makeConnection(int outputID, int inputID)
     }
 }
 
-void Canvas::makeConnection(OutputNode *onode, int inputID)
+void Canvas::makeConnection(OutputNode *onode, std::string inputNodeId)
 {
     if (onode->isConnected()) {
         return;
     }
     
-    Node* inode = getNodeWithID(inputID);
+    Node* inode = getNodeWithID(inputNodeId);
     if (inode == NULL) {
         return;
     }
@@ -395,7 +395,7 @@ void Canvas::disconnectNode(Node *node)
 
 void Canvas::reset()
 {
-    Node::globalNodeID = 0;
+    CanvasComponent::globalComponentID = 0;
     
     for (int i=components.size()-1; i>=0; i--)
     {
@@ -458,7 +458,7 @@ void Canvas::initFromXml(const XmlTree& xml)
         }
         
         XmlTree wireXml = iter->getChild("");
-        makeConnection(wireXml.getAttributeValue<int>("outputID"), wireXml.getAttributeValue<int>("inputID"));
+        makeConnection(wireXml.getAttributeValue<std::string>("outputID"), wireXml.getAttributeValue<std::string>("inputID"));
     }
 }
 
@@ -642,7 +642,7 @@ CanvasComponent* Canvas::getComponentUnder(Vec2f p)
     return NULL;
 }
 
-Node* Canvas::getNodeWithID(int id)
+Node* Canvas::getNodeWithID(std::string id)
 {
     for (int i=0; i<components.size(); i++)
     {

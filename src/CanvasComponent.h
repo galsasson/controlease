@@ -32,6 +32,8 @@ using namespace std;
 class CanvasComponent : public MouseListener
 {
 public:
+    static int globalComponentID;
+    
     CanvasComponent(Canvas *c);
     virtual ~CanvasComponent();
     
@@ -57,7 +59,9 @@ public:
     virtual ConnectionResult getConnectionEnd(const cease::MouseEvent& event);
     virtual vector<Node*> getInputNodes();
     virtual vector<Node*> getOutputNodes();
-    virtual Node* getNodeWithID(int id);
+    virtual Node* getNodeWithID(std::string id);
+    
+    int getId() { return id; }
     
     // callbacks from nodes
     virtual float getValue(int i) {return 0;};
@@ -66,6 +70,8 @@ public:
     virtual void outputDisconnected(int i) {};
     virtual void inputConnected(int i) {};
     virtual void inputDisconnected(int i) {};
+    
+    int getNodesCount() { return inputNodes.size() + outputNodes.size(); }
 
     virtual KeyboardListener* getCurrentKeyboardListener() {return NULL;};
     virtual Node* getNodeBelow(const cease::MouseEvent& event);
@@ -81,6 +87,8 @@ public:
 protected:
     virtual Vec2f toLocal(const Vec2f& p);
     virtual Vec2f toCanvas(const Vec2f& p);
+    
+    int id;
     
     Canvas *canvas;
     Vec2f originalSize; // size as set in setSize

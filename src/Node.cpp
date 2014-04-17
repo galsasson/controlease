@@ -8,8 +8,6 @@
 
 #include "Node.h"
 
-int Node::globalNodeID = 0;
-
 Node::Node(CanvasComponent *comp)
 {
     component = comp;
@@ -23,8 +21,6 @@ Node::Node(CanvasComponent *comp)
 
 void Node::initNew(int i, Vec2f p)
 {
-    id = Node::globalNodeID++;
-
     index = i;
     pos = p;
     
@@ -33,13 +29,7 @@ void Node::initNew(int i, Vec2f p)
 
 void Node::initFromXml(const cinder::XmlTree& xml)
 {
-    id = xml.getAttributeValue<int>("globalID");
-    // when loading a patch, update globalID so future
-    // nodes will be created with a unique id
-    if (id >= Node::globalNodeID) {
-        Node::globalNodeID = id+1;
-    }
-    
+    id = xml.getAttributeValue<std::string>("id");
     index = xml.getAttributeValue<int>("index");
     pos = Vec2f(xml.getAttributeValue<float>("pos.x"), xml.getAttributeValue<float>("pos.y"));
     setName(xml.getAttributeValue<std::string>("name"));
@@ -50,7 +40,7 @@ void Node::initFromXml(const cinder::XmlTree& xml)
 XmlTree Node::getXml()
 {
     XmlTree nodeXml("Node", "");
-    nodeXml.setAttribute("globalID", id);
+    nodeXml.setAttribute("id", id);
     nodeXml.setAttribute("index", index);
     nodeXml.setAttribute("lastVal", lastVal);
     nodeXml.setAttribute("pos.x", pos.x);

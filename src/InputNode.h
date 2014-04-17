@@ -26,6 +26,7 @@ public:
     InputNode(CanvasComponent *comp);
     ~InputNode();
     
+    void initNew(int i, Vec2f p);
     void initFromXml(const XmlTree &xml);
     XmlTree getXml();
     

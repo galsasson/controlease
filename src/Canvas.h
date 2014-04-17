@@ -69,8 +69,8 @@ public:
     void setSize(Vec2f newSize);
     
     vector<InputNode*> getInputNodesAtArea(Vec2f center, float rad);
-    void makeConnection(int outputID, int inputID);
-    void makeConnection(OutputNode *onode, int inputID);
+    void makeConnection(std::string outputNodeId, std::string inputNodeId);
+    void makeConnection(OutputNode *onode, std::string inputNodeId);
     void makeConnection(OutputNode *onode, InputNode *inode);
     void disconnectNode(Node *node);
 
@@ -92,7 +92,7 @@ private:
     Wire* popWireWithNode(Node *node);
     void deleteComponent(CanvasComponent *comp);
     CanvasComponent* getComponentUnder(Vec2f p);
-    Node* getNodeWithID(int id);
+    Node* getNodeWithID(std::string id);
     
     vector<CanvasComponent*> components;
     

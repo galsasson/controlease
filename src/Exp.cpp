@@ -39,7 +39,7 @@ void Exp::initNew(Vec2f pos)
     resizeComponent();
 }
 
-void Exp::initFromXml(const XmlTree& xml)
+void Exp::initFromXml(const XmlTree& xml, bool createNodes)
 {
     CanvasComponent::initFromXml(xml);
     

@@ -40,7 +40,7 @@ void JSComponent::initNew(Vec2f pos, fs::path script)
     initComponent();
 }
 
-void JSComponent::initFromXml(const XmlTree& xml)
+void JSComponent::initFromXml(const XmlTree& xml, bool createNodes)
 {
     CanvasComponent::initFromXml(xml, false);   // do not restore the nodes of this object
     stringstream compPath;
@@ -721,7 +721,7 @@ void JSComponent::v8GetCanvasInputs(const FunctionCallbackInfo<v8::Value> &args)
     for (int i=0; i<inodes.size(); i++)
     {
         Handle<Object> inputObject = Object::New(Isolate::GetCurrent());
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "id"), v8::Number::New(Isolate::GetCurrent(), inodes[i]->getId()));
+        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "id"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->getId().data()));
         inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "name"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->getName().data()));
         inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "distance"), v8::Number::New(Isolate::GetCurrent(), (canvasRect.getCenter() - inodes[i]->getCanvasPos()).length()));
         inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "connected"), v8::Boolean::New(Isolate::GetCurrent(), inodes[i]->isConnected()));
@@ -742,7 +742,9 @@ void JSComponent::v8ConnectOutput(const FunctionCallbackInfo<v8::Value> &args)
     HandleScope scope(args.GetIsolate());
     
     int outputIndex = args[0]->NumberValue();
-    int inputId = args[1]->NumberValue();
+    
+    v8::String::Utf8Value v8str(args[1]->ToString());
+    std::string inputId = std::string(*v8str);
     
     if (outputIndex >= outputNodes.size()) {
         console() << "warning: no such output node index: "<<outputIndex<<endl;

@@ -10,6 +10,7 @@
 #define __Controlease__OutputNode__
 
 #include <iostream>
+#include <sstream>
 #include "cinder/app/App.h"
 //#include "CanvasComponent.h"
 #include "Node.h"
@@ -24,6 +25,8 @@ class OutputNode : public Node
 public:
     OutputNode(CanvasComponent *comp);
     ~OutputNode();
+    
+    void initNew(int i, Vec2f p);
     
     void draw();
     

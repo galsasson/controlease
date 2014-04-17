@@ -38,7 +38,7 @@ void OscController::initNew(Vec2f pos)
     addressInput->onReturn(boost::bind(&OscController::addressInputSet, this));
 }
 
-void OscController::initFromXml(const XmlTree& xml)
+void OscController::initFromXml(const XmlTree& xml, bool createNodes)
 {
     CanvasComponent::initFromXml(xml);
     

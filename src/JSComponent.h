@@ -43,7 +43,7 @@ public:
     ~JSComponent();
     
     void initNew(Vec2f pos, fs::path script);
-    void initFromXml(const XmlTree& xml);
+    void initFromXml(const XmlTree& xml, bool createNodes = true);
     XmlTree getXml();
 
     void addInputNode(std::string name);

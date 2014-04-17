@@ -8,6 +8,8 @@
 
 #include "CanvasComponent.h"
 
+int CanvasComponent::globalComponentID = 0;
+
 CanvasComponent::CanvasComponent(Canvas *c)
 {
     canvas = c;
@@ -27,12 +29,22 @@ CanvasComponent::~CanvasComponent() {
 
 void CanvasComponent::initNew(Vec2f p)
 {
+    id = globalComponentID++;
+    
     originalSize = Vec2f(0, 0);
     canvasRect = Rectf(p, p+originalSize);
 }
 
 void CanvasComponent::initFromXml(const XmlTree& xml, bool createNodes)
 {
+    id = xml.getAttributeValue<int>("id");
+    // when loading a patch, update globalID so future
+    // nodes will be created with a unique id
+    if (globalComponentID <= id) {
+        // increment global id so each component will have a unique id
+        globalComponentID = id+1;
+    }
+    
     setName(xml.getAttributeValue<std::string>("name"));
     Vec2f pos = Vec2f(xml.getAttributeValue<float>("position.x"), xml.getAttributeValue<float>("position.y"));
     Vec2f size = Vec2f(xml.getAttributeValue<float>("size.x"), xml.getAttributeValue<float>("size.y"));
@@ -66,6 +78,7 @@ void CanvasComponent::initFromXml(const XmlTree& xml, bool createNodes)
 XmlTree CanvasComponent::getXml()
 {
     XmlTree cComp("CanvasComponent", "");
+    cComp.setAttribute("id", id);
     cComp.setAttribute("type", ci::toString(type));
     cComp.setAttribute("name", name);
     cComp.setAttribute("position.x", canvasRect.x1);
@@ -232,7 +245,7 @@ vector<Node*> CanvasComponent::getOutputNodes()
     return outputs;
 }
 
-Node* CanvasComponent::getNodeWithID(int id)
+Node* CanvasComponent::getNodeWithID(std::string id)
 {
     for (int i=0; i<inputNodes.size(); i++)
     {

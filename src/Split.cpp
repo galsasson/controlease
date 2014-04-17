@@ -34,7 +34,7 @@ void Split::initNew(Vec2f pos)
     updateVal(0);
 }
 
-void Split::initFromXml(const XmlTree& xml)
+void Split::initFromXml(const XmlTree& xml, bool createNodes)
 {
     CanvasComponent::initFromXml(xml);
 }
