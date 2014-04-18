@@ -217,6 +217,8 @@ float Exp::getValue(int i)
 
 void Exp::setValue(int i, float v)
 {
+    runCompiledScript();
+    
 //    if (i >= ivals.size()) {
 //        return;
 //    }
@@ -232,7 +234,7 @@ void Exp::prepareJSScript()
     }
     
     std::ostringstream str;
-    str << "var time=0; var update = function() {"<<codeInput->getValue()<<"}";
+    str << "var time=0; var val=[]; var update = function() {"<<codeInput->getValue()<<"}";
     
     compileAndRun(str.str());
 }
@@ -278,38 +280,39 @@ void Exp::v8OutSetter(uint32_t index, Local<Value> val, const PropertyCallbackIn
 void Exp::compileAndRun(std::string code)
 {
     /* compile the script */
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
 
     // add the map function
-    Handle<ObjectTemplate> global = ObjectTemplate::New(Isolate::GetCurrent());
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "map"), FunctionTemplate::New(Isolate::GetCurrent(), v8Map));
+    Handle<ObjectTemplate> global = ObjectTemplate::New(ResourceManager::mainIsolate);
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "map"), FunctionTemplate::New(ResourceManager::mainIsolate, v8Map));
     
     // add interceptors to inputs and outputs
-    Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
+    Handle<ObjectTemplate> globalIn = ObjectTemplate::New(ResourceManager::mainIsolate);
     globalIn->SetInternalFieldCount(1);
     globalIn->SetIndexedPropertyHandler(v8InGetter);
-    Handle<ObjectTemplate> globalOut = ObjectTemplate::New(Isolate::GetCurrent());
+    Handle<ObjectTemplate> globalOut = ObjectTemplate::New(ResourceManager::mainIsolate);
     globalOut->SetInternalFieldCount(1);
     globalOut->SetIndexedPropertyHandler(v8OutGetter, v8OutSetter);
     
     // Create a new context.
-    Handle<Context> context = Context::New(Isolate::GetCurrent(), NULL, global);
+    Handle<Context> context = Context::New(ResourceManager::mainIsolate, NULL, global);
     
     // Enter the context for compiling and running the hello world script.
     Context::Scope context_scope(context);
     
     Local<Object> objIn = globalIn->NewInstance();
-    objIn->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
+    objIn->SetInternalField(0, External::New(ResourceManager::mainIsolate, this));
     Local<Object> objOut = globalOut->NewInstance();
-    objOut->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
-    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "inn"), objIn);
-    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "out"), objOut);
+    objOut->SetInternalField(0, External::New(ResourceManager::mainIsolate, this));
+    context->Global()->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "inn"), objIn);
+    context->Global()->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "out"), objOut);
     
-    pContext.Reset(Isolate::GetCurrent(), context);
+    pContext.Reset(ResourceManager::mainIsolate, context);
     
     // Create a string containing the JavaScript source code.
-    Handle<String> source = String::NewFromUtf8(Isolate::GetCurrent(), code.c_str());
+    Handle<String> source = String::NewFromUtf8(ResourceManager::mainIsolate, code.c_str());
     
     // Compile the source code.
     Handle<Script> localScript = Script::Compile(source);
@@ -320,7 +323,7 @@ void Exp::compileAndRun(std::string code)
     localScript->Run();
     
     // find 'update' function
-    Handle<String> function_name = String::NewFromUtf8(Isolate::GetCurrent(), "update");
+    Handle<String> function_name = String::NewFromUtf8(ResourceManager::mainIsolate, "update");
     Handle<Value> function_val = context->Global()->Get(function_name);
     if (!function_val->IsFunction()) {
         console() << "could not find 'update' function."<<endl;
@@ -328,7 +331,9 @@ void Exp::compileAndRun(std::string code)
     }
     
     Handle<Function> updateFunction = Handle<Function>::Cast(function_val);
-    pFunction.Reset(Isolate::GetCurrent(), updateFunction);
+    pFunction.Reset(ResourceManager::mainIsolate, updateFunction);
+    
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 void Exp::runCompiledScript()
@@ -336,16 +341,19 @@ void Exp::runCompiledScript()
     if (pFunction.IsEmpty()) {
         return;
     }
-    
+ 
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
     
-    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    Local<Context> context = Local<Context>::New(ResourceManager::mainIsolate, pContext);
     
     Context::Scope context_scope(context);
     
-    Local<Function> loopFunction = Local<Function>::New(Isolate::GetCurrent(), pFunction);
+    Local<Function> loopFunction = Local<Function>::New(ResourceManager::mainIsolate, pFunction);
     loopFunction->Call(context->Global(), 0, NULL);
+    
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 void Exp::v8Map(const FunctionCallbackInfo<v8::Value> &args)

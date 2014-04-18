@@ -8,6 +8,8 @@
 
 #include "ResourceManager.h"
 
+v8::Isolate* ResourceManager::mainIsolate;
+
 void ResourceManager::initResources()
 {
 //    mFont = Font(loadAsset("Blender-BOOK.ttf"), 14);
@@ -24,6 +26,9 @@ void ResourceManager::initResources()
     colors.push_back(Color::hex(0x5b3a6f));
     colors.push_back(Color::hex(0xbaa326));
     colors.push_back(Color::hex(0xF26835));
+    
+    ResourceManager::mainIsolate = v8::Isolate::New();
+    ResourceManager::mainIsolate->Enter();
 }
 
 gl::TextureFontRef ResourceManager::getTextureFont()

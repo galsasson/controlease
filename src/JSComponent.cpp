@@ -208,6 +208,7 @@ float JSComponent::getValue(int i)
 
 void JSComponent::setValue(int i, float v)
 {
+    callV8Function(pUpdateFunc);
 //    if (i >= ivals.size()) {
 //        console() << "warning: index "<<i<<"?? are you crazy? what value are you setting?"<<endl;
 //        return;
@@ -285,14 +286,14 @@ void JSComponent::v8OutSetter(uint32_t index, Local<Value> val, const PropertyCa
 bool JSComponent::getFunction(Handle<Context> &context, std::string name, Persistent<v8::Function> &func)
 {
     // find 'update' function
-    Handle<String> funcName = String::NewFromUtf8(Isolate::GetCurrent(), name.c_str());
+    Handle<String> funcName = String::NewFromUtf8(ResourceManager::mainIsolate, name.c_str());
     Handle<Value> funcVal = context->Global()->Get(funcName);
     if (!funcVal->IsFunction()) {
         console() << "could not find '"<<name<<"' function."<<endl;
         return false;
     }
     Handle<Function> localFunction = Handle<Function>::Cast(funcVal);
-    func.Reset(Isolate::GetCurrent(), localFunction);
+    func.Reset(ResourceManager::mainIsolate, localFunction);
 
     return true;
 }
@@ -300,59 +301,60 @@ bool JSComponent::getFunction(Handle<Context> &context, std::string name, Persis
 void JSComponent::compileAndRun(std::string code)
 {
     /* compile the script */
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
 
     // add callback functions
     // TODO: make an object (maybe 'c.<...>')
-    Handle<ObjectTemplate> global = ObjectTemplate::New(Isolate::GetCurrent());
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceMap"), FunctionTemplate::New(Isolate::GetCurrent(), v8Map));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetName"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetNameCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceAddInput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8AddInputCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceAddOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8AddOutputCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetGuiSize"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetGuiSizeCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceEllipse"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawEllipseCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceRect"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawRectCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceLine"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawLineCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceDrawString"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DrawStringCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBrightness"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBrightnessCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceBW"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetBWCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceHue"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetHueCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceNoise"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8NoiseCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceSetOffset"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8SetOffsetCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceGetPosition"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8GetPositionCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceGetCanvasInputs"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8GetCanvasInputsCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceConnectOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8ConnectOutputCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceDisconnectOutput"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8DisconnectOutputCB, External::New(Isolate::GetCurrent(), this)));
-    global->Set(String::NewFromUtf8(Isolate::GetCurrent(), "ceLog"), FunctionTemplate::New(Isolate::GetCurrent(), &JSComponent::v8LogCB, External::New(Isolate::GetCurrent(), this)));
+    Handle<ObjectTemplate> global = ObjectTemplate::New(ResourceManager::mainIsolate);
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceMap"), FunctionTemplate::New(ResourceManager::mainIsolate, v8Map));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceSetName"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8SetNameCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceAddInput"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8AddInputCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceAddOutput"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8AddOutputCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceSetGuiSize"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8SetGuiSizeCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceEllipse"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8DrawEllipseCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceRect"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8DrawRectCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceLine"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8DrawLineCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceDrawString"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8DrawStringCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceBrightness"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8SetBrightnessCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceBW"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8SetBWCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceHue"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8SetHueCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceNoise"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8NoiseCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceSetOffset"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8SetOffsetCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceGetPosition"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8GetPositionCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceGetCanvasInputs"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8GetCanvasInputsCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceConnectOutput"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8ConnectOutputCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceDisconnectOutput"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8DisconnectOutputCB, External::New(ResourceManager::mainIsolate, this)));
+    global->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "ceLog"), FunctionTemplate::New(ResourceManager::mainIsolate, &JSComponent::v8LogCB, External::New(ResourceManager::mainIsolate, this)));
     
     
     
     // add interceptors to inputs and outputs
-    Handle<ObjectTemplate> globalIn = ObjectTemplate::New(Isolate::GetCurrent());
+    Handle<ObjectTemplate> globalIn = ObjectTemplate::New(ResourceManager::mainIsolate);
     globalIn->SetInternalFieldCount(1);
     globalIn->SetIndexedPropertyHandler(v8InGetter);
-    Handle<ObjectTemplate> globalOut = ObjectTemplate::New(Isolate::GetCurrent());
+    Handle<ObjectTemplate> globalOut = ObjectTemplate::New(ResourceManager::mainIsolate);
     globalOut->SetInternalFieldCount(1);
     globalOut->SetIndexedPropertyHandler(v8OutGetter, v8OutSetter);
 
     // Create a new context.
-    Handle<Context> context = Context::New(Isolate::GetCurrent(), NULL, global);
+    Handle<Context> context = Context::New(ResourceManager::mainIsolate, NULL, global);
     
     // Enter the context for compiling and running the hello world script.
     Context::Scope context_scope(context);
     
     Local<Object> objIn = globalIn->NewInstance();
-    objIn->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
+    objIn->SetInternalField(0, External::New(ResourceManager::mainIsolate, this));
     Local<Object> objOut = globalOut->NewInstance();
-    objOut->SetInternalField(0, External::New(Isolate::GetCurrent(), this));
-    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "inn"), objIn);
-    context->Global()->Set(String::NewFromUtf8(Isolate::GetCurrent(), "out"), objOut);
+    objOut->SetInternalField(0, External::New(ResourceManager::mainIsolate, this));
+    context->Global()->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "inn"), objIn);
+    context->Global()->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "out"), objOut);
 
-    pContext.Reset(Isolate::GetCurrent(), context);
+    pContext.Reset(ResourceManager::mainIsolate, context);
     
     // Create a string containing the JavaScript source code.
-    Handle<String> source = String::NewFromUtf8(Isolate::GetCurrent(), code.c_str());
+    Handle<String> source = String::NewFromUtf8(ResourceManager::mainIsolate, code.c_str());
     
     // Compile the source code.
     Handle<Script> localScript = Script::Compile(source);
@@ -379,6 +381,8 @@ void JSComponent::compileAndRun(std::string code)
     getFunction(context, "loadComp", pLoadFunc);
     
     callV8Function(pSetupFunc);
+    
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 bool JSComponent::callV8Function(Persistent<v8::Function> &func)
@@ -387,16 +391,18 @@ bool JSComponent::callV8Function(Persistent<v8::Function> &func)
         return false;
     }
     
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
     
-    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    Local<Context> context = Local<Context>::New(ResourceManager::mainIsolate, pContext);
     
     Context::Scope context_scope(context);
     
-    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), func);
+    Local<Function> localFunction = Local<Function>::New(ResourceManager::mainIsolate, func);
     localFunction->Call(context->Global(), 0, NULL);
 
+    v8::Unlocker ul(ResourceManager::mainIsolate);
     return true;
 }
 
@@ -406,21 +412,23 @@ bool JSComponent::callV8MouseFunction(Persistent<v8::Function> &func, float x, f
         return false;
     }
     
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
     
-    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    Local<Context> context = Local<Context>::New(ResourceManager::mainIsolate, pContext);
     
     Context::Scope context_scope(context);
     
-    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), func);
+    Local<Function> localFunction = Local<Function>::New(ResourceManager::mainIsolate, func);
     
     Handle<Value> args[2];
-    args[0] = v8::Number::New(Isolate::GetCurrent(), x);
-    args[1] = v8::Number::New(Isolate::GetCurrent(), y);
+    args[0] = v8::Number::New(ResourceManager::mainIsolate, x);
+    args[1] = v8::Number::New(ResourceManager::mainIsolate, y);
     
     localFunction->Call(context->Global(), 2, args);
     
+    v8::Unlocker ul(ResourceManager::mainIsolate);
     return true;
 }
 
@@ -430,19 +438,23 @@ std::string JSComponent::getInternalState()
         return "";
     }
 
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
     
-    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    Local<Context> context = Local<Context>::New(ResourceManager::mainIsolate, pContext);
     
     Context::Scope context_scope(context);
     
-    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), pSaveFunc);
+    Local<Function> localFunction = Local<Function>::New(ResourceManager::mainIsolate, pSaveFunc);
     
     Handle<Value> result = localFunction->Call(context->Global(), 0, NULL);
-    
     v8::String::Utf8Value utfString(result->ToString());
-    return std::string(*utfString);
+    std::string ret(*utfString);
+
+    v8::Unlocker ul(ResourceManager::mainIsolate);
+    
+    return ret;
 }
 
 void JSComponent::setInternalState(std::string stateJSON)
@@ -451,18 +463,21 @@ void JSComponent::setInternalState(std::string stateJSON)
         return;
     }
     
+    v8::Locker l(ResourceManager::mainIsolate);
     // Create a stack-allocated handle scope.
-    HandleScope handle_scope(Isolate::GetCurrent());
+    HandleScope handle_scope(ResourceManager::mainIsolate);
     
-    Local<Context> context = Local<Context>::New(Isolate::GetCurrent(), pContext);
+    Local<Context> context = Local<Context>::New(ResourceManager::mainIsolate, pContext);
     
     Context::Scope context_scope(context);
     
-    Local<Function> localFunction = Local<Function>::New(Isolate::GetCurrent(), pLoadFunc);
+    Local<Function> localFunction = Local<Function>::New(ResourceManager::mainIsolate, pLoadFunc);
     Handle<Value> args[1];
-    args[0] = v8::String::NewFromUtf8(Isolate::GetCurrent(), stateJSON.data());
+    args[0] = v8::String::NewFromUtf8(ResourceManager::mainIsolate, stateJSON.data());
     
     localFunction->Call(context->Global(), 1, args);
+    
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 /*****************************************************************************/
@@ -698,9 +713,9 @@ void JSComponent::v8SetOffset(const FunctionCallbackInfo<v8::Value> &args)
 void JSComponent::v8GetPosition(const FunctionCallbackInfo<v8::Value> &args)
 {
     
-    Handle<Object> obj = Object::New(Isolate::GetCurrent());
-    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "x"), v8::Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().x));
-    obj->Set(String::NewFromUtf8(Isolate::GetCurrent(), "y"), v8::Number::New(Isolate::GetCurrent(), canvasRect.getUpperLeft().y));
+    Handle<Object> obj = Object::New(ResourceManager::mainIsolate);
+    obj->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "x"), v8::Number::New(ResourceManager::mainIsolate, canvasRect.getUpperLeft().x));
+    obj->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "y"), v8::Number::New(ResourceManager::mainIsolate, canvasRect.getUpperLeft().y));
     args.GetReturnValue().Set(obj);
 }
 
@@ -717,14 +732,14 @@ void JSComponent::v8GetCanvasInputs(const FunctionCallbackInfo<v8::Value> &args)
     
     HandleScope scope(args.GetIsolate());
 
-    Handle<Array> array = Array::New(Isolate::GetCurrent());
+    Handle<Array> array = Array::New(ResourceManager::mainIsolate);
     for (int i=0; i<inodes.size(); i++)
     {
-        Handle<Object> inputObject = Object::New(Isolate::GetCurrent());
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "id"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->getId().data()));
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "name"), v8::String::NewFromUtf8(Isolate::GetCurrent(), inodes[i]->getName().data()));
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "distance"), v8::Number::New(Isolate::GetCurrent(), (canvasRect.getCenter() - inodes[i]->getCanvasPos()).length()));
-        inputObject->Set(String::NewFromUtf8(Isolate::GetCurrent(), "connected"), v8::Boolean::New(Isolate::GetCurrent(), inodes[i]->isConnected()));
+        Handle<Object> inputObject = Object::New(ResourceManager::mainIsolate);
+        inputObject->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "id"), v8::String::NewFromUtf8(ResourceManager::mainIsolate, inodes[i]->getId().data()));
+        inputObject->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "name"), v8::String::NewFromUtf8(ResourceManager::mainIsolate, inodes[i]->getName().data()));
+        inputObject->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "distance"), v8::Number::New(ResourceManager::mainIsolate, (canvasRect.getCenter() - inodes[i]->getCanvasPos()).length()));
+        inputObject->Set(String::NewFromUtf8(ResourceManager::mainIsolate, "connected"), v8::Boolean::New(ResourceManager::mainIsolate, inodes[i]->isConnected()));
         array->Set(i, inputObject);
     }
     

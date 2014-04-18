@@ -122,12 +122,13 @@ float Split::getValue(int i)
 
 void Split::setValue(int i, float v)
 {
-    if (immediateChange) {
-        updateVal(v);
-    }
-    else {
-        nextVal = v;
-    }
+//    if (immediateChange) {
+//        updateVal(v);
+//    }
+//    else {
+    nextVal = v;
+    updateVal(v);
+//    }
 }
 
 void Split::updateVal(float newVal)

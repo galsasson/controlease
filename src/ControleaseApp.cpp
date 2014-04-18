@@ -87,17 +87,17 @@ void ControleaseApp::setup()
 
 void ControleaseApp::update()
 {
-//    compbox->update();
-    if (bUpdate) {
+    compbox->update();
+//    if (bUpdate) {
         canvas->update();
-    }
+//    }
 }
 
 void ControleaseApp::threadUpdate()
 {
     while (1)
     {
-        compbox->update();
+//        compbox->update();
         canvas->update();
         usleep(10000);
 //        console() << "update..."<<endl;

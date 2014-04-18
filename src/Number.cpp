@@ -167,12 +167,15 @@ float Number::getValue(int i)
 
 void Number::setValue(int i, float v)
 {
-    if (immediateChange) {
-        updateVal(v);
-    }
-    else {
-        nextVal = v;
-    }
+    nextVal = v;
+    updateVal(v);
+//    if (immediateChange) {
+//        nextVal = v;
+//        updateVal(v);
+//    }
+//    else {
+//        nextVal = v;
+//    }
 }
 
 void Number::outputConnected(int i)

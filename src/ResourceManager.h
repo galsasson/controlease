@@ -14,6 +14,7 @@
 #include "cinder/app/AppBasic.h"
 #include "cinder/gl/gl.h"
 #include "cinder/gl/TextureFont.h"
+#include "v8.h"
 
 using namespace ci;
 using namespace ci::app;
@@ -34,7 +35,9 @@ public:
     gl::TextureFontRef getTextureFont();
     Colorf getColor(int index);
     gl::Texture& getPlusTexture();
-    
+
+    static v8::Isolate* mainIsolate;
+
 private:
     ResourceManager() {};
 
@@ -46,5 +49,6 @@ private:
     gl::TextureFontRef mTextureFont;
     gl::Texture mPlusTexture;
     vector<Colorf> colors;
+    
 };
 #endif /* defined(__tunnelvars__ResourceManager__) */

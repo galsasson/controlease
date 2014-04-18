@@ -148,8 +148,8 @@ private:
     void setInternalState(std::string stateJSON);
     
     void compileAndRun(std::string code);
-    void scriptRunMouseDown();
-    void scriptRunMouseUp();
+//    void scriptRunMouseDown();
+//    void scriptRunMouseUp();
     Persistent<Context> pContext;
     Persistent<Function> pSetupFunc;
     Persistent<Function> pUpdateFunc;
