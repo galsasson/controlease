@@ -1,9 +1,11 @@
-external apps build dir
+# external apps build dir
 external_apps/of/Crystalfilm/bin/CrystalfilmDebug.app
 external_apps/of/Crystalfilm2/bin/Crystalfilm2Debug.app
 external_apps/of/drawingApp/bin/drawingAppDebug.app
 external_apps/of/thesis-performance
 
+# ableton and songs
+ableton-live
 
 # libs directory (currently v8)
 libs
