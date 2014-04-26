@@ -12,6 +12,7 @@ var bSendClick = false;
 var setup = function()
 {
     ceSetName("Pad");
+    ceAddInput("scale");
     ceAddOutput("x");
     ceAddOutput("y");
     ceAddOutput("click");
@@ -22,10 +23,11 @@ var setup = function()
 
 var update = function()
 {
-    out[0] = state.pos[0]/50-1;
-    out[1] = state.pos[1]/50-1;
+    var scale = inn[0];
+    
+    out[0] = (state.pos[0]/50-1)*scale;
+    out[1] = (state.pos[1]/50-1)*scale;
     out[2] = bSendClick;
-    bSendClick = 0;
 }
 
 var draw = function()
@@ -45,7 +47,11 @@ var mousedrag = function(x, y)
 {
     state.pos[0] = x;
     state.pos[1] = y;
-    bSendClick = true;
+}
+
+var mouseup = function(x, y)
+{
+    bSendClick = false;
 }
 
 
