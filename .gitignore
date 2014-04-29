@@ -3,6 +3,7 @@ external_apps/of/Crystalfilm/bin/CrystalfilmDebug.app
 external_apps/of/Crystalfilm2/bin/Crystalfilm2Debug.app
 external_apps/of/drawingApp/bin/drawingAppDebug.app
 external_apps/of/thesis-performance
+external_apps/of/ofxControlEase_example
 
 # ableton and songs
 ableton-live
