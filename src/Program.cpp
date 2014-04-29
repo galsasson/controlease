@@ -276,7 +276,7 @@ KeyboardListener* Program::getCurrentKeyboardListener()
 
 float Program::getValue(int i)
 {
-    return inputs[i]->getValue();
+    return outputs[i]->getValue();// inputs[i]->getValue();
 }
 
 void Program::setValue(int i, float v)
