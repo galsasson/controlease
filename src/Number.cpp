@@ -26,7 +26,7 @@ Number::~Number()
 void Number::initNew(Vec2f pos)
 {
     CanvasComponent::initNew(pos);    
-    setSize(Vec2f(100, 40));
+    setSize(Vec2f(60, 40));
     
     addNewInputNode();
     addNewOutputNode();

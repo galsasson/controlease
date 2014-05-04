@@ -470,7 +470,7 @@ void Canvas::drawGridFbo()
     Area prevViewport = gl::getViewport();
     gl::setViewport(gridFbo.getBounds());
 
-    gl::clear(Color(0.0, 0.0, 0.0));
+    gl::clear(Color(0.6, 0.6, 0.6));
     gl::color(0.35, 0.35, 0.35);
     gl::lineWidth(1);
     
