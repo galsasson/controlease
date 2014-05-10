@@ -86,6 +86,8 @@ private:
     
     // interaction
     Vec2f prevMouse;
+    
+    bool bSenderRecieverInitialized;
 };
 
 #endif /* defined(__tunnelvars__Program__) */

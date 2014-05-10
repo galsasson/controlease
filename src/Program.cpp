@@ -13,6 +13,7 @@ Program::Program(Canvas *c) : CanvasComponent(c)
     setType(ComponentType::COMPONENT_TYPE_PROGRAM);
     bConnected = false;
     bEditing = false;
+    bSenderRecieverInitialized = false;
 }
 
 Program::~Program()
@@ -184,10 +185,6 @@ void Program::draw()
         {
             ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 31+i*9));
         }
-//        for (int i=0; i<outputs.size(); i++)
-//        {
-//            outputs[i]->draw();
-//        }
     
         // draw all input nodes
         for (int i=0; i<inputNodes.size(); i++)
@@ -276,19 +273,30 @@ KeyboardListener* Program::getCurrentKeyboardListener()
 
 float Program::getValue(int i)
 {
-    return outputs[i]->getValue();// inputs[i]->getValue();
+    return outputs[i]->getValue();
 }
 
 void Program::setValue(int i, float v)
 {
+    if (!bSenderRecieverInitialized) {
+        return;
+    }
+    
     inputs[i]->sendVal(v);
 }
 
 void Program::createSenderListener()
 {
     oscSender = new osc::Sender();
-    oscSender->setup(programHost, programPort);
-    oscListener.setup(listenPort);
+    try {
+        oscSender->setup(programHost, programPort);
+        oscListener.setup(listenPort);
+        bSenderRecieverInitialized = true;
+    }
+    catch (...)
+    {
+        console() << "error creating oscsender and listener"<<endl;
+    }
 }
 
 /* sendHelloMessage will tell the remote program
@@ -296,6 +304,10 @@ void Program::createSenderListener()
  */
 void Program::sendHelloMessage()
 {
+    if (!bSenderRecieverInitialized) {
+        return;
+    }
+    
     osc::Message helloMsg;
     helloMsg.setAddress("/hello");
     helloMsg.addIntArg(listenPort);
@@ -307,6 +319,10 @@ void Program::sendHelloMessage()
    '/alive!' message */
 void Program::sendAliveMessage()
 {
+    if (!bSenderRecieverInitialized) {
+        return;
+    }
+    
     osc::Message aliveMsg;
     aliveMsg.setAddress("/alive?");
     oscSender->sendMessage(aliveMsg);
@@ -314,6 +330,10 @@ void Program::sendAliveMessage()
 
 void Program::handleMessages()
 {
+    if (!bSenderRecieverInitialized) {
+        return;
+    }
+
     while( oscListener.hasWaitingMessages() ) {
 		osc::Message message;
 		oscListener.getNextMessage( &message );
