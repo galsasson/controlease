@@ -253,15 +253,23 @@ void JSComponent::initComponent()
 
 void JSComponent::v8InGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
 {
+    v8::Locker l(ResourceManager::mainIsolate);
+    HandleScope handle_scope(ResourceManager::mainIsolate);
+
     Local<Object> self = info.Holder();
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     JSComponent *comp = (JSComponent*)wrap->Value();
     ReturnValue<Value> ret = info.GetReturnValue();
     ret.Set(comp->getValue(index));
+
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 void JSComponent::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Value> &info)
 {
+    v8::Locker l(ResourceManager::mainIsolate);
+    HandleScope handle_scope(ResourceManager::mainIsolate);
+
     Local<Object> self = info.Holder();
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     JSComponent *comp = (JSComponent*)wrap->Value();
@@ -269,10 +277,15 @@ void JSComponent::v8OutGetter(uint32_t index, const PropertyCallbackInfo<v8::Val
     if (comp->outputNodes.size() > index) {
         ret.Set(comp->outputNodes[index]->getLastVal());
     }
+    
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 void JSComponent::v8OutSetter(uint32_t index, Local<Value> val, const PropertyCallbackInfo<Value>& info)
 {
+    v8::Locker l(ResourceManager::mainIsolate);
+    HandleScope handle_scope(ResourceManager::mainIsolate);
+
     Local<Object> self = info.Holder();
     Local<External> wrap = Local<External>::Cast(self->GetInternalField(0));
     JSComponent *comp = (JSComponent*)wrap->Value();
@@ -281,6 +294,8 @@ void JSComponent::v8OutSetter(uint32_t index, Local<Value> val, const PropertyCa
     }
     ReturnValue<Value> ret = info.GetReturnValue();
     ret.Set(true);
+    
+    v8::Unlocker ul(ResourceManager::mainIsolate);
 }
 
 bool JSComponent::getFunction(Handle<Context> &context, std::string name, Persistent<v8::Function> &func)
