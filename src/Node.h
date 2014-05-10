@@ -40,6 +40,7 @@ public:
     virtual std::string& getName() { return name; }
     virtual float getLastVal() { return lastVal; }
     virtual Vec2f& getPosition() { return pos; }
+    virtual void offsetPosition(const Vec2f& offset) {pos += offset; }
     virtual std::string getId() { return id; }
 
     bool bDisplayName;      // display the name as well

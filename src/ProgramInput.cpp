@@ -86,11 +86,6 @@ XmlTree ProgramInput::getXml()
     return xml;
 }
 
-string ProgramInput::getName()
-{
-    return name;
-}
-
 float ProgramInput::getValue()
 {
     if (type == TYPE_INT32) {

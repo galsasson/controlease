@@ -61,7 +61,7 @@ public:
     void setValue(int i, float v);
     
 private:
-    void createSenderListener();
+    bool createSenderListener();
     void sendHelloMessage();
     void sendAliveMessage();
     void handleMessages();
@@ -69,6 +69,8 @@ private:
     void addInput(osc::Message msg);
     void addOutput(osc::Message msg);
     void handleOutputMessage(osc::Message& msg);
+    bool doesInputNameExists(std::string name);
+    bool doesOutputNameExists(std::string name);
     
     string programHost;
     int programPort;

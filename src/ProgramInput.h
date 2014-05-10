@@ -28,7 +28,9 @@ public:
     void initFromXml(osc::Sender *sender, const XmlTree& xml);
     XmlTree getXml();
 
-    string getName();
+    string getName() { return name; }
+    int getIndex() { return index; }
+    void setIndex(int i) { index = i; }
     float getValue();
     
     void sendVal(float val);

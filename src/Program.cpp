@@ -14,6 +14,7 @@ Program::Program(Canvas *c) : CanvasComponent(c)
     bConnected = false;
     bEditing = false;
     bSenderRecieverInitialized = false;
+    oscSender = new osc::Sender();
 }
 
 Program::~Program()
@@ -35,6 +36,7 @@ void Program::initNew(Vec2f pos)
 {
     CanvasComponent::initNew(pos);
     setSize(Vec2f(200, 40));
+    pushNodesDown(17);
 
     addressInput = new TextInput();
     addressInput->initNew(Vec2f(4, 23), Vec2f(192, 14));
@@ -59,12 +61,6 @@ void Program::initFromXml(const XmlTree& xml, bool createNodes)
         programHost = xml.getAttributeValue<std::string>("programHost");
         programPort = xml.getAttributeValue<int>("programPort");
         
-        createSenderListener();
-        
-        // send the program the hello message to update on our
-        // current ip and port number
-        sendHelloMessage();
-
         // create program inputs
         XmlTree programInputsXml = xml.getChild("ProgramInputs");
         for(XmlTree::ConstIter iter = programInputsXml.begin(); iter != programInputsXml.end(); ++iter)
@@ -86,6 +82,14 @@ void Program::initFromXml(const XmlTree& xml, bool createNodes)
                 outputs.push_back(newOutput);
             }
         }
+        
+        if (!createSenderListener()) {
+            return;
+        }
+        
+        // send the program the hello message to update it on our
+        // current ip and port number
+        sendHelloMessage();
     }
     
 }
@@ -125,10 +129,15 @@ XmlTree Program::getXml()
 
 void Program::setupConnection(string host, int oport)
 {
+    bConnected = false;
+    
     programHost = host;
     programPort = oport;
     
-    createSenderListener();
+    if (!createSenderListener()) {
+        return;
+    }
+    
     sendHelloMessage();
     sendAliveMessage();
 }
@@ -158,9 +167,8 @@ void Program::update()
     // handle incoming messages from the program
     handleMessages();
     
-    if (!bConnected && bEditing) {
+    if (bEditing) {
         addressInput->update();
-        return;
     }
 }
 
@@ -180,12 +188,6 @@ void Program::draw()
     gl::drawLine(Vec2f(2, titleRect.y2), Vec2f(localRect.getWidth()-4, titleRect.y2));
 
     if (bConnected) {
-        // draw all the input names
-        for (int i=0; i<inputs.size(); i++)
-        {
-            ResourceManager::getInstance().getTextureFont()->drawString(inputs[i]->getName(), Vec2f(15, 31+i*9));
-        }
-    
         // draw all input nodes
         for (int i=0; i<inputNodes.size(); i++)
         {
@@ -197,9 +199,8 @@ void Program::draw()
             outputNodes[i]->draw();
         }
     }
-    else {
-        addressInput->draw();
-    }
+    
+    addressInput->draw();
     
     gl::popMatrices();
 }
@@ -208,10 +209,10 @@ void Program::drawOutline()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft());
-    if (!bConnected)
-    {
+//    if (!bConnected)
+//    {
         addressInput->drawInFocus();
-    }
+//    }
     
     gl::translate(Vec2f(-4, -4));
     
@@ -233,11 +234,9 @@ void Program::mouseDown(const cease::MouseEvent& event)
     Vec2f local = toLocal(event.getPos());
     bEditing = false;
     
-    if (!bConnected) {
-        if (addressInput->contains(local)) {
-            bEditing = true;
-            return;
-        }
+    if (addressInput->contains(local)) {
+        bEditing = true;
+        return;
     }
 
     prevMouse = event.getPos();
@@ -254,7 +253,7 @@ void Program::mouseDrag(const cease::MouseEvent& event)
 bool Program::isHotspot(const cease::MouseEvent& event)
 {
     Vec2f local = toLocal(event.getPos());
-    return titleRect.contains(local) || (!bConnected && addressInput->contains(local));
+    return titleRect.contains(local) || (addressInput->contains(local));
 }
 
 bool Program::isDragPoint(const cease::MouseEvent& event)
@@ -264,7 +263,7 @@ bool Program::isDragPoint(const cease::MouseEvent& event)
 
 KeyboardListener* Program::getCurrentKeyboardListener()
 {
-    if (!bConnected && bEditing) {
+    if (bEditing) {
         return addressInput;
     }
     
@@ -285,9 +284,8 @@ void Program::setValue(int i, float v)
     inputs[i]->sendVal(v);
 }
 
-void Program::createSenderListener()
+bool Program::createSenderListener()
 {
-    oscSender = new osc::Sender();
     try {
         oscSender->setup(programHost, programPort);
         oscListener.setup(listenPort);
@@ -296,7 +294,10 @@ void Program::createSenderListener()
     catch (...)
     {
         console() << "error creating oscsender and listener"<<endl;
+        return false;
     }
+    
+    return true;
 }
 
 /* sendHelloMessage will tell the remote program
@@ -409,16 +410,24 @@ void Program::handleAlive(osc::Message msg)
 
 void Program::addInput(osc::Message msg)
 {
-    ProgramInput *input = new ProgramInput();
-    if (input->initNew(oscSender, msg)) {
-        inputs.push_back(input);
+    // TODO: don't use ProgramInput
+    ProgramInput *pinput = new ProgramInput();
+    if (pinput->initNew(oscSender, msg)) {
+        // if we already have input with this name, don't do anything
+        if (doesInputNameExists(pinput->getName())) {
+            delete pinput;
+            return;
+        }
+        
+        inputs.push_back(pinput);
         InputNode *node = addNewInputNode();
-        node->setOriginalVal(input->getValue());
-        node->setName(input->getName());
+        node->setOriginalVal(pinput->getValue());
+        node->setName(pinput->getName());
+        node->bDisplayName = true;
         pack(0, 0);
     }
     else {
-        delete input;
+        delete pinput;
     }
 }
 
@@ -427,6 +436,12 @@ void Program::addOutput(osc::Message msg)
     ProgramOutput *poutput = new ProgramOutput();
     if (poutput->initNew(msg))
     {
+        // if we already have input with this name, don't do anything
+        if (doesOutputNameExists(poutput->getName())) {
+            delete poutput;
+            return;
+        }
+        
         outputs.push_back(poutput);
         OutputNode *node = addNewOutputNode();
         node->updateVal(poutput->getValue());
@@ -448,4 +463,28 @@ void Program::handleOutputMessage(osc::Message& msg)
     int index = msg.getArgAsInt32(0);
     float val = msg.getArgAsFloat(1);
     outputNodes[index]->updateVal(val);
+}
+
+bool Program::doesInputNameExists(std::string name)
+{
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        if (inputNodes[i]->getName() == name) {
+            return true;
+        }
+    }
+    
+    return false;
+}
+
+bool Program::doesOutputNameExists(std::string name)
+{
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        if (outputNodes[i]->getName() == name) {
+            return true;
+        }
+    }
+    
+    return false;
 }

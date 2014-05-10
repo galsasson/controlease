@@ -363,6 +363,22 @@ string CanvasComponent::getJSComponentTypeString(std::string scriptFile)
     return boost::to_upper_copy(file.filename().string());
 }
 
+void CanvasComponent::pushNodesDown(float amount)
+{
+    Vec2f offset(0, amount);
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        inputNodes[i]->offsetPosition(offset);
+    }
+    for (int i=0; i<outputNodes.size(); i++)
+    {
+        outputNodes[i]->offsetPosition(offset);
+    }
+    
+    nextInputPos += offset;
+    nextOutputPos += offset;
+}
+
 Vec2f CanvasComponent::toLocal(const Vec2f& p)
 {
     return p-canvasRect.getUpperLeft();

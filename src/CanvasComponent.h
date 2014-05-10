@@ -85,6 +85,8 @@ public:
     static std::string getJSComponentTypeString(std::string scriptFile);
 
 protected:
+    void pushNodesDown(float amount);
+    
     virtual Vec2f toLocal(const Vec2f& p);
     virtual Vec2f toCanvas(const Vec2f& p);
     
