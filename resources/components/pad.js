@@ -7,7 +7,7 @@
  ******/
 
 state.pos = [0, 0];
-var bSendClick = false;
+var bSendClick = 0;
 
 var setup = function()
 {
@@ -18,7 +18,7 @@ var setup = function()
     ceAddOutput("click");
     ceSetGuiSize(100, 100);
     
-    bSendClick = false;
+    bSendClick = 0;
 }
 
 var update = function()
@@ -40,7 +40,7 @@ var mousedown = function(x, y)
 {
     state.pos[0] = x;
     state.pos[1] = y;
-    bSendClick = true;
+    bSendClick = 1;
 }
 
 var mousedrag = function(x, y)
@@ -51,7 +51,7 @@ var mousedrag = function(x, y)
 
 var mouseup = function(x, y)
 {
-    bSendClick = false;
+    bSendClick = 0;
 }
 
 
