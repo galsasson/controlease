@@ -6,7 +6,7 @@
  *
  ******/
 
-state.pos = [0, 0];
+state.pos = [50, 50];
 var bSendClick = 0;
 
 var setup = function()

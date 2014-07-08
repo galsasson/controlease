@@ -26,15 +26,18 @@ bool ProgramInput::initNew(osc::Sender *sender, osc::Message msg)
         address = msg.getArgAsString(1);
         index = msg.getArgAsInt32(2);
         type = (ValueType)msg.getArgAsInt32(3);
-        if (type == TYPE_BOOLEAN) {
+        if (type == ValueType::TYPE_BOOLEAN) {
             boolVal = !!msg.getArgAsFloat(4);
         }
-        else if (type == TYPE_INT32) {
+        else if (type == ValueType::TYPE_INT32) {
             intVal = (int)msg.getArgAsFloat(4);
         }
-        else if (type == TYPE_FLOAT) {
+        else if (type == ValueType::TYPE_FLOAT) {
             floatVal = msg.getArgAsFloat(4);
         }
+		else if (type == ValueType::TYPE_UCHAR) {
+			ucharVal = (unsigned char)msg.getArgAsFloat(4);
+		}
     }
     catch(...) {
         return false;
@@ -61,6 +64,9 @@ void ProgramInput::initFromXml(osc::Sender *sender, const cinder::XmlTree& xml)
     else if (type == ValueType::TYPE_FLOAT) {
         floatVal = xml.getAttributeValue<float>("value");
     }
+	else if (type == ValueType::TYPE_UCHAR) {
+		ucharVal = xml.getAttributeValue<unsigned char>("value");
+	}
     
     initialized = true;
 }
@@ -82,19 +88,22 @@ XmlTree ProgramInput::getXml()
     else if (type == ValueType::TYPE_FLOAT) {
         xml.setAttribute("value", floatVal);
     }
+	else if (type == ValueType::TYPE_UCHAR) {
+		xml.setAttribute("value", ucharVal);
+	}
     
     return xml;
 }
 
 float ProgramInput::getValue()
 {
-    if (type == TYPE_INT32) {
+    if (type == ValueType::TYPE_INT32) {
         return (float)intVal;
     }
-    else if (type == TYPE_FLOAT) {
+    else if (type == ValueType::TYPE_FLOAT) {
         return floatVal;
     }
-    else if (type == TYPE_BOOLEAN) {
+    else if (type == ValueType::TYPE_BOOLEAN) {
         if (boolVal) {
             return 1;
         }
@@ -102,13 +111,16 @@ float ProgramInput::getValue()
             return 0;
         }
     }
+	else if (type == ValueType::TYPE_UCHAR) {
+		return (float)ucharVal;
+	}
     
     return 0;
 }
 
 void ProgramInput::sendVal(float val)
 {
-    if (type == TYPE_INT32) {
+    if (type == ValueType::TYPE_INT32) {
         intVal = (int)val;
         osc::Message msg;
         msg.setAddress(address);
@@ -116,7 +128,7 @@ void ProgramInput::sendVal(float val)
         msg.addFloatArg(intVal);
         oscSender->sendMessage(msg);
     }
-    else if (type == TYPE_FLOAT) {
+    else if (type == ValueType::TYPE_FLOAT) {
         floatVal = val;
         osc::Message msg;
         msg.setAddress(address);
@@ -124,7 +136,7 @@ void ProgramInput::sendVal(float val)
         msg.addFloatArg(floatVal);
         oscSender->sendMessage(msg);
     }
-    else if (type == TYPE_BOOLEAN) {
+    else if (type == ValueType::TYPE_BOOLEAN) {
         boolVal = !!val;
         osc::Message msg;
         msg.setAddress(address);
@@ -132,21 +144,29 @@ void ProgramInput::sendVal(float val)
         msg.addFloatArg(boolVal);
         oscSender->sendMessage(msg);
     }
+	else if (type == ValueType::TYPE_UCHAR) {
+		ucharVal = (unsigned char)val;
+        osc::Message msg;
+        msg.setAddress(address);
+        msg.addIntArg(index);
+        msg.addFloatArg(ucharVal);
+        oscSender->sendMessage(msg);
+	}
 }
 
 string ProgramInput::getValueString()
 {
-    if (type == TYPE_INT32) {
+    if (type == ValueType::TYPE_INT32) {
         std::ostringstream str;
         str << intVal;
         return str.str();
     }
-    else if (type == TYPE_FLOAT) {
+    else if (type == ValueType::TYPE_FLOAT) {
         std::ostringstream str;
         str << floatVal << setprecision(4);
         return str.str();
     }
-    else if (type == TYPE_BOOLEAN) {
+    else if (type == ValueType::TYPE_BOOLEAN) {
         if (boolVal) {
             return "true";
         }
@@ -154,6 +174,11 @@ string ProgramInput::getValueString()
             return "false";
         }
     }
+	else if (type == ValueType::TYPE_UCHAR) {
+        std::ostringstream str;
+        str << ucharVal << setprecision(4);
+        return str.str();
+	}
     else {
         return "-";
     }

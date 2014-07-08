@@ -15,6 +15,11 @@ Program::Program(Canvas *c) : CanvasComponent(c)
     bEditing = false;
     bSenderRecieverInitialized = false;
     oscSender = new osc::Sender();
+    bRunThread = true;
+	
+#ifdef ALWAYS_UPDATE
+    outputThread = new std::thread(&Program::outputThreadWorker, this);
+#endif
 }
 
 Program::~Program()
@@ -28,6 +33,12 @@ Program::~Program()
     {
         delete outputs[i];
     }
+    
+#ifdef ALWAYS_UPDATE
+    bRunThread = false;
+    outputThread->join();
+    delete outputThread;
+#endif
     
     delete addressInput;
 }
@@ -83,13 +94,15 @@ void Program::initFromXml(const XmlTree& xml, bool createNodes)
             }
         }
         
-        if (!createSenderListener()) {
-            return;
-        }
-        
-        // send the program the hello message to update it on our
-        // current ip and port number
-        sendHelloMessage();
+        setupConnection(programHost, programPort);
+//        
+//        if (!createSenderListener()) {
+//            return;
+//        }
+//        
+//        // send the program the hello message to update it on our
+//        // current ip and port number
+//        sendHelloMessage();
     }
     
 }
@@ -209,10 +222,8 @@ void Program::drawOutline()
 {
     gl::pushMatrices();
     gl::translate(canvasRect.getUpperLeft());
-//    if (!bConnected)
-//    {
-        addressInput->drawInFocus();
-//    }
+
+    addressInput->drawInFocus();
     
     gl::translate(Vec2f(-4, -4));
     
@@ -281,7 +292,9 @@ void Program::setValue(int i, float v)
         return;
     }
     
+#ifndef ALWAYS_UPDATE
     inputs[i]->sendVal(v);
+#endif
 }
 
 bool Program::createSenderListener()
@@ -339,15 +352,11 @@ void Program::handleMessages()
 		osc::Message message;
 		oscListener.getNextMessage( &message );
 		
-//		console() << "New message received" << std::endl;
-//		console() << "Address: " << message.getAddress() << std::endl;
-//		console() << "Num Arg: " << message.getNumArgs() << std::endl;
-        
         if (message.getAddress() == "/oc") {
             handleOutputMessage(message);
             continue;
         }
-        if (message.getAddress() == "/alive!") {
+        else if (message.getAddress() == "/alive!") {
             handleAlive(message);
             continue;
         }
@@ -488,3 +497,32 @@ bool Program::doesOutputNameExists(std::string name)
     
     return false;
 }
+
+void Program::sendAllInputs()
+{
+    osc::Message msg;
+    msg.setAddress("/all");
+    for (int i=0; i<inputNodes.size(); i++)
+    {
+        msg.addFloatArg(inputNodes[i]->getLastVal());
+    }
+    oscSender->sendMessage(msg);
+}
+
+void Program::outputThreadWorker()
+{
+    console() << "Program worker thread started"<<endl;
+    while (bRunThread)
+    {
+        if (bConnected)
+        {
+            sendAllInputs();
+            usleep(16666);
+        }
+        else {
+            usleep(50000);
+        }
+    }
+    console() << "Program worker thread finished"<<endl;
+}
+

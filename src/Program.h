@@ -33,6 +33,8 @@ using namespace ci;
 using namespace ci::app;
 using namespace std;
 
+//#define ALWAYS_UPDATE
+
 class Program : public CanvasComponent
 {
 public:
@@ -72,6 +74,8 @@ private:
     bool doesInputNameExists(std::string name);
     bool doesOutputNameExists(std::string name);
     
+    void sendAllInputs();
+    
     string programHost;
     int programPort;
     int listenPort;
@@ -86,6 +90,10 @@ private:
     vector<ProgramInput*> inputs;
     vector<ProgramOutput*> outputs;
     
+    bool bRunThread;
+    std::thread *outputThread;
+    void outputThreadWorker();
+
     // interaction
     Vec2f prevMouse;
     

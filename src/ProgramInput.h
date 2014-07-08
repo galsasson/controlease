@@ -48,6 +48,7 @@ private:
     int intVal;
     float floatVal;
     bool boolVal;
+	unsigned char ucharVal;
     float minVal;
     float maxVal;
 };
